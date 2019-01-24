@@ -13,20 +13,20 @@ namespace pGina.Plugin.MFLoginPlugin
 {
     public partial class Configuration : Form
     {
-        dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.MFLoginPluginUuid);
+        dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
 
         public Configuration()
         {
             InitializeComponent();
-            //txtDescription.Text = m_settings.Description;
-            //chkShowDescription.Checked = m_settings.ShowDescription;
+            txtDescription.Text = m_settings.Description;
+            chkShowDescription.Checked = m_settings.ShowDescription;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            //m_settings.Description = txtDescription.Text;
-            //m_settings.ShowDescription = chkShowDescription.Checked;
+            m_settings.Description = txtDescription.Text;
+            m_settings.ShowDescription = chkShowDescription.Checked;
             this.Close();
         }
 
@@ -34,10 +34,6 @@ namespace pGina.Plugin.MFLoginPlugin
         {
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
-        }
-        private void Configuration_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

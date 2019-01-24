@@ -12,20 +12,20 @@ using pGina.Shared.Settings;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
-    public class MFLoginPlugin : IPluginConfiguration, IPluginAuthentication, IPluginAuthorization, IPluginAuthenticationGateway, IPluginChangePassword
+    public class MFLoginPlugin : IPluginConfiguration, IPluginAuthentication, IPluginChangePassword
     {
         private ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
-        public static Guid MFLoginPluginUuid = new Guid("{A633385F-BE0B-410C-9271-D80C215EC324}");
-        private string m_Description = "A plugin for multi-factor authentication.";
+        public static Guid SimpleUuid = new Guid("{98EF7D32-20B2-421F-A68D-5BFA8E3BAFA6}");
+        private string m_defaultDescription = "Multi-factor authentication plugin.";
         private dynamic m_settings = null;
 
         public MFLoginPlugin()
         {
-            using (Process me = Process.GetCurrentProcess())
+            using(Process me = Process.GetCurrentProcess())
             {
-                m_settings = new pGinaDynamicSettings(MFLoginPluginUuid);
+                m_settings = new pGinaDynamicSettings(SimpleUuid);
                 m_settings.SetDefault("ShowDescription", true);
-                m_settings.SetDefault("Description", m_Description);
+                m_settings.SetDefault("Description", m_defaultDescription);
 
                 m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
@@ -33,7 +33,7 @@ namespace pGina.Plugin.MFLoginPlugin
 
         public string Name
         {
-            get { return "MFLogin"; }
+            get { return "MFLoginPlugin"; }
         }
 
         public string Description
@@ -51,7 +51,7 @@ namespace pGina.Plugin.MFLoginPlugin
 
         public Guid Uuid
         {
-            get { return MFLoginPluginUuid; }
+            get { return SimpleUuid; }
         }
 
         BooleanResult IPluginAuthentication.AuthenticateUser(SessionProperties properties)
@@ -59,16 +59,20 @@ namespace pGina.Plugin.MFLoginPlugin
             try
             {
                 m_logger.DebugFormat("AuthenticateUser({0})", properties.Id.ToString());
+
                 // Get user info
                 UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
+
                 m_logger.DebugFormat("Found username: {0}", userInfo.Username);
+                
                 //
 
                 // auth code
 
                 //
+
                 m_logger.ErrorFormat("Failed to authenticate user: {0}", userInfo.Username);
-                return new BooleanResult() { Success = false, Message = string.Format("Unable to log in") };
+                return new BooleanResult() { Success = false, Message = string.Format("Failed to auth") };
             }
             catch (Exception e)
             {
@@ -76,42 +80,16 @@ namespace pGina.Plugin.MFLoginPlugin
                 throw;  // Allow pGina service to catch and handle exception
             }
         }
-        BooleanResult IPluginAuthorization.AuthorizeUser(SessionProperties properties)
-        {
-            try
-            {
-                m_logger.DebugFormat("Authorize({0})", properties.Id.ToString());
-                // Get user info
-                UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
-               
-                return new BooleanResult() { Success = false, Message = string.Format("Not implemented") };
-            }
-            catch (Exception e)
-            {
-                m_logger.ErrorFormat("AuthorizeUser exception: {0}", e);
-                throw;  // Allow pGina service to catch and handle exception
-            }
-        }
-        BooleanResult IPluginAuthenticationGateway.AuthenticatedUserGateway(SessionProperties properties)
-        {
-            try
-            {
-                m_logger.DebugFormat("Processing gateway ({0})", properties.Id.ToString());
-                return new BooleanResult() { Success = false, Message = string.Format("Not implemented") };
-            }
-            catch (Exception e)
-            {
-                m_logger.ErrorFormat("Gateway exception: {0}", e);
-                throw;  // Allow pGina service to catch and handle exception
-            }
-        }
+
         public void Configure()
         {
             Configuration conf = new Configuration();
             conf.ShowDialog();
         }
+
         public void Starting() { }
         public void Stopping() { }
+
         public BooleanResult ChangePassword(SessionProperties properties, ChangePasswordPluginActivityInfo pluginInfo)
         {
             return new BooleanResult() { Success = false, Message = "Not implemented" };
