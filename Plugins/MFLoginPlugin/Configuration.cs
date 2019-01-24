@@ -18,15 +18,11 @@ namespace pGina.Plugin.MFLoginPlugin
         public Configuration()
         {
             InitializeComponent();
-            txtDescription.Text = m_settings.Description;
-            chkShowDescription.Checked = m_settings.ShowDescription;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            m_settings.Description = txtDescription.Text;
-            m_settings.ShowDescription = chkShowDescription.Checked;
             this.Close();
         }
 
@@ -34,6 +30,13 @@ namespace pGina.Plugin.MFLoginPlugin
         {
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            PasswordKey pk=new PasswordKey();
+            IKey ik = pk;
+            listBox1.Items.AddRange (ik.GetInfo());
         }
     }
 }
