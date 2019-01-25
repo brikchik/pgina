@@ -5,7 +5,7 @@ using System.Text;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
-    class USBDevice
+    class USBDevice : IKey
     {
         private string Serial = "";
         private string Type = "USBDevice";
@@ -20,5 +20,6 @@ namespace pGina.Plugin.MFLoginPlugin
         {
             return false; // !!!!!!!!!! check if USB device is connected and has the Serial SN;
         }
+        string IKey.ReturnPassword() { return null; }
     }
 }

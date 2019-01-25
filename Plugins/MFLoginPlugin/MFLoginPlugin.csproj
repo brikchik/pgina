@@ -60,7 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthMethod.cs" />
+    <Compile Include="AuthenticationManager.cs" />
+    <Compile Include="Entities\AuthMethod.cs" />
     <Compile Include="Configuration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,13 +69,14 @@
       <DependentUpon>Configuration.cs</DependentUpon>
     </Compile>
     <Compile Include="DBHelper.cs" />
-    <Compile Include="IKey.cs" />
-    <Compile Include="KeySet.cs" />
-    <Compile Include="PasswordKey.cs" />
+    <Compile Include="Entities\IKey.cs" />
+    <Compile Include="Entities\KeySet.cs" />
+    <Compile Include="Entities\Keys\PasswordKey.cs" />
+    <Compile Include="Entities\LogEntity.cs" />
     <Compile Include="PluginImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="USBDevice.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Entities\Keys\USBDevice.cs" />
+    <Compile Include="Entities\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration.resx">

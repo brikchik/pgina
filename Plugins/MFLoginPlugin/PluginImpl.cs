@@ -9,6 +9,10 @@ using log4net;
 using pGina.Shared.Interfaces;
 using pGina.Shared.Types;
 using pGina.Shared.Settings;
+//
+// NOTE: pGina.fork plugins work with "pGina created" non-admin accounts by default!!!
+// net user LOGIN PASSWORD /ADD /COMMENT:"pGina created"
+//
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -59,20 +63,16 @@ namespace pGina.Plugin.MFLoginPlugin
             try
             {
                 m_logger.DebugFormat("AuthenticateUser({0})", properties.Id.ToString());
-
                 // Get user info
                 UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
-
                 m_logger.DebugFormat("Found username: {0}", userInfo.Username);
-                
-                //
-
-                // auth code
-
-                //
-
-                m_logger.ErrorFormat("Failed to authenticate user: {0}", userInfo.Username);
-                return new BooleanResult() { Success = false, Message = string.Format("Failed to auth") };
+                if (AuthenticationManager.Authenticate(userInfo))
+                    return new BooleanResult() { Success = true };
+                else
+                {
+                    m_logger.ErrorFormat("Failed to authenticate user: {0}", userInfo.Username);
+                    return new BooleanResult() { Success = false, Message = string.Format("Failed to authenticate") };
+                }
             }
             catch (Exception e)
             {

@@ -15,6 +15,8 @@ namespace pGina.Plugin.MFLoginPlugin
         void IKey.AddKey(string newPassword) { Password = newPassword; }// !!!!!!!!!!! has to be done in form
         
         bool IKey.CheckKey(string password) { return (password==Password); } // !!!!!!!!!!
-        
+
+        string IKey.ReturnPassword() { return Password; }  // !!!!!!!!!
+
     }
 }

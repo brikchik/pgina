@@ -35,8 +35,12 @@ namespace pGina.Plugin.MFLoginPlugin
         private void button1_Click(object sender, EventArgs e)
         {
             PasswordKey pk=new PasswordKey();
-            IKey ik = pk;
-            listBox1.Items.AddRange (ik.GetInfo());
+            USBDevice usbd = new USBDevice();
+            IKey[] ik=new IKey[2];
+            ik[0]=pk;
+            ik[1] = usbd;
+            listBox1.Items.AddRange (ik[0].GetInfo());
+            listBox1.Items.AddRange(ik[1].GetInfo());
         }
     }
 }
