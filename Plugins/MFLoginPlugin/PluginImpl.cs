@@ -66,13 +66,13 @@ namespace pGina.Plugin.MFLoginPlugin
                 // Get user info
                 UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
                 m_logger.DebugFormat("Found username: {0}", userInfo.Username);
-                if (AuthenticationManager.Authenticate(userInfo))
-                    return new BooleanResult() { Success = true };
+                // Start authentication process
+                BooleanResult success = AuthenticationManager.Authenticate(userInfo);
+                if (success.Success)
+                    m_logger.Info(success.Message);
                 else
-                {
-                    m_logger.ErrorFormat("Failed to authenticate user: {0}", userInfo.Username);
-                    return new BooleanResult() { Success = false, Message = string.Format("Failed to authenticate") };
-                }
+                    m_logger.ErrorFormat(success.Message);
+                return success;
             }
             catch (Exception e)
             {
@@ -83,8 +83,13 @@ namespace pGina.Plugin.MFLoginPlugin
 
         public void Configure()
         {
-            Configuration conf = new Configuration();
-            conf.ShowDialog();
+            bool local = false;
+            bool firstrun = true;
+            // read settings
+            //
+            // get 'local' setting
+            if (local) { LocalConfiguration conf = new LocalConfiguration(); }
+            else { FirstRun fr = new FirstRun(local, firstrun); }
         }
 
         public void Starting() { }
@@ -92,7 +97,8 @@ namespace pGina.Plugin.MFLoginPlugin
 
         public BooleanResult ChangePassword(SessionProperties properties, ChangePasswordPluginActivityInfo pluginInfo)
         {
-            return new BooleanResult() { Success = false, Message = "Not implemented" };
+            throw new Exception("Not allowed. Not implemented.");
+            return new BooleanResult() { Success = false, Message = "Not allowed" };
         }
     }
 }

@@ -62,27 +62,56 @@
   <ItemGroup>
     <Compile Include="AuthenticationManager.cs" />
     <Compile Include="Entities\AuthMethod.cs" />
-    <Compile Include="Configuration.cs">
+    <Compile Include="LocalConfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Configuration.Designer.cs">
-      <DependentUpon>Configuration.cs</DependentUpon>
+    <Compile Include="LocalConfiguration.Designer.cs">
+      <DependentUpon>LocalConfiguration.cs</DependentUpon>
     </Compile>
     <Compile Include="DBHelper.cs" />
     <Compile Include="Entities\IKey.cs" />
+    <Compile Include="Entities\KeyManagementForms\BluetoothManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entities\KeyManagementForms\BluetoothManagementForm.Designer.cs">
+      <DependentUpon>BluetoothManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\KeyManagementForms\PasswordManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entities\KeyManagementForms\PasswordManagementForm.Designer.cs">
+      <DependentUpon>PasswordManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\KeyManagementForms\USBManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entities\KeyManagementForms\USBManagementForm.Designer.cs">
+      <DependentUpon>USBManagementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\KeySet.cs" />
+    <Compile Include="Entities\Keys\BluetoothKey.cs" />
     <Compile Include="Entities\Keys\PasswordKey.cs" />
     <Compile Include="Entities\LogEntity.cs" />
+    <Compile Include="FirstRun.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FirstRun.Designer.cs">
+      <DependentUpon>FirstRun.cs</DependentUpon>
+    </Compile>
     <Compile Include="PluginImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\Keys\USBDevice.cs" />
     <Compile Include="Entities\User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Configuration.resx">
-      <DependentUpon>Configuration.cs</DependentUpon>
+    <EmbeddedResource Include="LocalConfiguration.resx">
+      <DependentUpon>LocalConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FirstRun.resx">
+      <DependentUpon>FirstRun.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

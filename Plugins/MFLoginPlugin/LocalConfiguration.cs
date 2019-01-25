@@ -8,16 +8,18 @@ using System.Text;
 using System.Windows.Forms;
 
 using pGina.Shared.Settings;
+using pGina.Plugin.MFLoginPlugin.Entities.Keys;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
-    public partial class Configuration : Form
+    public partial class LocalConfiguration : Form
     {
         dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
 
-        public Configuration()
+        public LocalConfiguration()
         {
             InitializeComponent();
+            this.ShowDialog();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -41,6 +43,24 @@ namespace pGina.Plugin.MFLoginPlugin
             ik[1] = usbd;
             listBox1.Items.AddRange (ik[0].GetInfo());
             listBox1.Items.AddRange(ik[1].GetInfo());
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            IKey pk = new PasswordKey();
+            pk.AddKey();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            IKey pk = new USBDevice();
+            pk.AddKey();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            IKey pk = new BluetoothKey();
+            pk.AddKey();
         }
     }
 }
