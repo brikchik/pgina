@@ -83,8 +83,8 @@ namespace pGina.Plugin.MFLoginPlugin
 
         public void Configure()
         {
-            bool local = false;
-            bool firstrun = true;
+            bool local = true;
+            bool firstrun = false;
             // read settings
             //
             // get 'local' setting

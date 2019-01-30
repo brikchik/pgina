@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -32,6 +33,15 @@ namespace pGina.Plugin.MFLoginPlugin
             }
             else
             {
+                string path = DBpath_label.Text;
+                try
+                {
+                    if (File.Exists(path)) DBHelper.ConnectLocalDB(path, passwordField.Text);
+                    else
+                        DBHelper.CreateLocalDB(path, passwordField.Text);
+                    // !!!! write settings
+                }
+                catch (System.Data.SQLite.SQLiteException sqle) { MessageBox.Show(sqle.Message, "Unable to use database"); }
             }
         }
 
@@ -45,24 +55,27 @@ namespace pGina.Plugin.MFLoginPlugin
             }
             else
             {
+                DBHelper.ConnectToRemoteDB(serverPath_textbox.Text);
             }
         }
 
         private void changePath_button_Click(object sender, EventArgs e)
         {
-            saveDBDialog.InitialDirectory=@"/"; // !!!!!!!!!!!
+            saveDBDialog.InitialDirectory=@"";
             saveDBDialog.Filter.Contains(".db");
             DialogResult dr=saveDBDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
                 changePath_button.BackColor = SystemColors.ActiveCaption;
                 defaultPath_button.BackColor = SystemColors.ButtonFace;
+                DBpath_label.Text = saveDBDialog.FileName;
             }
         }
         private void defaultPath_button_Click(object sender, EventArgs e)
         {
             changePath_button.BackColor = SystemColors.ButtonFace;
             defaultPath_button.BackColor = SystemColors.ActiveCaption;
+            DBpath_label.Text = "C:\\MFLoginDB.db"; // !!!! switch to isolated storage
         }
     }
 }

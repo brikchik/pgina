@@ -37,6 +37,7 @@
             this.password_label = new System.Windows.Forms.Label();
             this.changePath_button = new System.Windows.Forms.Button();
             this.defaultPath_button = new System.Windows.Forms.Button();
+            this.DBpath_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonContinue_local
@@ -46,7 +47,7 @@
             this.buttonContinue_local.Location = new System.Drawing.Point(0, 0);
             this.buttonContinue_local.MinimumSize = new System.Drawing.Size(300, 0);
             this.buttonContinue_local.Name = "buttonContinue_local";
-            this.buttonContinue_local.Size = new System.Drawing.Size(354, 122);
+            this.buttonContinue_local.Size = new System.Drawing.Size(354, 144);
             this.buttonContinue_local.TabIndex = 0;
             this.buttonContinue_local.Text = "Continue locally";
             this.buttonContinue_local.UseVisualStyleBackColor = true;
@@ -59,11 +60,18 @@
             this.buttonContinue_network.Location = new System.Drawing.Point(360, 0);
             this.buttonContinue_network.MinimumSize = new System.Drawing.Size(30, 0);
             this.buttonContinue_network.Name = "buttonContinue_network";
-            this.buttonContinue_network.Size = new System.Drawing.Size(350, 122);
+            this.buttonContinue_network.Size = new System.Drawing.Size(350, 144);
             this.buttonContinue_network.TabIndex = 1;
             this.buttonContinue_network.Text = "Join network";
             this.buttonContinue_network.UseVisualStyleBackColor = true;
             this.buttonContinue_network.Click += new System.EventHandler(this.buttonContinue_network_Click);
+            // 
+            // saveDBDialog
+            // 
+            this.saveDBDialog.DefaultExt = "db";
+            this.saveDBDialog.Filter = "Database files|*.db";
+            this.saveDBDialog.OverwritePrompt = false;
+            this.saveDBDialog.SupportMultiDottedExtensions = true;
             // 
             // serverPath_textbox
             // 
@@ -123,11 +131,22 @@
             this.defaultPath_button.UseVisualStyleBackColor = false;
             this.defaultPath_button.Click += new System.EventHandler(this.defaultPath_button_Click);
             // 
+            // DBpath_label
+            // 
+            this.DBpath_label.AutoSize = true;
+            this.DBpath_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.DBpath_label.Location = new System.Drawing.Point(380, 117);
+            this.DBpath_label.Name = "DBpath_label";
+            this.DBpath_label.Size = new System.Drawing.Size(143, 20);
+            this.DBpath_label.TabIndex = 8;
+            this.DBpath_label.Text = "C:\\MFLoginDB.db";
+            // 
             // FirstRun
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(710, 122);
+            this.ClientSize = new System.Drawing.Size(710, 144);
             this.Controls.Add(this.buttonContinue_network);
+            this.Controls.Add(this.DBpath_label);
             this.Controls.Add(this.buttonContinue_local);
             this.Controls.Add(this.defaultPath_button);
             this.Controls.Add(this.changePath_button);
@@ -158,5 +177,6 @@
         private System.Windows.Forms.Label password_label;
         private System.Windows.Forms.Button changePath_button;
         private System.Windows.Forms.Button defaultPath_button;
+        private System.Windows.Forms.Label DBpath_label;
     }
 }

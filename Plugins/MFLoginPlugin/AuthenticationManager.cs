@@ -13,13 +13,12 @@ namespace pGina.Plugin.MFLoginPlugin
     {
         public static BooleanResult Authenticate(UserInformation userInfo)
         {
-            DBHelper dbh=new DBHelper();
-            User user = dbh.GetUser(userInfo.Username);
+            User user = DBHelper.GetUser(userInfo.Username);
             if (user == null)
             {
                 return new BooleanResult { Success = false, Message = "User doesn't exist" };
             }
-            AuthMethod[] am = dbh.GetAuthMethods(user);
+            AuthMethod[] am = DBHelper.GetAuthMethods(user);
             for (int i = 0; i < am.Length; i++)
             {
                 KeySet ks = am[i].ks;
