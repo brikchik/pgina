@@ -88,7 +88,9 @@ namespace pGina.Plugin.MFLoginPlugin
             // read settings
             //
             // get 'local' setting
-            if (local) { LocalConfiguration conf = new LocalConfiguration(); }
+            if (local) {
+				LocalConfiguration conf = new LocalConfiguration();
+			}
             else { FirstRun fr = new FirstRun(local, firstrun); }
         }
 

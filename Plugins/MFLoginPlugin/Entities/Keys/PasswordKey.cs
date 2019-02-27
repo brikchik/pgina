@@ -3,24 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Data.SQLite;
 using pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms;
 namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 {
-    class PasswordKey: IKey
+    class PasswordKey: Key
     {
-        private string Password = "";// !!!!!!!!!! has to be hashed
-        private string Type = "Password";
-        UInt64 IKey.KID() { return 0; }
-        
-        string[] IKey.GetInfo() { return new String[] { Type, Password }; }// !!!!!!!!!!
-        string IKey.Type() { return Type; }
-        void IKey.AddKey(string newPassword) { Password = newPassword; }// has to be done in form
-        void IKey.AddKey() {
+		public PasswordKey(ulong kid):base(kid){ Type = "Password"; } // specific key
+		public PasswordKey():base(0) { Type = "Password"; } // empty key
+        public new string[] GetInfo() { return new String[] { Type, Password }; }// !!!!!!!!!!
+        public void AddKey(string newPassword) { Password = newPassword; }// has to be done in form
+        public new void AddKey() {
             PasswordManagementForm pmf = new PasswordManagementForm();
             pmf.ShowDialog();
             Password = pmf.NewPassword;
         }
-        bool IKey.CheckKey(string password) { return (password==Password); } // !!!!!!!!!! hash
-        string IKey.ReturnPassword() { return null; }
+		public override bool CheckKey(string password) { return (password==Password); } // !!!!!!!!!! hash
     }
 }

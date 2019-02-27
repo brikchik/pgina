@@ -81,7 +81,7 @@
       <DependentUpon>LocalConfiguration.cs</DependentUpon>
     </Compile>
     <Compile Include="DBHelper.cs" />
-    <Compile Include="Entities\IKey.cs" />
+    <Compile Include="Entities\Key.cs" />
     <Compile Include="Entities\KeyManagementForms\BluetoothManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,8 +100,6 @@
     <Compile Include="Entities\KeyManagementForms\USBManagementForm.Designer.cs">
       <DependentUpon>USBManagementForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\KeySet.cs" />
-    <Compile Include="Entities\Keys\BluetoothKey.cs" />
     <Compile Include="Entities\Keys\PasswordKey.cs" />
     <Compile Include="Entities\LogEntity.cs" />
     <Compile Include="FirstRun.cs">

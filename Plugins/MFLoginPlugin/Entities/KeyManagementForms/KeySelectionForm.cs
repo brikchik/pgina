@@ -20,7 +20,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 			InitializeComponent();
 			if (Type == "Password")
 			{
-				IKey pk = new PasswordKey();
+				Key pk = new PasswordKey();
 				pk.AddKey();
 				Key = pk;
 				Close();

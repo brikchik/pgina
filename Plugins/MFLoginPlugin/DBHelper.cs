@@ -1,6 +1,7 @@
 ﻿// DBHelper class contains everything connected with storage
 // while the whole database is read into entity classes on login attempt
 // Plugin may use different databases
+// SQL Injection Protection required
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace pGina.Plugin.MFLoginPlugin
 {
     class DBHelper 
     {
-        public static SQLiteConnection connection; // mustn't be public !!!!
+		public static SQLiteConnection connection;
         public static void CreateLocalDB(string path, string password)
         {
             SQLiteConnection.CreateFile(path);
@@ -39,33 +40,42 @@ namespace pGina.Plugin.MFLoginPlugin
             connection.Close();
             connection.Dispose();
         }
+		public static User[] ReadUsers()
+		{
+			List<User> Users = new List<User>();
+			if (connection.State != System.Data.ConnectionState.Open) return null;
+			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS;", connection);
+			SQLiteDataReader r = sqlc.ExecuteReader();
+			while (r.Read())
+			{
+				User newUser=new User(ulong.Parse(r["UID"].ToString()));
+				newUser.Fill();
+				Users.Add(newUser);
+			}
+			return Users.ToArray();
+		}
         public static void ConnectToRemoteDB(string path) { throw new NotImplementedException(); }
-        //
-        public static void AddKey(IKey ik) {
-        }
-        public static void UpdateKey(IKey ik) { } // Type and id must remain untouched!
-        public static IKey GetKey() { return new PasswordKey(); } // !!!!!!!!
-        // Keys can't be removed
-        public static void AddUser(User u) {
-        }
-        public static void UpdateUser(User u) { } // login and id must remain untouched!
-        public static User GetUser() { return new User(0, "default"); }
-        public static User GetUser(string userName) { return new User(0, "UserName"); } //// !!!!!
-        // Users can't be removed
-        public static void AddKeySet(KeySet ks) { } // check if keys exist!
-        public static void UpdateKeySet(KeySet ks) { }// Check if it's used by another user!!!!!
-        public static void RemoveKeySet(KeySet ks) { }// if not used. check required
-        public static KeySet GetKeySet() { return new KeySet(0); }
-        //
-        public static void AddAuthMethod(AuthMethod am) { }
-        public static void UpdateAuthMethod(AuthMethod am) { } //use id to distinguish authMethods
-        public static void RemoveAuthMethod(AuthMethod am) { } //use id to distinguish authMethods
-        public static AuthMethod[] GetAuthMethods(User u) { return new AuthMethod[]{}; } // for a user
-        //
+
+		public static AuthMethod[] GetAuthMethods(User user) {
+			List<AuthMethod> authMethods=new List<AuthMethod>();
+			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHOD WHERE UID=$UID", DBHelper.connection);
+			sqlc.Parameters.AddWithValue("$UID", user.UID);
+			SQLiteDataReader r = sqlc.ExecuteReader();
+			while (r.Read())
+			{
+				ulong amid = ulong.Parse(r["AMID"].ToString());
+				AuthMethod am = new AuthMethod(amid);
+				am.Fill();
+				authMethods.Add(am);
+			}
+			return authMethods.ToArray();
+		}
+        /*
         public static void WriteLogAttempt(LogEntity le) { }
         public static LogEntity ReadLogAttempt() { return new LogEntity(); } // how can this be used??????
         public static List<LogEntity> ReadLogs(DateTime start, DateTime end) { return new List<LogEntity>(); } //logs in time period
         public static List<LogEntity> ReadLogs() { return new List<LogEntity>(); } // all logs
         //
+		*/
     }
 }

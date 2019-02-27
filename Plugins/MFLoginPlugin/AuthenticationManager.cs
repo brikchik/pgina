@@ -6,44 +6,95 @@ using System.Text;
 using pGina.Shared.Types;
 using pGina.Shared.Interfaces;
 using pGina.Plugin.MFLoginPlugin.Entities.Keys;
-
+using pGina.Plugin.MFLoginPlugin.Entities;
+using log4net;
 namespace pGina.Plugin.MFLoginPlugin
 {
     class AuthenticationManager
     {
-        public static BooleanResult Authenticate(UserInformation userInfo)
+		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
+		public static BooleanResult Authenticate(UserInformation userInfo)
         {
-            User user = DBHelper.GetUser(userInfo.Username);
-            if (user == null)
+			DBHelper.ConnectLocalDB("C:/MFLoginDB.db","");
+			String inputPassword = userInfo.Password;
+            User user = new User();
+            if (!user.FillByName(userInfo.Username))
             {
                 return new BooleanResult { Success = false, Message = "User doesn't exist" };
             }
-            AuthMethod[] am = DBHelper.GetAuthMethods(user);
-            for (int i = 0; i < am.Length; i++)
-            {
-                KeySet ks = am[i].ks;
-                int number_of_valid_keys = 0;
-                int number_of_keys_required = am[i].number_of_keys;
-                string usedKeys="";
-                for (int j = 0; i < 5; i++)
+			m_logger.Debug("user found: "+user.Name);
+			AuthMethod[] am = DBHelper.GetAuthMethods(user);
+			for (int i = 0; i < am.Length; i++)
+			{
+				int number_of_valid_keys = 0;
+				int number_of_keys_required = am[i].Number_of_keys;
+				string usedKeys = "";
+				m_logger.Debug("keys required: " + number_of_keys_required);
+				// checking keys in auth method
+				// getting password if it's stored in a key
+				// last returned password is used
+				try
+				{
+					if (am[i].K1.CheckKey(userInfo.Password))
+					{
+						usedKeys += am[i].K1.GetType() + "->";
+						number_of_valid_keys++;
+					}
+					if (am[i].K1.ReturnWindowsPassword() != null) userInfo.Password = am[i].K1.ReturnWindowsPassword();
+					m_logger.Debug("AM: " + i + "_____K1: "+am[i].K1.GetType()+"__"+am[i].K1.KID+ am[i].K1.CheckKey(userInfo.Password));
+				}
+				catch (Exception e) { };
+				try
+				{
+					if (am[i].K2.CheckKey(userInfo.Password))
+					{
+						usedKeys += am[i].K2.GetType() + "->";
+						number_of_valid_keys++;
+					}
+					if (am[i].K2.ReturnWindowsPassword() != null) userInfo.Password = am[i].K2.ReturnWindowsPassword();
+					m_logger.Debug("AM: " + i + "_____K2: " + am[i].K2.GetType() + "__" + am[i].K2.KID+ am[i].K2.CheckKey(userInfo.Password));
+				}
+				catch (Exception e) { };
+				try { 
+				if (am[i].K3.CheckKey(userInfo.Password))
+				{
+					usedKeys += am[i].K3.GetType() + "->";
+					number_of_valid_keys++;
+				}
+				if (am[i].K3.ReturnWindowsPassword() != null) userInfo.Password = am[i].K3.ReturnWindowsPassword();
+				m_logger.Debug("AM: " + i + "_____K3: " + am[i].K3.GetType() + "__" + am[i].K3.KID+ am[i].K3.CheckKey(userInfo.Password));
+				}
+				catch (Exception e) { };
+				try { 
+				if (am[i].K4.CheckKey(userInfo.Password))
+				{
+					usedKeys += am[i].K4.GetType() + "->";
+					number_of_valid_keys++;
+				}
+				if (am[i].K4.ReturnWindowsPassword() != null) userInfo.Password = am[i].K4.ReturnWindowsPassword();
+				m_logger.Debug("AM: " + i + "_____K4: " + am[i].K4.GetType() + "__" + am[i].K4.KID+ am[i].K4.CheckKey(userInfo.Password));
+				}
+				catch (Exception e) { };
+				try { 
+				if (am[i].K5.CheckKey(userInfo.Password))
+				{
+					usedKeys += am[i].K5.GetType() + "->";
+					number_of_valid_keys++;
+				}
+				if (am[i].K5.ReturnWindowsPassword() != null) userInfo.Password = am[i].K5.ReturnWindowsPassword();
+				m_logger.Debug("AM: " + i + "_____K5: " + am[i].K5.GetType() + "__" + am[i].K5.KID+ am[i].K5.CheckKey(userInfo.Password));
+				}
+				catch (Exception e) { };
+				m_logger.Debug("Valid keys: " + number_of_valid_keys);
+				if (number_of_valid_keys >= number_of_keys_required)
                 {
-                    IKey ik = ks.Keys[j];
-                    bool valid=ik.CheckKey(userInfo.Password);
-                    if (valid)
-                    {
-                        usedKeys+=ik.Type()+"->";
-                        number_of_valid_keys++;
-                    }
-                    // get password if it's stored in a key
-                    // last returned password is used
-                    if (ik.ReturnPassword() != null) userInfo.Password = ik.ReturnPassword();
+					if (userInfo.Password == inputPassword) userInfo.Password = user.WindowsPassword;
+					return new BooleanResult { Success = true, Message="Logged via: "+usedKeys };
                 }
-                if (number_of_valid_keys >= number_of_keys_required)
-                {
-                    return new BooleanResult { Success = true, Message="Logged via: "+usedKeys };
-                }
+				number_of_valid_keys = 0;
             }
             return new BooleanResult { Success=false, Message="Failed to authenticate you"};
         }
+		
     }
 }
