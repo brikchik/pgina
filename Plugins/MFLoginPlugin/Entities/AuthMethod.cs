@@ -10,20 +10,16 @@ namespace pGina.Plugin.MFLoginPlugin
     class AuthMethod
     {
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
-		public AuthMethod(ulong amid = 0, User user = null) {
+		public AuthMethod(User user=null) {
+			if (user != null) UID = user.UID;
+			SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(AMID) AS MAX_AMID FROM AUTH_METHOD", DBHelper.connection);
+			SQLiteDataReader r = sqlc.ExecuteReader();
+			r.Read();
+			try	{AMID = ulong.Parse(r["MAX_AMID"].ToString()) + 1;} catch (Exception e) { AMID = 0; m_logger.Debug("Unable to create new Auth_method"); }
+		}
+		public AuthMethod(ulong amid)
+		{
 			if (amid != 0) AMID = amid;
-			else if (user != null) UID = user.UID;
-			else
-			{
-				SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(AMID) AS MAX_AMID FROM AUTH_METHOD", DBHelper.connection);
-				SQLiteDataReader r = sqlc.ExecuteReader();
-				r.Read();
-				try
-				{
-					AMID = ulong.Parse(r["MAX_AMID"].ToString()) + 1;
-				}
-				catch (Exception e) { AMID = 1; }
-			}
 		}
 		public ulong AMID=0;
         public ulong UID=0;
@@ -70,20 +66,26 @@ namespace pGina.Plugin.MFLoginPlugin
 				sqlc = new SQLiteCommand("INSERT INTO AUTH_METHOD VALUES($AMID, $UID, $K1, $K2, $K3, $K4, $K5, $Description, $Number_of_keys, $Hash)", DBHelper.connection);
 			sqlc.Parameters.AddWithValue("$AMID", AMID);
 			sqlc.Parameters.AddWithValue("$UID", UID);
-			sqlc.Parameters.AddWithValue("$K1", K1.KID);
-			sqlc.Parameters.AddWithValue("$K2", K2.KID);
-			sqlc.Parameters.AddWithValue("$K3", K3.KID);
-			sqlc.Parameters.AddWithValue("$K4", K4.KID);
-			sqlc.Parameters.AddWithValue("$K5", K5.KID);
+			try { sqlc.Parameters.AddWithValue("$K1", K1.KID); } catch { sqlc.Parameters.AddWithValue("$K1", 0); }
+			try { sqlc.Parameters.AddWithValue("$K2", K2.KID);} catch { sqlc.Parameters.AddWithValue("$K2", 0); }
+			try { sqlc.Parameters.AddWithValue("$K3", K3.KID); } catch { sqlc.Parameters.AddWithValue("$K3", 0); }
+			try { sqlc.Parameters.AddWithValue("$K4", K4.KID);} catch { sqlc.Parameters.AddWithValue("$K4", 0); }
+			try { sqlc.Parameters.AddWithValue("$K5", K5.KID); } catch { sqlc.Parameters.AddWithValue("$K5", 0); }
 			sqlc.Parameters.AddWithValue("$Description", Description);
 			sqlc.Parameters.AddWithValue("$Number_of_keys", Number_of_keys);
 			
 			sqlc.Parameters.AddWithValue("$Hash", Hash);
 			return (sqlc.ExecuteNonQuery() == 1);
 		}
+		public bool Delete() {
+			SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM AUTH_METHOD WHERE AMID=$AMID", DBHelper.connection);
+			sqlc.Parameters.AddWithValue("$AMID", AMID);
+			bool deleted = (sqlc.ExecuteScalar() != null);
+			return deleted;
+		}
 		public override string ToString()
 		{
-			return "" + AMID + "_" + UID+"_K: "+"_||_"+Number_of_keys+"///"+Description;
+			return "" + AMID +"_K: "+"_||"+Description;
 		}
 	}
 }

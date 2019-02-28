@@ -54,7 +54,35 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return Users.ToArray();
 		}
-        public static void ConnectToRemoteDB(string path) { throw new NotImplementedException(); }
+		public static Key[] ReadKeys()
+		{
+			List<Key> Keys = new List<Key>();
+			if (connection.State != System.Data.ConnectionState.Open) return null;
+			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS;", connection);
+			SQLiteDataReader r = sqlc.ExecuteReader();
+			while (r.Read())
+			{
+				Key newKey = Key.DefineKey(ulong.Parse(r["KID"].ToString()));
+				newKey.Fill();
+				Keys.Add(newKey);
+			}
+			return Keys.ToArray();
+		}
+		public static AuthMethod[] ReadAuthMethods()
+		{
+			List<AuthMethod> AMs = new List<AuthMethod>();
+			if (connection.State != System.Data.ConnectionState.Open) return null;
+			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHODS;", connection);
+			SQLiteDataReader r = sqlc.ExecuteReader();
+			while (r.Read())
+			{
+				AuthMethod newAM = new AuthMethod(ulong.Parse(r["AMID"].ToString()));
+				newAM.Fill();
+				AMs.Add(newAM);
+			}
+			return AMs.ToArray();
+		}
+		public static void ConnectToRemoteDB(string path) { throw new NotImplementedException(); }
 
 		public static AuthMethod[] GetAuthMethods(User user) {
 			List<AuthMethod> authMethods=new List<AuthMethod>();

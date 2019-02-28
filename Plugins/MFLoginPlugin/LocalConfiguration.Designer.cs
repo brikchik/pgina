@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.InactiveBorder, null);
-			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "USB"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.InactiveBorder, null);
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LocalConfiguration));
 			this.tabControl = new System.Windows.Forms.TabControl();
@@ -44,10 +44,8 @@
 			this.userName_textBox = new System.Windows.Forms.TextBox();
 			this.authConfig = new System.Windows.Forms.GroupBox();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.button1 = new System.Windows.Forms.Button();
+			this.removeAuthMethod_button = new System.Windows.Forms.Button();
 			this.newAuthMethod_button = new System.Windows.Forms.Button();
-			this.nextAuthMethod_button = new System.Windows.Forms.Button();
-			this.prevAuthMethod_button = new System.Windows.Forms.Button();
 			this.authMethods_listBox = new System.Windows.Forms.ListBox();
 			this.keepPassword_checkBox = new System.Windows.Forms.CheckBox();
 			this.openingPictureBox = new System.Windows.Forms.PictureBox();
@@ -84,6 +82,7 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+			this.keysListBox = new System.Windows.Forms.ListBox();
 			this.tabControl.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.fastChoice_groupBox.SuspendLayout();
@@ -148,11 +147,11 @@
 			this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
 			this.fastChoiceTypes_listView.AutoArrange = false;
 			this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			listViewItem1.Tag = "Password";
-			listViewItem2.Tag = "USBDevice";
+			listViewItem3.Tag = "Password";
+			listViewItem4.Tag = "USBDevice";
 			this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2});
+            listViewItem3,
+            listViewItem4});
 			this.fastChoiceTypes_listView.LabelWrap = false;
 			this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
 			this.fastChoiceTypes_listView.MultiSelect = false;
@@ -269,25 +268,24 @@
 			// panel1
 			// 
 			this.panel1.BackColor = System.Drawing.SystemColors.ScrollBar;
-			this.panel1.Controls.Add(this.button1);
+			this.panel1.Controls.Add(this.removeAuthMethod_button);
 			this.panel1.Controls.Add(this.newAuthMethod_button);
-			this.panel1.Controls.Add(this.nextAuthMethod_button);
-			this.panel1.Controls.Add(this.prevAuthMethod_button);
 			this.panel1.Controls.Add(this.authMethods_listBox);
 			this.panel1.Location = new System.Drawing.Point(7, 21);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(379, 98);
 			this.panel1.TabIndex = 24;
 			// 
-			// button1
+			// removeAuthMethod_button
 			// 
-			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this.button1.Location = new System.Drawing.Point(219, 51);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(147, 39);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "REMOVE authentication method";
-			this.button1.UseVisualStyleBackColor = true;
+			this.removeAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this.removeAuthMethod_button.Location = new System.Drawing.Point(219, 51);
+			this.removeAuthMethod_button.Name = "removeAuthMethod_button";
+			this.removeAuthMethod_button.Size = new System.Drawing.Size(147, 39);
+			this.removeAuthMethod_button.TabIndex = 4;
+			this.removeAuthMethod_button.Text = "REMOVE authentication method";
+			this.removeAuthMethod_button.UseVisualStyleBackColor = true;
+			this.removeAuthMethod_button.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// newAuthMethod_button
 			// 
@@ -298,26 +296,7 @@
 			this.newAuthMethod_button.TabIndex = 3;
 			this.newAuthMethod_button.Text = "NEW authentication method";
 			this.newAuthMethod_button.UseVisualStyleBackColor = true;
-			// 
-			// nextAuthMethod_button
-			// 
-			this.nextAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F);
-			this.nextAuthMethod_button.Location = new System.Drawing.Point(163, 51);
-			this.nextAuthMethod_button.Name = "nextAuthMethod_button";
-			this.nextAuthMethod_button.Size = new System.Drawing.Size(44, 39);
-			this.nextAuthMethod_button.TabIndex = 2;
-			this.nextAuthMethod_button.Text = "↓";
-			this.nextAuthMethod_button.UseVisualStyleBackColor = true;
-			// 
-			// prevAuthMethod_button
-			// 
-			this.prevAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F);
-			this.prevAuthMethod_button.Location = new System.Drawing.Point(163, 6);
-			this.prevAuthMethod_button.Name = "prevAuthMethod_button";
-			this.prevAuthMethod_button.Size = new System.Drawing.Size(44, 39);
-			this.prevAuthMethod_button.TabIndex = 1;
-			this.prevAuthMethod_button.Text = "↑";
-			this.prevAuthMethod_button.UseVisualStyleBackColor = true;
+			this.newAuthMethod_button.Click += new System.EventHandler(this.newAuthMethod_button_Click);
 			// 
 			// authMethods_listBox
 			// 
@@ -327,7 +306,7 @@
             "Authentication method 1"});
 			this.authMethods_listBox.Location = new System.Drawing.Point(4, 6);
 			this.authMethods_listBox.Name = "authMethods_listBox";
-			this.authMethods_listBox.Size = new System.Drawing.Size(153, 84);
+			this.authMethods_listBox.Size = new System.Drawing.Size(209, 84);
 			this.authMethods_listBox.TabIndex = 0;
 			this.authMethods_listBox.SelectedIndexChanged += new System.EventHandler(this.authMethods_listBox_SelectedIndexChanged);
 			// 
@@ -392,6 +371,7 @@
             0,
             0,
             0});
+			this.keysRequired_NumUpDown.ValueChanged += new System.EventHandler(this.keysRequired_NumUpDown_ValueChanged);
 			// 
 			// key5Label
 			// 
@@ -539,6 +519,7 @@
 			this.addUser_button.TabIndex = 6;
 			this.addUser_button.Text = "Add existing";
 			this.addUser_button.UseVisualStyleBackColor = true;
+			this.addUser_button.Click += new System.EventHandler(this.addUser_button_Click);
 			// 
 			// userListBox
 			// 
@@ -552,6 +533,7 @@
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.keysListBox);
 			this.tabPage3.Controls.Add(this.newKey_label);
 			this.tabPage3.Controls.Add(this.newBluetooth_button);
 			this.tabPage3.Controls.Add(this.newUSB_button);
@@ -729,6 +711,15 @@
 			this.toolStripButton3.Text = "OK";
 			this.toolStripButton3.Click += new System.EventHandler(this.btnOk_Click);
 			// 
+			// keysListBox
+			// 
+			this.keysListBox.FormattingEnabled = true;
+			this.keysListBox.ItemHeight = 15;
+			this.keysListBox.Location = new System.Drawing.Point(185, 18);
+			this.keysListBox.Name = "keysListBox";
+			this.keysListBox.Size = new System.Drawing.Size(246, 334);
+			this.keysListBox.TabIndex = 14;
+			// 
 			// LocalConfiguration
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -812,10 +803,9 @@
 		private System.Windows.Forms.Button createUser_button;
 		private System.Windows.Forms.Button addUser_button;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Button prevAuthMethod_button;
 		private System.Windows.Forms.ListBox authMethods_listBox;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button removeAuthMethod_button;
 		private System.Windows.Forms.Button newAuthMethod_button;
-		private System.Windows.Forms.Button nextAuthMethod_button;
+		private System.Windows.Forms.ListBox keysListBox;
 	}
 }

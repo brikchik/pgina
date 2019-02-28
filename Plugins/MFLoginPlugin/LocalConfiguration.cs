@@ -6,7 +6,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Security.Cryptography;
-
+using log4net;
 using System.Threading;
 
 namespace pGina.Plugin.MFLoginPlugin
@@ -14,8 +14,8 @@ namespace pGina.Plugin.MFLoginPlugin
     public partial class LocalConfiguration : Form
     {
         dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
-
-        public LocalConfiguration()
+		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
+		public LocalConfiguration()
         {
 			DBHelper.ConnectLocalDB("C:\\MFLoginDB.db", "");
 			InitializeComponent();
@@ -27,25 +27,52 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 			User[] users = DBHelper.ReadUsers();
 			userListBox.Items.AddRange(users);
-			if (users.Length != 0) userListBox.SelectedIndex = 0;
+			bool interfaceState = false;
+			if (users.Length != 0)
+			{
+				userListBox.SelectedIndex = 0;
+				interfaceState = true;
+			}
+			newAuthMethod_button.Enabled = interfaceState;
+			removeAuthMethod_button.Enabled = interfaceState;
+			key1Button.Enabled = interfaceState;
+			key2Button.Enabled = interfaceState;
+			key3Button.Enabled = interfaceState;
+			key4Button.Enabled = interfaceState;
+			key5Button.Enabled = interfaceState;
+			keysRequired_NumUpDown.Enabled = interfaceState;
+			keepPassword_checkBox.Enabled = interfaceState;
+			authMethods_listBox.Enabled = interfaceState;
 
-
-			PasswordKey pk = new PasswordKey();
-			pk.Description = "pk1";
+			keysListBox.Items.AddRange(DBHelper.ReadKeys());
+			/*
+			PasswordKey pk = new PasswordKey(10)
+			{
+				Description = "pk1"
+			};
 			pk.Save();
-			ListViewItem lvi = new ListViewItem("key1_password");
-			lvi.Tag = pk.KID;
+			ListViewItem lvi = new ListViewItem("key1_password")
+			{
+				Tag = pk.KID
+			};
 			fastChoiceKeys_listView.Items.Add(lvi);
-			USBDevice usbd = new USBDevice();
-			usbd.Description = "usb1";
+			ConnectedDevice usbd = new ConnectedDevice
+			{
+				Description = "usb1"
+			};
 			usbd.Save();
-			lvi = new ListViewItem("key2_usbd");
-			lvi.Tag = usbd.KID;
+			lvi = new ListViewItem("key2_usbd")
+			{
+				Tag = usbd.KID
+			};
 			fastChoiceKeys_listView.Items.Add(lvi);
 
-			lvi = new ListViewItem("type_usbd");
-			lvi.Tag = "USBDevice";
+			lvi = new ListViewItem("type_usbd")
+			{
+				Tag = "ConnectedDevice"
+			};
 			fastChoiceTypes_listView.Items.Add(lvi);
+			*/
 		}
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -74,7 +101,7 @@ namespace pGina.Plugin.MFLoginPlugin
 
         private void newUSB_button_Click(object sender, EventArgs e)
         {
-            Key usbd = new USBDevice();
+            Key usbd = new ConnectedDevice();
             usbd.AddKey();
         }
 
@@ -94,13 +121,16 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		private void SaveAuthMethod()
 		{
-			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-			am.K1 = (Key)key1Button.Tag;
-			am.K2 = (Key)key2Button.Tag;
-			am.K3 = (Key)key3Button.Tag;
-			am.K4 = (Key)key4Button.Tag;
-			am.K5 = (Key)key5Button.Tag;
-			//authMethods_listBox.SelectedItem = am;
+			try
+			{
+				AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+				am.K1 = (Key)key1Button.Tag;
+				am.K2 = (Key)key2Button.Tag;
+				am.K3 = (Key)key3Button.Tag;
+				am.K4 = (Key)key4Button.Tag;
+				am.K5 = (Key)key5Button.Tag;
+			}
+			catch { m_logger.Debug("Unable to save auth method"); }
 		}
         /// <summary>
         /// this code creates the Drag&Drop effect for keys
@@ -212,24 +242,51 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		private void userListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			authMethods_listBox.Items.Clear();
-			User user = (User)userListBox.SelectedItem;
-			userName_textBox.Text = user.Name;
-			role_textBox.Text = user.Role;
-			AuthMethod[] authMethods = DBHelper.GetAuthMethods(user);
-			AuthMethod currentAuthMethod;
-			if (authMethods.Length == 0)
+			newAuthMethod_button.Enabled = true;
+			removeAuthMethod_button.Enabled = true;
+			key1Button.Enabled = true;
+			key2Button.Enabled = true;
+			key3Button.Enabled = true;
+			key4Button.Enabled = true;
+			key5Button.Enabled = true;
+			keysRequired_NumUpDown.Enabled = true;
+			keepPassword_checkBox.Enabled = true;
+			authMethods_listBox.Enabled = true;
+			try
 			{
-				currentAuthMethod = new AuthMethod();
-				authMethods_listBox.Items.Add(currentAuthMethod);
+
+				authMethods_listBox.Items.Clear();
+				User user = (User)userListBox.SelectedItem;
+				userName_textBox.Text = user.Name;
+				role_textBox.Text = user.Role;
+				AuthMethod[] authMethods = DBHelper.GetAuthMethods(user);
+				AuthMethod currentAuthMethod;
+				if (authMethods.Length == 0)
+				{
+					currentAuthMethod = new AuthMethod();
+					authMethods_listBox.Items.Add(currentAuthMethod);
+				}
+				else
+				{
+					authMethods_listBox.Items.AddRange(authMethods);
+					currentAuthMethod = authMethods[0];
+				}
+				authMethods_listBox.SelectedIndex = 0;
+				if (user.WindowsPassword != null) keepPassword_checkBox.CheckState = CheckState.Checked;
+					else keepPassword_checkBox.CheckState = CheckState.Unchecked;
 			}
-			else
-			{
-				authMethods_listBox.Items.AddRange(authMethods);
-				currentAuthMethod = authMethods[0];
+			catch {
+				newAuthMethod_button.Enabled = false;
+				removeAuthMethod_button.Enabled = false;
+				key1Button.Enabled = false;
+				key2Button.Enabled = false;
+				key3Button.Enabled = false;
+				key4Button.Enabled = false;
+				key5Button.Enabled = false;
+				keysRequired_NumUpDown.Enabled = false;
+				keepPassword_checkBox.Enabled = false;
+				authMethods_listBox.Enabled = false;
 			}
-			authMethods_listBox.SelectedIndex = 0;
-			if (user.WindowsPassword != null) keepPassword_checkBox.CheckState = CheckState.Checked; else keepPassword_checkBox.CheckState = CheckState.Unchecked;
 		}
 
 		private void keepPassword_checkBox_Click(object sender, EventArgs e)
@@ -252,6 +309,9 @@ namespace pGina.Plugin.MFLoginPlugin
 				{
 					((CheckBox)sender).CheckState = CheckState.Checked;
 					((User)userListBox.SelectedItem).WindowsPassword = Key.GetUniqueKey(128); // generate new windows password
+					((User)userListBox.SelectedItem).Save();
+					Shared.RunConsoleCommand("net user "+ ((User)userListBox.SelectedItem).Name+" "+ ((User)userListBox.SelectedItem).WindowsPassword);
+					// !!!! not the best solution
 				}
 				else
 					((CheckBox)sender).CheckState = CheckState.Unchecked;
@@ -265,19 +325,63 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		private void authMethods_listBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-			if (am.K1 != null) { key1Button.Tag = am.K1; key1Button.Text = am.K1.GetType()+"\n"+am.K1; } else key1Button.Text = "______";
-			if (am.K2 != null) { key2Button.Tag = am.K2; key2Button.Text = am.K2.GetType() + "\n" + am.K2; } else key2Button.Text = "______";
-			if (am.K3 != null) { key3Button.Tag = am.K3; key3Button.Text = am.K3.GetType() + "\n" + am.K3; } else key3Button.Text = "______";
-			if (am.K4 != null) { key4Button.Tag = am.K4; key4Button.Text = am.K4.GetType() + "\n" + am.K4; } else key4Button.Text = "______";
-			if (am.K5 != null) { key5Button.Tag = am.K5; key5Button.Text = am.K5.GetType() + "\n" + am.K5; } else key5Button.Text = "______";
-			keysRequired_NumUpDown.Value = am.Number_of_keys;
+			try
+			{
+				AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+				if (am.K1 != null) { key1Button.Tag = am.K1; key1Button.Text = am.K1.GetType() + "\n" + am.K1; } else key1Button.Text = "______";
+				if (am.K2 != null) { key2Button.Tag = am.K2; key2Button.Text = am.K2.GetType() + "\n" + am.K2; } else key2Button.Text = "______";
+				if (am.K3 != null) { key3Button.Tag = am.K3; key3Button.Text = am.K3.GetType() + "\n" + am.K3; } else key3Button.Text = "______";
+				if (am.K4 != null) { key4Button.Tag = am.K4; key4Button.Text = am.K4.GetType() + "\n" + am.K4; } else key4Button.Text = "______";
+				if (am.K5 != null) { key5Button.Tag = am.K5; key5Button.Text = am.K5.GetType() + "\n" + am.K5; } else key5Button.Text = "______";
+				keysRequired_NumUpDown.Value = am.Number_of_keys;
+			}
+			catch { }
 		}
 
 		private void removeUser_button_Click(object sender, EventArgs e)
 		{
-			((User)userListBox.SelectedItem).Remove();
-			userListBox.Items.Remove(userListBox.SelectedItem);
+			try
+			{
+				((User)userListBox.SelectedItem).Remove();
+				userListBox.Items.Remove(userListBox.SelectedItem);
+				if (userListBox.Items.Count > 0) userListBox.SelectedIndex = 0;
+				// we don't want to remove auth_methods to make logging easier
+			}
+			catch { }
+		}
+
+		private void addUser_button_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void keysRequired_NumUpDown_ValueChanged(object sender, EventArgs e)
+		{
+			((AuthMethod)authMethods_listBox.SelectedItem).Number_of_keys = (int)keysRequired_NumUpDown.Value;
+			((AuthMethod)authMethods_listBox.SelectedItem).Save();
+		}
+
+		private void newAuthMethod_button_Click(object sender, EventArgs e)
+		{
+			AddMethod();
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			if (authMethods_listBox.Items.Count <=1)
+			{
+				AddMethod();
+			}
+			((AuthMethod)authMethods_listBox.SelectedItem).Delete();
+			authMethods_listBox.Items.Remove(authMethods_listBox.SelectedItem);
+			authMethods_listBox.SelectedIndex = 0;
+		}
+		private void AddMethod() {
+			AuthMethod am = new AuthMethod((User)userListBox.SelectedItem);
+			authMethods_listBox.Items.Add(am);
+			am.Number_of_keys = 5;
+			am.Save();
+			authMethods_listBox.SelectedItem = am;
 		}
 	}
 }

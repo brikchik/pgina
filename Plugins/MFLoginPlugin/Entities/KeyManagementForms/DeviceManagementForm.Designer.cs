@@ -1,6 +1,6 @@
 ﻿namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 {
-    partial class USBManagementForm
+    partial class DeviceManagementForm
     {
         /// <summary>
         /// Required designer variable.

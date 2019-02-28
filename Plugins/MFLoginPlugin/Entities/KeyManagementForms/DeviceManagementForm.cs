@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 {
-    public partial class USBManagementForm : Form
+    public partial class DeviceManagementForm : Form
     {
-        public USBManagementForm()
+        public DeviceManagementForm()
         {
             InitializeComponent();
         }

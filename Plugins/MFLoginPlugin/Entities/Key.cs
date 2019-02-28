@@ -27,13 +27,14 @@ namespace pGina.Plugin.MFLoginPlugin
 			switch (type)
 			{
 				case "Password": key=new PasswordKey(kid); break;
-				case "USBDevice": key= new USBDevice(kid); break;
+				case "ConnectedDevice": key= new ConnectedDevice(kid); break;
+				case "BluetoothDevice": key = new BluetoothDevice(kid); break;
 				default:break;
 			}
 			if(key!=null)key.Fill();
 			return key;
 		}
-		public static String[] KeyTypes= { "Password", "USBDevice"};
+		public static String[] KeyTypes= { "Password", "ConnectedDevice", "BluetoothDevice"};
         // each key has to provide a key creation window
         public ulong KID=0;
 		public string Description="";
@@ -106,7 +107,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		public override string ToString()
 		{
-			return Type + Description;
+			return Type + ": " + Description+ " ("+KID+")";
 		}
 		public virtual bool CheckKey(string password) { m_logger.Debug("Key.CheckKey called... That wasn't supposed to happen"); return false; }// All _keys_ behave similarly. abstract key is wrong
 
