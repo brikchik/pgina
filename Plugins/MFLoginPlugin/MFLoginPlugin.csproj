@@ -99,11 +99,11 @@
     <Compile Include="Entities\KeyManagementForms\PasswordManagementForm.Designer.cs">
       <DependentUpon>PasswordManagementForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\DeviceManagementForm.cs">
+    <Compile Include="Entities\KeyManagementForms\ConnectedDeviceManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\DeviceManagementForm.Designer.cs">
-      <DependentUpon>DeviceManagementForm.cs</DependentUpon>
+    <Compile Include="Entities\KeyManagementForms\ConnectedDeviceManagementForm.Designer.cs">
+      <DependentUpon>ConnectedDeviceManagementForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\Keys\PasswordKey.cs" />
     <Compile Include="Entities\LogEntity.cs" />
@@ -125,6 +125,12 @@
     <Compile Include="Shared.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Entities\KeyManagementForms\BluetoothManagementForm.resx">
+      <DependentUpon>BluetoothManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Entities\KeyManagementForms\ConnectedDeviceManagementForm.resx">
+      <DependentUpon>ConnectedDeviceManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Entities\KeyManagementForms\KeySelectionForm.resx">
       <DependentUpon>KeySelectionForm.cs</DependentUpon>
     </EmbeddedResource>

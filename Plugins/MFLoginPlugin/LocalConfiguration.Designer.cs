@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("BluetoothDevice");
+			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.InactiveBorder, null);
 			System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.InactiveBorder, null);
-			System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
-            "USB"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.InactiveBorder, null);
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LocalConfiguration));
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.fastChoice_groupBox = new System.Windows.Forms.GroupBox();
 			this.fastChoiceTypes_listView = new System.Windows.Forms.ListView();
-			this.fastChoiceKeys_listView = new System.Windows.Forms.ListView();
 			this.user_groupBox = new System.Windows.Forms.GroupBox();
 			this.userIconPictureBox = new System.Windows.Forms.PictureBox();
 			this.role_textBox = new System.Windows.Forms.TextBox();
@@ -68,6 +68,7 @@
 			this.addUser_button = new System.Windows.Forms.Button();
 			this.userListBox = new System.Windows.Forms.ListBox();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.keysListBox = new System.Windows.Forms.ListBox();
 			this.newKey_label = new System.Windows.Forms.Label();
 			this.newBluetooth_button = new System.Windows.Forms.Button();
 			this.newUSB_button = new System.Windows.Forms.Button();
@@ -82,7 +83,8 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-			this.keysListBox = new System.Windows.Forms.ListBox();
+			this.removeUnusedKeys_button = new System.Windows.Forms.Button();
+			this.refreshKeyList_button = new System.Windows.Forms.Button();
 			this.tabControl.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.fastChoice_groupBox.SuspendLayout();
@@ -134,7 +136,6 @@
 			// 
 			this.fastChoice_groupBox.BackColor = System.Drawing.Color.Thistle;
 			this.fastChoice_groupBox.Controls.Add(this.fastChoiceTypes_listView);
-			this.fastChoice_groupBox.Controls.Add(this.fastChoiceKeys_listView);
 			this.fastChoice_groupBox.Location = new System.Drawing.Point(473, 219);
 			this.fastChoice_groupBox.Name = "fastChoice_groupBox";
 			this.fastChoice_groupBox.Size = new System.Drawing.Size(456, 138);
@@ -147,42 +148,28 @@
 			this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
 			this.fastChoiceTypes_listView.AutoArrange = false;
 			this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+			listViewItem1.Tag = "BluetoothDevice";
+			listViewItem2.Tag = "ConnectedDevice";
 			listViewItem3.Tag = "Password";
-			listViewItem4.Tag = "USBDevice";
 			this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3,
-            listViewItem4});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
 			this.fastChoiceTypes_listView.LabelWrap = false;
 			this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
 			this.fastChoiceTypes_listView.MultiSelect = false;
 			this.fastChoiceTypes_listView.Name = "fastChoiceTypes_listView";
 			this.fastChoiceTypes_listView.ShowGroups = false;
-			this.fastChoiceTypes_listView.Size = new System.Drawing.Size(210, 109);
+			this.fastChoiceTypes_listView.Size = new System.Drawing.Size(443, 109);
 			this.fastChoiceTypes_listView.Sorting = System.Windows.Forms.SortOrder.Ascending;
 			this.fastChoiceTypes_listView.TabIndex = 4;
 			this.fastChoiceTypes_listView.UseCompatibleStateImageBehavior = false;
+			this.fastChoiceTypes_listView.View = System.Windows.Forms.View.Tile;
 			this.fastChoiceTypes_listView.SelectedIndexChanged += new System.EventHandler(this.fastChoiceTypes_listView_SelectedIndexChanged);
+			this.fastChoiceTypes_listView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fastChoiceTypes_listView_MouseDoubleClick);
 			this.fastChoiceTypes_listView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseDown);
 			this.fastChoiceTypes_listView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseMove);
 			this.fastChoiceTypes_listView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseUp);
-			// 
-			// fastChoiceKeys_listView
-			// 
-			this.fastChoiceKeys_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-			this.fastChoiceKeys_listView.AutoArrange = false;
-			this.fastChoiceKeys_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.fastChoiceKeys_listView.LabelWrap = false;
-			this.fastChoiceKeys_listView.Location = new System.Drawing.Point(226, 20);
-			this.fastChoiceKeys_listView.MultiSelect = false;
-			this.fastChoiceKeys_listView.Name = "fastChoiceKeys_listView";
-			this.fastChoiceKeys_listView.ShowGroups = false;
-			this.fastChoiceKeys_listView.Size = new System.Drawing.Size(224, 109);
-			this.fastChoiceKeys_listView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.fastChoiceKeys_listView.TabIndex = 5;
-			this.fastChoiceKeys_listView.UseCompatibleStateImageBehavior = false;
-			this.fastChoiceKeys_listView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseDown);
-			this.fastChoiceKeys_listView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseMove);
-			this.fastChoiceKeys_listView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseUp);
 			// 
 			// user_groupBox
 			// 
@@ -203,7 +190,7 @@
 			this.userIconPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.user_logo;
 			this.userIconPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.userIconPictureBox.InitialImage = null;
-			this.userIconPictureBox.Location = new System.Drawing.Point(6, 24);
+			this.userIconPictureBox.Location = new System.Drawing.Point(6, 61);
 			this.userIconPictureBox.Name = "userIconPictureBox";
 			this.userIconPictureBox.Size = new System.Drawing.Size(70, 73);
 			this.userIconPictureBox.TabIndex = 17;
@@ -214,7 +201,7 @@
 			this.role_textBox.BackColor = System.Drawing.SystemColors.Info;
 			this.role_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
 			this.role_textBox.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-			this.role_textBox.Location = new System.Drawing.Point(82, 24);
+			this.role_textBox.Location = new System.Drawing.Point(82, 110);
 			this.role_textBox.MaxLength = 30;
 			this.role_textBox.Name = "role_textBox";
 			this.role_textBox.ReadOnly = true;
@@ -228,7 +215,7 @@
 			// 
 			this.userName_textBox.BackColor = System.Drawing.SystemColors.Info;
 			this.userName_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-			this.userName_textBox.Location = new System.Drawing.Point(6, 105);
+			this.userName_textBox.Location = new System.Drawing.Point(6, 29);
 			this.userName_textBox.MaxLength = 128;
 			this.userName_textBox.Name = "userName_textBox";
 			this.userName_textBox.ReadOnly = true;
@@ -533,6 +520,8 @@
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.refreshKeyList_button);
+			this.tabPage3.Controls.Add(this.removeUnusedKeys_button);
 			this.tabPage3.Controls.Add(this.keysListBox);
 			this.tabPage3.Controls.Add(this.newKey_label);
 			this.tabPage3.Controls.Add(this.newBluetooth_button);
@@ -546,6 +535,15 @@
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Keys";
 			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// keysListBox
+			// 
+			this.keysListBox.FormattingEnabled = true;
+			this.keysListBox.ItemHeight = 15;
+			this.keysListBox.Location = new System.Drawing.Point(185, 18);
+			this.keysListBox.Name = "keysListBox";
+			this.keysListBox.Size = new System.Drawing.Size(246, 334);
+			this.keysListBox.TabIndex = 14;
 			// 
 			// newKey_label
 			// 
@@ -711,14 +709,25 @@
 			this.toolStripButton3.Text = "OK";
 			this.toolStripButton3.Click += new System.EventHandler(this.btnOk_Click);
 			// 
-			// keysListBox
+			// removeUnusedKeys_button
 			// 
-			this.keysListBox.FormattingEnabled = true;
-			this.keysListBox.ItemHeight = 15;
-			this.keysListBox.Location = new System.Drawing.Point(185, 18);
-			this.keysListBox.Name = "keysListBox";
-			this.keysListBox.Size = new System.Drawing.Size(246, 334);
-			this.keysListBox.TabIndex = 14;
+			this.removeUnusedKeys_button.Location = new System.Drawing.Point(460, 272);
+			this.removeUnusedKeys_button.Name = "removeUnusedKeys_button";
+			this.removeUnusedKeys_button.Size = new System.Drawing.Size(154, 80);
+			this.removeUnusedKeys_button.TabIndex = 15;
+			this.removeUnusedKeys_button.Text = "Remove all unused keys from database";
+			this.removeUnusedKeys_button.UseVisualStyleBackColor = true;
+			this.removeUnusedKeys_button.Click += new System.EventHandler(this.removeUnusedKeys_button_Click);
+			// 
+			// refreshKeyList_button
+			// 
+			this.refreshKeyList_button.Location = new System.Drawing.Point(460, 221);
+			this.refreshKeyList_button.Name = "refreshKeyList_button";
+			this.refreshKeyList_button.Size = new System.Drawing.Size(154, 33);
+			this.refreshKeyList_button.TabIndex = 16;
+			this.refreshKeyList_button.Text = "Refresh";
+			this.refreshKeyList_button.UseVisualStyleBackColor = true;
+			this.refreshKeyList_button.Click += new System.EventHandler(this.refreshKeyList_button_Click);
 			// 
 			// LocalConfiguration
 			// 
@@ -798,7 +807,6 @@
 		private System.Windows.Forms.CheckBox keepPassword_checkBox;
 		private System.Windows.Forms.GroupBox user_groupBox;
 		private System.Windows.Forms.GroupBox fastChoice_groupBox;
-		private System.Windows.Forms.ListView fastChoiceKeys_listView;
 		private System.Windows.Forms.Button removeUser_button;
 		private System.Windows.Forms.Button createUser_button;
 		private System.Windows.Forms.Button addUser_button;
@@ -807,5 +815,7 @@
 		private System.Windows.Forms.Button removeAuthMethod_button;
 		private System.Windows.Forms.Button newAuthMethod_button;
 		private System.Windows.Forms.ListBox keysListBox;
+		private System.Windows.Forms.Button removeUnusedKeys_button;
+		private System.Windows.Forms.Button refreshKeyList_button;
 	}
 }

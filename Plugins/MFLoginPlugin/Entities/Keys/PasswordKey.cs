@@ -11,13 +11,19 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
     {
 		public PasswordKey(ulong kid):base(kid){ Type = "Password"; } // specific key
 		public PasswordKey():base(0) { Type = "Password"; } // empty key
-        public new string[] GetInfo() { return new String[] { Type, Password }; }// !!!!!!!!!!
-        public void AddKey(string newPassword) { Password = newPassword; }// has to be done in form
-        public new void AddKey() {
-            PasswordManagementForm pmf = new PasswordManagementForm();
+        public override void AddKey() {
+            PasswordManagementForm pmf = new PasswordManagementForm(KID);
             pmf.ShowDialog();
             Password = pmf.NewPassword;
+			Description = pmf.NewDescription;
+			Inverted = pmf.Inverted;
         }
-		public override bool CheckKey(string password) { return (password==Password); } // !!!!!!!!!! hash
+		public override bool CheckKey(string password) {
+			bool success = false;
+			success = (password == Password);
+			if (Inverted) success = !success;
+			log4net.LogManager.GetLogger("MFLoginPlugin").Error("" + password + " " + Password + "_" + Inverted+"_"+success);
+			return success;
+		} // !!!!
     }
 }

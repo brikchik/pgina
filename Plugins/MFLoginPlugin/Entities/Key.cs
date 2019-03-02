@@ -34,9 +34,21 @@ namespace pGina.Plugin.MFLoginPlugin
 			if(key!=null)key.Fill();
 			return key;
 		}
+		public static Key DefineKey(string type)
+		{
+			Key key = new Key(); // Get new key id
+			switch (type)
+			{
+				case "Password": key = new PasswordKey(key.KID); break;
+				case "ConnectedDevice": key = new ConnectedDevice(key.KID); break;
+				case "BluetoothDevice": key = new BluetoothDevice(key.KID); break;
+				default: break;
+			}
+			return key; // get appropriate key class
+		}
 		public static String[] KeyTypes= { "Password", "ConnectedDevice", "BluetoothDevice"};
         // each key has to provide a key creation window
-        public ulong KID=0;
+        public ulong KID;
 		public string Description="";
 		protected bool Inverted=false;
 		protected string Type="";
@@ -54,12 +66,13 @@ namespace pGina.Plugin.MFLoginPlugin
 			try { 
 			KID = ulong.Parse(r["MAX_KID"].ToString()) + 1;
 			}
-			catch (Exception e) { KID = 1; }
+			catch { KID = 1; }
 		}
 		public Key(ulong kid) { KID = kid; }
 
 		public string[] GetInfo() { return null; }
-		public void AddKey() { } // management form // ####
+		// management form
+		public virtual void AddKey() { m_logger.Debug("Key.AddKey called. That wasn't supposed to happen!"); } 
 		public bool Fill()
 		{
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE KID=$KID", DBHelper.connection);

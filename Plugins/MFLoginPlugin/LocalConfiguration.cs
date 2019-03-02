@@ -121,16 +121,12 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		private void SaveAuthMethod()
 		{
-			try
-			{
-				AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-				am.K1 = (Key)key1Button.Tag;
-				am.K2 = (Key)key2Button.Tag;
-				am.K3 = (Key)key3Button.Tag;
-				am.K4 = (Key)key4Button.Tag;
-				am.K5 = (Key)key5Button.Tag;
-			}
-			catch { m_logger.Debug("Unable to save auth method"); }
+			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+			try { am.K1 = Key.DefineKey((ulong)key1Button.Tag); } catch { }
+			try { am.K2 = Key.DefineKey((ulong)key2Button.Tag); } catch { }
+			try { am.K3 = Key.DefineKey((ulong)key3Button.Tag); } catch { }
+			try { am.K4 = Key.DefineKey((ulong)key4Button.Tag); } catch { }
+			try { am.K5 = Key.DefineKey((ulong)key5Button.Tag); } catch { }
 		}
         /// <summary>
         /// this code creates the Drag&Drop effect for keys
@@ -174,48 +170,31 @@ namespace pGina.Plugin.MFLoginPlugin
             if (e.Effect == DragDropEffects.Move)
             {
 				ListViewItem lvi=(ListViewItem)item;
-				string label;
-				if (lvi.Tag is String) label = lvi.Tag.ToString();
-				else
-					label = ((Key)lvi.Tag).GetType();
-				if (sender == key1Button) key1Button.Text = label;else
-				if (sender == key2Button) key2Button.Text = label;else
-				if (sender == key3Button) key3Button.Text = label;else
-				if (sender == key4Button) key4Button.Text = label;else
-				if (sender == key5Button) key5Button.Text = label;
-				ulong kid = 0; // number is key ID, string is a type
-				ulong.TryParse(lvi.Tag.ToString(), out kid);
-				if (kid != 0) ((Button)sender).Tag = lvi.Tag;
-				else
+				Key key = Key.DefineKey(lvi.Tag.ToString());
+				if (key == null)
 				{
-					KeySelectionForm ksf = new KeySelectionForm(label);
-					((Button)sender).Tag = ksf.Key;
+					m_logger.Debug("Unable to create key of type: "+lvi.Tag.ToString());
+					return;
 				}
+				key.AddKey();
+				string label = key.GetType() + '\n' + key.Description;
+				if (sender == key1Button) { key1Button.Text = label; key1Button.Tag = key.KID; }
+				else
+				if (sender == key2Button) { key2Button.Text = label; key2Button.Tag = key.KID; }
+				else
+				if (sender == key3Button) { key3Button.Text = label; key3Button.Tag = key.KID; }
+				else
+				if (sender == key4Button) { key4Button.Text = label; key4Button.Tag = key.KID; }
+				else
+				if (sender == key5Button) { key5Button.Text = label; key5Button.Tag = key.KID; }
+				else
+					MessageBox.Show("Unknown target");
+				// write changes to database
+				m_logger.Debug("Saving new key to DB: "+key.KID+' '+sender.GetType().ToString());
+				key.Save();
 				SaveAuthMethod();
-				// Chosen key class (or null) is stored in the TAG field of button.
             }
         }
-		private void DragTarget_DragDropKey(object sender, System.Windows.Forms.DragEventArgs e)
-		{
-			Object item = e.Data.GetData(typeof(System.Windows.Forms.ListViewItem));// check if object is empty
-			if (e.Effect == DragDropEffects.Move)
-			{
-				ListViewItem lvi = (ListViewItem)item;
-				Key key = (Key)lvi.Tag;
-				if (sender == key1Button) key1Button.Text = key.GetType();
-				else
-				if (sender == key2Button) key2Button.Text = key.GetType();
-				else
-				if (sender == key3Button) key3Button.Text = key.GetType();
-				else
-				if (sender == key4Button) key4Button.Text = key.GetType();
-				else
-				if (sender == key5Button) key5Button.Text = key.GetType();
-				((Button)sender).Tag = key;
-				SaveAuthMethod();
-				// Chosen key class (or null) is stored in the TAG field of button.
-			}
-		}
 		private void DragTarget_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
         {
             if ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move)
@@ -230,7 +209,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		private void OpenKeyConfig(object sender, EventArgs e)
 		{
 			((Button)sender).Tag = null;
-			((Button)sender).Text = "_____";
+			((Button)sender).Text = "";
 			SaveAuthMethod();
 			// is it a good idea?
 			// !!!! KeySelectionForm ksf = new KeySelectionForm(((Button)sender).Text);
@@ -254,7 +233,6 @@ namespace pGina.Plugin.MFLoginPlugin
 			authMethods_listBox.Enabled = true;
 			try
 			{
-
 				authMethods_listBox.Items.Clear();
 				User user = (User)userListBox.SelectedItem;
 				userName_textBox.Text = user.Name;
@@ -311,7 +289,7 @@ namespace pGina.Plugin.MFLoginPlugin
 					((User)userListBox.SelectedItem).WindowsPassword = Key.GetUniqueKey(128); // generate new windows password
 					((User)userListBox.SelectedItem).Save();
 					Shared.RunConsoleCommand("net user "+ ((User)userListBox.SelectedItem).Name+" "+ ((User)userListBox.SelectedItem).WindowsPassword);
-					// !!!! not the best solution
+					// !!!! not the best solution. if it remains here, injection prevention required
 				}
 				else
 					((CheckBox)sender).CheckState = CheckState.Unchecked;
@@ -322,20 +300,19 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 
 		}
-
+		private void UpdateKeys()
+		{
+			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+			try { key1Button.Tag = am.K1; key1Button.Text = am.K1.Description; } catch { key1Button.Text = ""; }
+			try { key2Button.Tag = am.K2; key2Button.Text = am.K2.Description; } catch { key2Button.Text = ""; }
+			try { key3Button.Tag = am.K3; key3Button.Text = am.K3.Description; } catch { key3Button.Text = ""; }
+			try { key4Button.Tag = am.K4; key4Button.Text = am.K4.Description; } catch { key4Button.Text = ""; }
+			try { key5Button.Tag = am.K5; key5Button.Text = am.K5.Description; } catch { key5Button.Text = ""; }
+			try { keysRequired_NumUpDown.Value = am.Number_of_keys; } catch { }// no AuthMethod chosen
+		}
 		private void authMethods_listBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			try
-			{
-				AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-				if (am.K1 != null) { key1Button.Tag = am.K1; key1Button.Text = am.K1.GetType() + "\n" + am.K1; } else key1Button.Text = "______";
-				if (am.K2 != null) { key2Button.Tag = am.K2; key2Button.Text = am.K2.GetType() + "\n" + am.K2; } else key2Button.Text = "______";
-				if (am.K3 != null) { key3Button.Tag = am.K3; key3Button.Text = am.K3.GetType() + "\n" + am.K3; } else key3Button.Text = "______";
-				if (am.K4 != null) { key4Button.Tag = am.K4; key4Button.Text = am.K4.GetType() + "\n" + am.K4; } else key4Button.Text = "______";
-				if (am.K5 != null) { key5Button.Tag = am.K5; key5Button.Text = am.K5.GetType() + "\n" + am.K5; } else key5Button.Text = "______";
-				keysRequired_NumUpDown.Value = am.Number_of_keys;
-			}
-			catch { }
+			UpdateKeys();
 		}
 
 		private void removeUser_button_Click(object sender, EventArgs e)
@@ -382,6 +359,64 @@ namespace pGina.Plugin.MFLoginPlugin
 			am.Number_of_keys = 5;
 			am.Save();
 			authMethods_listBox.SelectedItem = am;
+		}
+
+		private void fastChoiceTypes_listView_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			// key has to be added to a free slot (1-5)
+			Key key = Key.DefineKey(fastChoiceTypes_listView.SelectedItems[0].Tag.ToString());
+			if (key == null)
+			{
+				m_logger.Debug("Unable to create key of type: " + fastChoiceTypes_listView.SelectedItems[0].Tag.ToString());
+				return;
+			}
+			bool created = false;
+			int buttonNumber = 0;
+			if (key1Button.Tag == null && !created) { key1Button.Tag = key.KID; created = true; buttonNumber = 1; }
+			if (key2Button.Tag == null && !created) { key2Button.Tag = key.KID; created = true; buttonNumber = 2; }
+			if (key3Button.Tag == null && !created) { key3Button.Tag = key.KID; created = true; buttonNumber = 3; }
+			if (key4Button.Tag == null && !created) { key4Button.Tag = key.KID; created = true; buttonNumber = 4; }
+			if (key5Button.Tag == null && !created) { key5Button.Tag = key.KID; created = true; buttonNumber = 5; }
+			if (!created)
+			{
+				MessageBox.Show("No free key slot.", "Key creation", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+				return;
+			}
+			key.AddKey(); // key creation form
+			key.Save();
+			switch (buttonNumber) {
+				case 1: key1Button.Text = key.Description;break;
+				case 2: key2Button.Text = key.Description;break;
+				case 3: key3Button.Text = key.Description;break;
+				case 4: key4Button.Text = key.Description;break;
+				case 5: key5Button.Text = key.Description;break;
+			}
+			SaveAuthMethod();
+		}
+
+		private void fastChoiceKeys_listView_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+		private void UpdateKeyList()
+		{
+			Key[] keys = DBHelper.ReadKeys();
+			keysListBox.Items.Clear();
+			keysListBox.Items.AddRange(keys);
+		}
+		private void removeUnusedKeys_button_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				DBHelper.RemoveUnusedKeys();
+				UpdateKeyList();
+			}
+			catch (Exception exception){ m_logger.Error("Unable to remove unused keys: "+exception.Message); }
+		}
+
+		private void refreshKeyList_button_Click(object sender, EventArgs e)
+		{
+			UpdateKeyList();
 		}
 	}
 }

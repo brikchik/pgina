@@ -9,11 +9,19 @@ using System.Windows.Forms;
 
 namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 {
-    public partial class DeviceManagementForm : Form
+    public partial class ConnectedDeviceManagementForm : Form
     {
-        public DeviceManagementForm()
+		public string Description="ConnectedDevice N";
+		public string Serial="";
+        public ConnectedDeviceManagementForm(ulong kid)
         {
             InitializeComponent();
+			description_textBox.Text += kid;
         }
-    }
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+
+		}
+	}
 }

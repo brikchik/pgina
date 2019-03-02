@@ -98,6 +98,11 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return authMethods.ToArray();
 		}
+		public static void RemoveUnusedKeys()
+		{
+			SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM KEYS WHERE KEYS.KID not in (SELECT K1 FROM AUTH_METHOD UNION SELECT K2 FROM AUTH_METHOD UNION SELECT K3 FROM AUTH_METHOD UNION SELECT K4 FROM AUTH_METHOD UNION SELECT K5 FROM AUTH_METHOD);", DBHelper.connection);
+			sqlc.ExecuteScalar();
+		}
         /*
         public static void WriteLogAttempt(LogEntity le) { }
         public static LogEntity ReadLogAttempt() { return new LogEntity(); } // how can this be used??????

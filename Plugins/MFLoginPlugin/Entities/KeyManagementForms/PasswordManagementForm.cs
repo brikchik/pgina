@@ -12,11 +12,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 {
     public partial class PasswordManagementForm : Form
     {
-        public PasswordManagementForm()
+        public PasswordManagementForm(ulong kid)
         {
             InitializeComponent();
+			description_textBox.Text += kid;
         }
-        public string NewPassword { get; set; }
+		public string NewPassword;
+		public string NewDescription;
+		public bool Inverted;
         private void create_password_button_Click(object sender, EventArgs e)
         {
             string pass1 = password_textBox1.Text;
@@ -29,6 +32,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
             else
             {
                 NewPassword = password_textBox1.Text;
+				NewDescription = description_textBox.Text;
+				Inverted = inverted_checkBox.Checked;
                 this.Close();
             }
         }

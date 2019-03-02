@@ -19,13 +19,12 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 		{
 			Type = "ConnectedDevice";
 		}
-		public new string[] GetInfo() { return new String[] { Type, Serial }; }// !!!!!!!!!!
-		public void AddKey(string serial) { if (serial!="")Serial = serial; }// has to be done in form //####
-		public new void AddKey()
+		public override void AddKey()
 		{
-			DeviceManagementForm umf = new DeviceManagementForm();
+			ConnectedDeviceManagementForm umf = new ConnectedDeviceManagementForm(KID);
 			umf.ShowDialog();
-			Serial = "";
+			Serial = umf.Serial;
+			Description = umf.Description;
 		}
 		public override bool CheckKey(string password) {
 			ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity");
