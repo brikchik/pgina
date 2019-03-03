@@ -69,10 +69,8 @@ namespace pGina.Plugin.MFLoginPlugin
 			catch { KID = 1; }
 		}
 		public Key(ulong kid) { KID = kid; }
-
-		public string[] GetInfo() { return null; }
 		// management form
-		public virtual void AddKey() { m_logger.Debug("Key.AddKey called. That wasn't supposed to happen!"); } 
+		public virtual bool AddKey() { m_logger.Debug("Key.AddKey called. That wasn't supposed to happen!"); return false; } 
 		public bool Fill()
 		{
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE KID=$KID", DBHelper.connection);

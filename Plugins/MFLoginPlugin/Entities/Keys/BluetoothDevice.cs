@@ -22,26 +22,49 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 		{
 			Type = "BluetoothDevice";
 		}
-		public new string[] GetInfo() { return new String[] { Type, Serial }; }// !!!!!!!!!!
-		public override void AddKey()
+		public override bool AddKey()
 		{
 			BluetoothManagementForm umf = new BluetoothManagementForm(KID);
 			umf.ShowDialog();
+			if (!umf.IsValid) return false;
 			Serial = umf.Serial;
 			Description = umf.Description;
+			Inverted = umf.Inverted;
+			return true;
 		}
 		public override bool CheckKey(string password)
 		{
-			m_logger.Debug("Searching for bluetooth device - "+Serial);
-			BluetoothClient bluetoothClient = new BluetoothClient();
-			BluetoothDeviceInfo[] info = bluetoothClient.DiscoverDevices(100);
-			BluetoothDeviceInfo[] paired = bluetoothClient.DiscoverDevices(255, true, false, false);
-			foreach (BluetoothDeviceInfo device in info)
+			bool success = false;
+			try
 			{
-				// !!!! my pc doesn't have a bluetooth module, implementation pending
-				m_logger.Debug("Bluetooth not implemented!!!");
+				m_logger.Debug("Searching for bluetooth device " + Serial);
+				BluetoothClient bluetoothClient = new BluetoothClient();
+				BluetoothDeviceInfo[] info = bluetoothClient.DiscoverDevices(100);
+				//BluetoothDeviceInfo[] paired = bluetoothClient.DiscoverDevices(255, true, false, false);
+				foreach (BluetoothDeviceInfo device in info)
+				{
+					if (device.DeviceAddress.ToString() == Serial)
+					{
+						success = true;
+						break;
+					}
+					//
+					//
+					//
+					// !!!! my pc doesn't have a bluetooth module to develop this key, proper implementation pending
+					// This method is __COMPLETELY__ unreliable.
+					// It works sometimes though (with false positives & false negatives)
+					// Device should be paired in some way for a proper key implementation
+					// m_logger.Debug("Bluetooth not implemented!!!");
+					//
+					//
+					//
+				}
 			}
-			return false;
+			catch { m_logger.Debug("Bluetooth key problem. "+Description); }
+			if (Inverted) success = !success;
+			m_logger.Debug("BluetoothDevice " + Description + "; Inverted: " + Inverted + "; Success: " + success);
+			return success; // !!!!
 		}
 	}
 }

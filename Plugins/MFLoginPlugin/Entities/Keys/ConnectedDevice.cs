@@ -19,24 +19,30 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 		{
 			Type = "ConnectedDevice";
 		}
-		public override void AddKey()
+		public override bool AddKey()
 		{
 			ConnectedDeviceManagementForm umf = new ConnectedDeviceManagementForm(KID);
 			umf.ShowDialog();
+			if (!umf.IsValid) return false;
 			Serial = umf.Serial;
 			Description = umf.Description;
+			Inverted = umf.Inverted;
+			return true;
 		}
 		public override bool CheckKey(string password) {
+			bool success = false;
 			ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity");
 			foreach (ManagementBaseObject msObject in managementObjectSearcher.Get())
 			{
 				if (msObject["DeviceID"].ToString().Contains(Serial))
 				{
-					m_logger.Debug(msObject["DeviceID"].ToString() + " is connected");
-					return true;
+					m_logger.Debug("Device with serial number "+msObject["DeviceID"].ToString() + " is connected");
+					success = true;
 				}
 			}
-			return false;
+			if (Inverted) success = !success;
+			log4net.LogManager.GetLogger("MFLoginPlugin").Debug("ConnectedDevice " + Description + "; Inverted: " + Inverted + "; Success: " + success);
+			return success;
 		}
 	}
 }

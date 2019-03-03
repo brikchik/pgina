@@ -20,6 +20,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 		public string NewPassword;
 		public string NewDescription;
 		public bool Inverted;
+		public bool IsValid = false;
         private void create_password_button_Click(object sender, EventArgs e)
         {
             string pass1 = password_textBox1.Text;
@@ -34,7 +35,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
                 NewPassword = password_textBox1.Text;
 				NewDescription = description_textBox.Text;
 				Inverted = inverted_checkBox.Checked;
-                this.Close();
+				IsValid = true;
+				this.Close();
             }
         }
     }

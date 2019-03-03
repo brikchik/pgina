@@ -28,7 +28,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		public Key K3=null;
 		public Key K4=null;
 		public Key K5=null;
-		public string Description="";
+		public string Description="Auth method";
         public int Number_of_keys=5; // How many keys are required for a successful auth
 		private string Hash="";
 		private void ComputeHash() { Hash = "" + AMID + " " + UID; }
@@ -40,7 +40,6 @@ namespace pGina.Plugin.MFLoginPlugin
 			if (r.Read())
 			{
 				UID = ulong.Parse(r["UID"].ToString());
-				m_logger.Debug("Auth_method loaded: "+AMID);
 				try { K1 = Key.DefineKey(ulong.Parse(r["K1"].ToString())); } catch (Exception e) { m_logger.Debug("K1 not loaded"); }
 				try { K2 = Key.DefineKey(ulong.Parse(r["K2"].ToString())); } catch (Exception e) { m_logger.Debug("K2 not loaded"); }
 				try { K3 = Key.DefineKey(ulong.Parse(r["K3"].ToString())); } catch (Exception e) { m_logger.Debug("K3 not loaded"); }
@@ -85,7 +84,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		public override string ToString()
 		{
-			return "" + AMID +"_K: "+"_||"+Description;
+			return "" + AMID +" "+Description;
 		}
 	}
 }

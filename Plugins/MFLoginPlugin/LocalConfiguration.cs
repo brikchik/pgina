@@ -1,17 +1,14 @@
-﻿using pGina.Plugin.MFLoginPlugin.Entities.Keys;
+﻿using log4net;
 using pGina.Plugin.MFLoginPlugin.Entities;
-using pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms;
+using pGina.Plugin.MFLoginPlugin.Entities.Keys;
 using pGina.Shared.Settings;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Security.Cryptography;
-using log4net;
-using System.Threading;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
-    public partial class LocalConfiguration : Form
+	public partial class LocalConfiguration : Form
     {
         dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
@@ -44,35 +41,6 @@ namespace pGina.Plugin.MFLoginPlugin
 			keepPassword_checkBox.Enabled = interfaceState;
 			authMethods_listBox.Enabled = interfaceState;
 
-			keysListBox.Items.AddRange(DBHelper.ReadKeys());
-			/*
-			PasswordKey pk = new PasswordKey(10)
-			{
-				Description = "pk1"
-			};
-			pk.Save();
-			ListViewItem lvi = new ListViewItem("key1_password")
-			{
-				Tag = pk.KID
-			};
-			fastChoiceKeys_listView.Items.Add(lvi);
-			ConnectedDevice usbd = new ConnectedDevice
-			{
-				Description = "usb1"
-			};
-			usbd.Save();
-			lvi = new ListViewItem("key2_usbd")
-			{
-				Tag = usbd.KID
-			};
-			fastChoiceKeys_listView.Items.Add(lvi);
-
-			lvi = new ListViewItem("type_usbd")
-			{
-				Tag = "ConnectedDevice"
-			};
-			fastChoiceTypes_listView.Items.Add(lvi);
-			*/
 		}
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -176,7 +144,7 @@ namespace pGina.Plugin.MFLoginPlugin
 					m_logger.Debug("Unable to create key of type: "+lvi.Tag.ToString());
 					return;
 				}
-				key.AddKey();
+				if (!key.AddKey()) return;
 				string label = key.GetType() + '\n' + key.Description;
 				if (sender == key1Button) { key1Button.Text = label; key1Button.Tag = key.KID; }
 				else
@@ -218,7 +186,42 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 
 		}
-
+		private void RefreshAuthMethods()
+		{
+			try
+			{
+				authMethods_listBox.Items.Clear();
+				User user = (User)userListBox.SelectedItem;
+				userName_textBox.Text = user.Name;
+				role_textBox.Text = user.Role;
+				AuthMethod[] authMethods = DBHelper.GetAuthMethods(user);
+				if (authMethods.Length == 0)
+				{
+					authMethods_listBox.Items.Add(new AuthMethod());
+				}
+				else
+				{
+					authMethods_listBox.Items.AddRange(authMethods);
+				}
+				authMethods_listBox.SelectedIndex = 0;
+				if (user.WindowsPassword != null) keepPassword_checkBox.CheckState = CheckState.Checked;
+				else keepPassword_checkBox.CheckState = CheckState.Unchecked;
+			}
+			catch
+			{
+				newAuthMethod_button.Enabled = false;
+				removeAuthMethod_button.Enabled = false;
+				key1Button.Enabled = false;
+				key2Button.Enabled = false;
+				key3Button.Enabled = false;
+				key4Button.Enabled = false;
+				key5Button.Enabled = false;
+				keysRequired_NumUpDown.Enabled = false;
+				keepPassword_checkBox.Enabled = false;
+				authMethods_listBox.Enabled = false;
+				description_textBox.Enabled = false;
+			}
+		}
 		private void userListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			newAuthMethod_button.Enabled = true;
@@ -231,40 +234,8 @@ namespace pGina.Plugin.MFLoginPlugin
 			keysRequired_NumUpDown.Enabled = true;
 			keepPassword_checkBox.Enabled = true;
 			authMethods_listBox.Enabled = true;
-			try
-			{
-				authMethods_listBox.Items.Clear();
-				User user = (User)userListBox.SelectedItem;
-				userName_textBox.Text = user.Name;
-				role_textBox.Text = user.Role;
-				AuthMethod[] authMethods = DBHelper.GetAuthMethods(user);
-				AuthMethod currentAuthMethod;
-				if (authMethods.Length == 0)
-				{
-					currentAuthMethod = new AuthMethod();
-					authMethods_listBox.Items.Add(currentAuthMethod);
-				}
-				else
-				{
-					authMethods_listBox.Items.AddRange(authMethods);
-					currentAuthMethod = authMethods[0];
-				}
-				authMethods_listBox.SelectedIndex = 0;
-				if (user.WindowsPassword != null) keepPassword_checkBox.CheckState = CheckState.Checked;
-					else keepPassword_checkBox.CheckState = CheckState.Unchecked;
-			}
-			catch {
-				newAuthMethod_button.Enabled = false;
-				removeAuthMethod_button.Enabled = false;
-				key1Button.Enabled = false;
-				key2Button.Enabled = false;
-				key3Button.Enabled = false;
-				key4Button.Enabled = false;
-				key5Button.Enabled = false;
-				keysRequired_NumUpDown.Enabled = false;
-				keepPassword_checkBox.Enabled = false;
-				authMethods_listBox.Enabled = false;
-			}
+			description_textBox.Enabled = true;
+			RefreshAuthMethods();
 		}
 
 		private void keepPassword_checkBox_Click(object sender, EventArgs e)
@@ -309,6 +280,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			try { key4Button.Tag = am.K4; key4Button.Text = am.K4.Description; } catch { key4Button.Text = ""; }
 			try { key5Button.Tag = am.K5; key5Button.Text = am.K5.Description; } catch { key5Button.Text = ""; }
 			try { keysRequired_NumUpDown.Value = am.Number_of_keys; } catch { }// no AuthMethod chosen
+			try { description_textBox.Text = am.Description; } catch { }// no AuthMethod chosen
 		}
 		private void authMethods_listBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -372,24 +344,24 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			bool created = false;
 			int buttonNumber = 0;
-			if (key1Button.Tag == null && !created) { key1Button.Tag = key.KID; created = true; buttonNumber = 1; }
-			if (key2Button.Tag == null && !created) { key2Button.Tag = key.KID; created = true; buttonNumber = 2; }
-			if (key3Button.Tag == null && !created) { key3Button.Tag = key.KID; created = true; buttonNumber = 3; }
-			if (key4Button.Tag == null && !created) { key4Button.Tag = key.KID; created = true; buttonNumber = 4; }
-			if (key5Button.Tag == null && !created) { key5Button.Tag = key.KID; created = true; buttonNumber = 5; }
+			if (key1Button.Tag == null && !created) { created = true; buttonNumber = 1; }
+			if (key2Button.Tag == null && !created) { created = true; buttonNumber = 2; }
+			if (key3Button.Tag == null && !created) { created = true; buttonNumber = 3; }
+			if (key4Button.Tag == null && !created) { created = true; buttonNumber = 4; }
+			if (key5Button.Tag == null && !created) { created = true; buttonNumber = 5; }
 			if (!created)
 			{
 				MessageBox.Show("No free key slot.", "Key creation", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
 				return;
 			}
-			key.AddKey(); // key creation form
+			if (!key.AddKey()) return; // key creation form
 			key.Save();
 			switch (buttonNumber) {
-				case 1: key1Button.Text = key.Description;break;
-				case 2: key2Button.Text = key.Description;break;
-				case 3: key3Button.Text = key.Description;break;
-				case 4: key4Button.Text = key.Description;break;
-				case 5: key5Button.Text = key.Description;break;
+				case 1: key1Button.Text = key.Description; key1Button.Tag = key.KID; break;
+				case 2: key2Button.Text = key.Description; key2Button.Tag = key.KID; break;
+				case 3: key3Button.Text = key.Description; key3Button.Tag = key.KID; break;
+				case 4: key4Button.Text = key.Description; key4Button.Tag = key.KID; break;
+				case 5: key5Button.Text = key.Description; key5Button.Tag = key.KID; break;
 			}
 			SaveAuthMethod();
 		}
@@ -417,6 +389,18 @@ namespace pGina.Plugin.MFLoginPlugin
 		private void refreshKeyList_button_Click(object sender, EventArgs e)
 		{
 			UpdateKeyList();
+		}
+
+
+
+		private void description_textBox_Leave(object sender, EventArgs e)
+		{
+		}
+
+		private void description_textBox_TextChanged(object sender, EventArgs e)
+		{
+			((AuthMethod)authMethods_listBox.SelectedItem).Description = description_textBox.Text;
+			((AuthMethod)authMethods_listBox.SelectedItem).Save();
 		}
 	}
 }
