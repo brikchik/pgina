@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.SQLite;
-
+using System.DirectoryServices;
+using log4net;
 namespace pGina.Plugin.MFLoginPlugin.Entities
 {
     class User
@@ -11,9 +12,9 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
         public ulong UID;
         public string Name;
 		public String Role;
-        private string Hash;
-		public string WindowsPassword = ""; // REAL windows password
-
+        private string Hash="";
+		public string WindowsPassword=null; // REAL windows password
+		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
 		public void ComputeHash() { Hash = Name + UID; } // !!!!!!!!!!!!
         public bool IsValid()
         {
@@ -94,6 +95,85 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			sqlc = new SQLiteCommand("DELETE FROM AUTH_METHODS WHERE UID=$UID", DBHelper.connection);
 			sqlc.Parameters.AddWithValue("$UID", UID);
 			return success;
+		}
+
+		public bool ExistsInSystem()
+		{
+			try
+			{
+				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+				DirectoryEntry currentUser = directoryEntry.Children.Find(Name, "user");
+			}
+			catch (Exception) { return false; }
+			return true;
+		}
+		public bool AddToSystem()
+		{
+			try
+			{
+				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+				DirectoryEntry newUser = directoryEntry.Children.Add(Name, "user");
+				newUser.Invoke("SetPassword", new Object[] { WindowsPassword });
+				newUser.Invoke("Put", new object[] { "Description", "pGina created" });
+				newUser.CommitChanges();
+				DirectoryEntry grp = null; ;
+				try { grp = directoryEntry.Children.Find("Users", "group"); } catch { }
+				if (grp != null) grp.Invoke("Add", new object[] { newUser.Path.ToString() });
+				try { grp = directoryEntry.Children.Find("Пользователи", "group"); } catch { }
+				if (grp != null) grp.Invoke("Add", new object[] { newUser.Path.ToString() });
+			}
+			catch (Exception e) { m_logger.Error(e.Message); return false; }
+			return true;
+		}
+		public bool NewPassword()
+		{
+			try
+			{
+				WindowsPassword = Shared.GetUniqueKey(100);
+				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+				DirectoryEntry user = directoryEntry.Children.Find(Name, "user");
+				user.Invoke("SetPassword", new Object[] { WindowsPassword });
+				user.CommitChanges();
+				Save();
+			}
+			catch (Exception e) { m_logger.Error(e.Message); return false; }
+			return true;
+		}
+		public bool RemoveFromSystem()
+		{
+			try
+			{
+				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+				DirectoryEntry currentUser = directoryEntry.Children.Find(Name, "user");
+				currentUser.InvokeGet("Description");
+				if (currentUser.InvokeGet("Description").ToString() == "pGina created")
+				{
+					directoryEntry.Children.Remove(currentUser);
+				}
+				else throw new Exception(message: "User is not created by pGina: "+Name);
+			}
+			catch (Exception e) { m_logger.Error(e.Message); return false; }
+			return true;
+		}
+		public bool MakeAdmin(bool admin)
+		{
+			String action = admin?"Add":"Remove";
+			DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+			DirectoryEntry currentUser = directoryEntry.Children.Find(Name, "user");
+			try
+			{
+				DirectoryEntry grp = directoryEntry.Children.Find("Administrators", "group");
+				if (grp != null) grp.Invoke(action, new object[] { currentUser.Path.ToString() });
+			}
+			catch (Exception e) { m_logger.Error("Administrators... " + e.Message); }
+			try
+			{
+				DirectoryEntry grp = directoryEntry.Children.Find("Администраторы", "group");
+				if (grp != null) grp.Invoke(action, new object[] { currentUser.Path.ToString() });
+			}
+			catch (Exception e) { m_logger.Error("Администраторы... " + e.Message); }
+
+			return true;
 		}
 	}
 }

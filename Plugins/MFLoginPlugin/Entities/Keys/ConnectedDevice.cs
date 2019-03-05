@@ -5,7 +5,7 @@ using System.Text;
 
 using System.Management;
 using log4net;
-using pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms;
+using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 {
     class ConnectedDevice : Key

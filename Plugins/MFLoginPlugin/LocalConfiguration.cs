@@ -1,10 +1,13 @@
 ﻿using log4net;
 using pGina.Plugin.MFLoginPlugin.Entities;
 using pGina.Plugin.MFLoginPlugin.Entities.Keys;
+using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 using pGina.Shared.Settings;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
+using System.Threading;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -17,7 +20,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			DBHelper.ConnectLocalDB("C:\\MFLoginDB.db", "");
 			InitializeComponent();
 			LoadData();
-			this.ShowDialog();
+			ShowDialog();
 		}
 
 		private void LoadData()
@@ -40,18 +43,14 @@ namespace pGina.Plugin.MFLoginPlugin
 			keysRequired_NumUpDown.Enabled = interfaceState;
 			keepPassword_checkBox.Enabled = interfaceState;
 			authMethods_listBox.Enabled = interfaceState;
-
+			// loading keys for Keys tab in advance
+			Thread keysUpdateThread = new Thread(UpdateKeyList);
+			keysUpdateThread.Start();
 		}
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
         }
 
@@ -197,7 +196,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				AuthMethod[] authMethods = DBHelper.GetAuthMethods(user);
 				if (authMethods.Length == 0)
 				{
-					authMethods_listBox.Items.Add(new AuthMethod());
+					authMethods_listBox.Items.Add(new AuthMethod(user));
 				}
 				else
 				{
@@ -220,6 +219,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				keepPassword_checkBox.Enabled = false;
 				authMethods_listBox.Enabled = false;
 				description_textBox.Enabled = false;
+				fastChoiceTypes_listView.Enabled = false;
 			}
 		}
 		private void userListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -235,6 +235,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			keepPassword_checkBox.Enabled = true;
 			authMethods_listBox.Enabled = true;
 			description_textBox.Enabled = true;
+			fastChoiceTypes_listView.Enabled = true;
 			RefreshAuthMethods();
 		}
 
@@ -257,10 +258,11 @@ namespace pGina.Plugin.MFLoginPlugin
 				if (dr.Equals(DialogResult.Yes))
 				{
 					((CheckBox)sender).CheckState = CheckState.Checked;
-					((User)userListBox.SelectedItem).WindowsPassword = Key.GetUniqueKey(128); // generate new windows password
-					((User)userListBox.SelectedItem).Save();
-					Shared.RunConsoleCommand("net user "+ ((User)userListBox.SelectedItem).Name+" "+ ((User)userListBox.SelectedItem).WindowsPassword);
-					// !!!! not the best solution. if it remains here, injection prevention required
+					((User)userListBox.SelectedItem).NewPassword();
+					if (!(((User)userListBox.SelectedItem).Name.All(c => Char.IsLetterOrDigit(c) || c == '_')))
+					{
+						MessageBox.Show("Name has to contain letters, numbers or _");
+					}
 				}
 				else
 					((CheckBox)sender).CheckState = CheckState.Unchecked;
@@ -291,17 +293,24 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 			try
 			{
-				((User)userListBox.SelectedItem).Remove();
+				User user=(User)userListBox.SelectedItem;
+				if (!user.RemoveFromSystem())MessageBox.Show("Unable to remove user from system");
+				user.Remove();
 				userListBox.Items.Remove(userListBox.SelectedItem);
 				if (userListBox.Items.Count > 0) userListBox.SelectedIndex = 0;
-				// we don't want to remove auth_methods to make logging easier
 			}
-			catch { }
+			catch (Exception ex){ m_logger.Error(ex.Message); }
 		}
 
 		private void addUser_button_Click(object sender, EventArgs e)
 		{
-
+			UserManagementForm addUserForm = new UserManagementForm();
+			addUserForm.ShowDialog();
+			if (addUserForm.IsValid)
+			{
+				userListBox.Items.Add(addUserForm.NewUser);
+				userListBox.SelectedItem = addUserForm.NewUser;
+			}
 		}
 
 		private void keysRequired_NumUpDown_ValueChanged(object sender, EventArgs e)
@@ -391,16 +400,86 @@ namespace pGina.Plugin.MFLoginPlugin
 			UpdateKeyList();
 		}
 
-
-
-		private void description_textBox_Leave(object sender, EventArgs e)
-		{
-		}
-
 		private void description_textBox_TextChanged(object sender, EventArgs e)
 		{
 			((AuthMethod)authMethods_listBox.SelectedItem).Description = description_textBox.Text;
 			((AuthMethod)authMethods_listBox.SelectedItem).Save();
+		}
+
+		private void changeRole_contextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+		{
+			((User)userListBox.SelectedItem).Role = e.ClickedItem.Text;
+			((User)userListBox.SelectedItem).MakeAdmin(e.ClickedItem.Text=="Administrator");
+			((User)userListBox.SelectedItem).Save();
+			role_textBox.Text = e.ClickedItem.Text;
+		}
+
+		private void userListBox_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				int currentIndex = userListBox.IndexFromPoint(e.Location);
+				if (currentIndex != -1)
+				{
+					Point p=e.Location;
+					p = PointToScreen(p);
+					p.Offset(0, changeRole_contextMenuStrip.Size.Height);
+					changeRole_contextMenuStrip.Select();
+					changeRole_contextMenuStrip.Show(p);
+					userListBox.SelectedIndex = currentIndex;
+				}
+			}
+		}
+
+		private void key4Label_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void keyInfo_Enter(object sender, EventArgs e)
+		{
+
+		}
+
+		private void keysListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Key key = (Key)keysListBox.SelectedItem;
+			keyDescription_textBox.Text = key.Description;
+			keyType_label.Text = key.GetType();
+			keyInverted_checkBox.Checked = key.Inverted;
+
+			keySerial_checkBox.Checked = (key.Serial != null);
+			keyPassword_checkBox.Checked = (key.Password != null);
+			keyData_checkBox.Checked = (key.Data != null);
+			keyConfigure_button.Enabled = key.IsConfigurable;
+		}
+
+		private void keyDescription_textBox_TextChanged(object sender, EventArgs e)
+		{
+			Key key = (Key)keysListBox.SelectedItem;
+			key.Description = keyDescription_textBox.Text;
+			key.Save();
+		}
+
+		private void keyInverted_checkBox_CheckedChanged(object sender, EventArgs e)
+		{
+			Key key = (Key)keysListBox.SelectedItem;
+			key.Inverted = keyInverted_checkBox.Checked;
+			key.Save();
+		}
+
+		private void tabPage3_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void keyConfigure_button_Click(object sender, EventArgs e)
+		{
+			((Key)keysListBox.SelectedItem).Configure();
+		}
+
+		private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+		{
 		}
 	}
 }

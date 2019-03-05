@@ -1,4 +1,4 @@
-﻿namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
+﻿namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
     partial class PasswordManagementForm
     {

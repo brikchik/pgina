@@ -60,6 +60,7 @@
     <Reference Include="System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>packages\System.Data.SQLite.Core.1.0.109.2\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
@@ -72,10 +73,16 @@
   <ItemGroup>
     <Compile Include="AuthenticationManager.cs" />
     <Compile Include="Entities\AuthMethod.cs" />
-    <Compile Include="Entities\KeyManagementForms\KeySelectionForm.cs">
+    <Compile Include="Entities\ManagementForms\UserManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\KeySelectionForm.Designer.cs">
+    <Compile Include="Entities\ManagementForms\UserManagementForm.Designer.cs">
+      <DependentUpon>UserManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ManagementForms\KeySelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entities\ManagementForms\KeySelectionForm.Designer.cs">
       <DependentUpon>KeySelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\Keys\BluetoothDevice.cs" />
@@ -87,22 +94,22 @@
     </Compile>
     <Compile Include="DBHelper.cs" />
     <Compile Include="Entities\Key.cs" />
-    <Compile Include="Entities\KeyManagementForms\BluetoothManagementForm.cs">
+    <Compile Include="Entities\ManagementForms\BluetoothManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\BluetoothManagementForm.Designer.cs">
+    <Compile Include="Entities\ManagementForms\BluetoothManagementForm.Designer.cs">
       <DependentUpon>BluetoothManagementForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\PasswordManagementForm.cs">
+    <Compile Include="Entities\ManagementForms\PasswordManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\PasswordManagementForm.Designer.cs">
+    <Compile Include="Entities\ManagementForms\PasswordManagementForm.Designer.cs">
       <DependentUpon>PasswordManagementForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\ConnectedDeviceManagementForm.cs">
+    <Compile Include="Entities\ManagementForms\ConnectedDeviceManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entities\KeyManagementForms\ConnectedDeviceManagementForm.Designer.cs">
+    <Compile Include="Entities\ManagementForms\ConnectedDeviceManagementForm.Designer.cs">
       <DependentUpon>ConnectedDeviceManagementForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\Keys\PasswordKey.cs" />
@@ -125,16 +132,19 @@
     <Compile Include="Shared.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Entities\KeyManagementForms\BluetoothManagementForm.resx">
+    <EmbeddedResource Include="Entities\ManagementForms\UserManagementForm.resx">
+      <DependentUpon>UserManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Entities\ManagementForms\BluetoothManagementForm.resx">
       <DependentUpon>BluetoothManagementForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Entities\KeyManagementForms\ConnectedDeviceManagementForm.resx">
+    <EmbeddedResource Include="Entities\ManagementForms\ConnectedDeviceManagementForm.resx">
       <DependentUpon>ConnectedDeviceManagementForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Entities\KeyManagementForms\KeySelectionForm.resx">
+    <EmbeddedResource Include="Entities\ManagementForms\KeySelectionForm.resx">
       <DependentUpon>KeySelectionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Entities\KeyManagementForms\PasswordManagementForm.resx">
+    <EmbeddedResource Include="Entities\ManagementForms\PasswordManagementForm.resx">
       <DependentUpon>PasswordManagementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LocalConfiguration.resx">

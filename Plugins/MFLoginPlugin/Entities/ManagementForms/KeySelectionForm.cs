@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 using pGina.Plugin.MFLoginPlugin.Entities.Keys;
 
-namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
+namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
 	public partial class KeySelectionForm : Form
 	{

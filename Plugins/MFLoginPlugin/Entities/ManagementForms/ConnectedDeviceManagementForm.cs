@@ -7,29 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
+namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
-    public partial class BluetoothManagementForm : Form
+    public partial class ConnectedDeviceManagementForm : Form
     {
-		public string Description = "BluetoothDevice N";
-		public string Serial = "";
+		public string Description="ConnectedDevice N";
+		public string Serial="";
 		public bool Inverted = false;
 		public bool IsValid = false;
-        public BluetoothManagementForm(ulong kid)
+        public ConnectedDeviceManagementForm(ulong kid)
         {
             InitializeComponent();
 			description_textBox.Text += kid;
         }
-
-		private void description_textBox_TextChanged(object sender, EventArgs e)
-		{
-			Description = description_textBox.Text;
-		}
-
-		private void description_label_Click(object sender, EventArgs e)
-		{
-
-		}
 
 		private void ok_button_Click(object sender, EventArgs e)
 		{
@@ -41,6 +31,11 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms
 		private void serial_textBox_TextChanged(object sender, EventArgs e)
 		{
 			Serial = serial_textBox.Text;
+		}
+
+		private void description_textBox_TextChanged(object sender, EventArgs e)
+		{
+			Description = description_textBox.Text;
 		}
 	}
 }

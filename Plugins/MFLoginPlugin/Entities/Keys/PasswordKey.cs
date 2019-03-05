@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 using System.Data.SQLite;
-using pGina.Plugin.MFLoginPlugin.Entities.KeyManagementForms;
+using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 {
     class PasswordKey: Key

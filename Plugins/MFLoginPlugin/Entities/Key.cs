@@ -47,29 +47,33 @@ namespace pGina.Plugin.MFLoginPlugin
 			return key; // get appropriate key class
 		}
 		public static String[] KeyTypes= { "Password", "ConnectedDevice", "BluetoothDevice"};
-        // each key has to provide a key creation window
+
         public ulong KID;
 		public string Description="";
-		protected bool Inverted=false;
+		public bool Inverted=false;
 		protected string Type="";
-		protected string Serial=null;
-		protected string Password=null;
-		protected string Data=null;
+		public string Serial=null;
+		public string Password=null;
+		public string Data=null;
 		protected string Hash="";
-
+		/* Configuration feature for some key types */
+		public bool IsConfigurable = false;
+		public virtual void Configure() {}
+		/* */
 		public new String GetType() { return Type; }
 		public Key()
 		{
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(KID) AS MAX_KID FROM KEYS", DBHelper.connection);
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			r.Read();
-			try { 
+			try {
 			KID = ulong.Parse(r["MAX_KID"].ToString()) + 1;
 			}
 			catch { KID = 1; }
 		}
 		public Key(ulong kid) { KID = kid; }
 		// management form
+		// each key has to provide a key creation window
 		public virtual bool AddKey() { m_logger.Debug("Key.AddKey called. That wasn't supposed to happen!"); return false; } 
 		public bool Fill()
 		{
@@ -124,23 +128,5 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		//key MAY contain windows password
 		public string ReturnWindowsPassword() { return null; }
-
-
-		public static string GetUniqueKey(int size)
-		{
-			char[] chars =
-				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-			byte[] data = new byte[size];
-			using (RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider())
-			{
-				crypto.GetBytes(data);
-			}
-			StringBuilder result = new StringBuilder(size);
-			foreach (byte b in data)
-			{
-				result.Append(chars[b % (chars.Length)]);
-			}
-			return result.ToString();
-		}
 	}
 }
