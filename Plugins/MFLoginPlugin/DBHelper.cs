@@ -54,11 +54,16 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return Users.ToArray();
 		}
-		public static Key[] ReadKeys()
+		public static Key[] ReadKeys(string type="")
 		{
 			List<Key> Keys = new List<Key>();
 			if (connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS;", connection);
+			if (type != "")
+			{
+				sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE TYPE=$TYPE;", connection);
+				sqlc.Parameters.AddWithValue("$TYPE", type);
+			}
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			while (r.Read())
 			{

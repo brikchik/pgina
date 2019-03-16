@@ -16,7 +16,7 @@ using pGina.Shared.Settings;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
-    public class MFLoginPlugin : IPluginConfiguration, IPluginAuthentication, IPluginChangePassword
+    public class MFLoginPlugin : IPluginConfiguration, IPluginAuthentication, IPluginAuthorization
     {
         private ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
         public static Guid SimpleUuid = new Guid("{98EF7D32-20B2-421F-A68D-5BFA8E3BAFA6}");
@@ -81,7 +81,13 @@ namespace pGina.Plugin.MFLoginPlugin
             }
         }
 
-        public void Configure()
+		public BooleanResult AuthorizeUser(SessionProperties properties)
+		{
+			// We elect to not do any authorization, let the user pass for us
+			return new BooleanResult() { Success = true };
+		}
+
+		public void Configure()
         {
             bool local = true;
             bool firstrun = false;
@@ -96,11 +102,5 @@ namespace pGina.Plugin.MFLoginPlugin
 
         public void Starting() { }
         public void Stopping() { }
-
-        public BooleanResult ChangePassword(SessionProperties properties, ChangePasswordPluginActivityInfo pluginInfo)
-        {
-            throw new Exception("Not allowed. Not implemented.");
-            return new BooleanResult() { Success = false, Message = "Not allowed" };
-        }
     }
 }

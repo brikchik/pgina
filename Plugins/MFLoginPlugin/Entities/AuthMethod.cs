@@ -29,7 +29,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		public Key K4=null;
 		public Key K5=null;
 		public string Description="Auth method";
-        public int Number_of_keys=5; // How many keys are required for a successful auth
+        public int Number_of_keys=0; // How many keys are required for a successful auth
 		private string Hash="";
 		private void ComputeHash() { Hash = "" + AMID + " " + UID; }
 		public bool Fill()

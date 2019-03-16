@@ -15,11 +15,19 @@ namespace pGina.Plugin.MFLoginPlugin
     {
         dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
+		private bool databaseLoaded = false;
 		public LocalConfiguration()
         {
-			DBHelper.ConnectLocalDB("C:\\MFLoginDB.db", "");
 			InitializeComponent();
-			LoadData();
+			try
+			{
+				DBHelper.ConnectLocalDB("C:\\MFLoginDB.db", "");
+				LoadData();
+				databaseLoaded = true;
+			} catch {
+				advancedSettings_tabPage.Text = "PROBLEMS WITH DATABASE";
+				tabControl.SelectTab("advancedSettings_tabPage");
+			}
 			ShowDialog();
 		}
 
@@ -44,8 +52,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			keepPassword_checkBox.Enabled = interfaceState;
 			authMethods_listBox.Enabled = interfaceState;
 			// loading keys for Keys tab in advance
-			Thread keysUpdateThread = new Thread(UpdateKeyList);
-			keysUpdateThread.Start();
+			UpdateKeyList();
 		}
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -85,15 +92,6 @@ namespace pGina.Plugin.MFLoginPlugin
 		private void englishToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// !!!!! set language
-		}
-		private void SaveAuthMethod()
-		{
-			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-			try { am.K1 = Key.DefineKey((ulong)key1Button.Tag); } catch { }
-			try { am.K2 = Key.DefineKey((ulong)key2Button.Tag); } catch { }
-			try { am.K3 = Key.DefineKey((ulong)key3Button.Tag); } catch { }
-			try { am.K4 = Key.DefineKey((ulong)key4Button.Tag); } catch { }
-			try { am.K5 = Key.DefineKey((ulong)key5Button.Tag); } catch { }
 		}
         /// <summary>
         /// this code creates the Drag&Drop effect for keys
@@ -145,21 +143,23 @@ namespace pGina.Plugin.MFLoginPlugin
 				}
 				if (!key.AddKey()) return;
 				string label = key.GetType() + '\n' + key.Description;
-				if (sender == key1Button) { key1Button.Text = label; key1Button.Tag = key.KID; }
+				AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+				if (sender == key1Button) { key1Button.Text = label; key1Button.Tag = key.KID; am.K1 = Key.DefineKey((ulong)key1Button.Tag); }
 				else
-				if (sender == key2Button) { key2Button.Text = label; key2Button.Tag = key.KID; }
+				if (sender == key2Button) { key2Button.Text = label; key2Button.Tag = key.KID; am.K2 = Key.DefineKey((ulong)key2Button.Tag); }
 				else
-				if (sender == key3Button) { key3Button.Text = label; key3Button.Tag = key.KID; }
+				if (sender == key3Button) { key3Button.Text = label; key3Button.Tag = key.KID; am.K3 = Key.DefineKey((ulong)key3Button.Tag); }
 				else
-				if (sender == key4Button) { key4Button.Text = label; key4Button.Tag = key.KID; }
+				if (sender == key4Button) { key4Button.Text = label; key4Button.Tag = key.KID; am.K4 = Key.DefineKey((ulong)key4Button.Tag); }
 				else
-				if (sender == key5Button) { key5Button.Text = label; key5Button.Tag = key.KID; }
+				if (sender == key5Button) { key5Button.Text = label; key5Button.Tag = key.KID; am.K5 = Key.DefineKey((ulong)key5Button.Tag); }
 				else
 					MessageBox.Show("Unknown target");
 				// write changes to database
 				m_logger.Debug("Saving new key to DB: "+key.KID+' '+sender.GetType().ToString());
 				key.Save();
-				SaveAuthMethod();
+				if (keysRequired_NumUpDown.Value<5) keysRequired_NumUpDown.Value++;
+					else am.Save(); // changing numUpDownBox value saves auth method. avoiding second database call
             }
         }
 		private void DragTarget_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
@@ -175,11 +175,19 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		private void OpenKeyConfig(object sender, EventArgs e)
 		{
+			bool isEmpty = (((Button)sender).Tag == null);
 			((Button)sender).Tag = null;
 			((Button)sender).Text = "";
-			SaveAuthMethod();
-			// is it a good idea?
-			// !!!! KeySelectionForm ksf = new KeySelectionForm(((Button)sender).Text);
+			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+			if (sender == key1Button) { am.K1 = null; }
+			else if (sender == key2Button) { am.K2 = null; }
+			else if (sender == key3Button) { am.K3 = null; }
+			else if (sender == key4Button) { am.K4 = null; }
+			else if (sender == key5Button) { am.K5 = null; }
+			if (keysRequired_NumUpDown.Value > 0 && !isEmpty) keysRequired_NumUpDown.Value--;
+				else am.Save();
+			// is it a good idea to clear on click?
+			// !!!! KeySelectionForm ksf = new KeySelectionForm(((Button)sender).Text); ????
 		}
 		private void controlPanel_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
 		{
@@ -364,15 +372,17 @@ namespace pGina.Plugin.MFLoginPlugin
 				return;
 			}
 			if (!key.AddKey()) return; // key creation form
+			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
 			key.Save();
 			switch (buttonNumber) {
-				case 1: key1Button.Text = key.Description; key1Button.Tag = key.KID; break;
-				case 2: key2Button.Text = key.Description; key2Button.Tag = key.KID; break;
-				case 3: key3Button.Text = key.Description; key3Button.Tag = key.KID; break;
-				case 4: key4Button.Text = key.Description; key4Button.Tag = key.KID; break;
-				case 5: key5Button.Text = key.Description; key5Button.Tag = key.KID; break;
+				case 1: key1Button.Text = key.Description; key1Button.Tag = key.KID; am.K1 = Key.DefineKey((ulong)key1Button.Tag); break;
+				case 2: key2Button.Text = key.Description; key2Button.Tag = key.KID; am.K2 = Key.DefineKey((ulong)key2Button.Tag); break;
+				case 3: key3Button.Text = key.Description; key3Button.Tag = key.KID; am.K3 = Key.DefineKey((ulong)key3Button.Tag); break;
+				case 4: key4Button.Text = key.Description; key4Button.Tag = key.KID; am.K4 = Key.DefineKey((ulong)key4Button.Tag); break;
+				case 5: key5Button.Text = key.Description; key5Button.Tag = key.KID; am.K5 = Key.DefineKey((ulong)key5Button.Tag); break;
 			}
-			SaveAuthMethod();
+			if (keysRequired_NumUpDown.Value < 5) keysRequired_NumUpDown.Value++;
+				else am.Save(); // changing numUpDownBox value saves auth method. avoiding second database call
 		}
 
 		private void fastChoiceKeys_listView_SelectedIndexChanged(object sender, EventArgs e)
@@ -468,11 +478,6 @@ namespace pGina.Plugin.MFLoginPlugin
 			key.Save();
 		}
 
-		private void tabPage3_Click(object sender, EventArgs e)
-		{
-
-		}
-
 		private void keyConfigure_button_Click(object sender, EventArgs e)
 		{
 			((Key)keysListBox.SelectedItem).Configure();
@@ -480,6 +485,14 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) tabControl.SelectTab("advancedSettings_tabPage");
+			else
+				advancedSettings_tabPage.Text = "Advanced settings";
+		}
+
+		private void tabControl_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

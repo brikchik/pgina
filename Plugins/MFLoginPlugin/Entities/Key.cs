@@ -122,7 +122,9 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		public override string ToString()
 		{
-			return Type + ": " + Description+ " ("+KID+")";
+			String type = Type + " (" + KID + ")" + ": " + Description;
+			if (Serial != "") type += " #SN:" + Serial;
+			return type; //serial added if exists
 		}
 		public virtual bool CheckKey(string password) { m_logger.Debug("Key.CheckKey called... That wasn't supposed to happen"); return false; }// All _keys_ behave similarly. abstract key is wrong
 
