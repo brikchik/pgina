@@ -8,11 +8,13 @@
 
 # Log files
 *_log.txt
+*.log
 
 # Build/output directories
 obj/
 bin/
 build/
+.vs/
 
 # Installer output
 Installer/Output
