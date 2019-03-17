@@ -28,8 +28,11 @@ namespace pGina.Plugin.MFLoginPlugin
             using(Process me = Process.GetCurrentProcess())
             {
                 m_settings = new pGinaDynamicSettings(SimpleUuid);
-                m_settings.SetDefault("ShowDescription", true);
-                m_settings.SetDefault("Description", m_defaultDescription);
+				m_settings.SetDefault("FirstRun",true);
+                m_settings.SetDefault("Local", false);
+				m_settings.SetDefault("LocalDatabasePath", "MFLoginDB.db");
+				m_settings.SetDefault("RemoteDatabasePath", "");
+				m_settings.SetDefault("Description", m_defaultDescription);
 
                 m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
@@ -77,7 +80,8 @@ namespace pGina.Plugin.MFLoginPlugin
             catch (Exception e)
             {
                 m_logger.ErrorFormat("AuthenticateUser exception: {0}", e);
-                throw;  // Allow pGina service to catch and handle exception
+				return new BooleanResult { Success = false, Message=e.Message };  
+				// Allow pGina service to show the exception
             }
         }
 
@@ -89,17 +93,18 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		public void Configure()
         {
-            bool local = true;
-            bool firstrun = false;
-            // read settings
-            //
-            // get 'local' setting
-            if (local) {
+			if ((bool)m_settings.FirstRun)
+			{
+				FirstRun fr = new FirstRun();
+			}
+			else
+			if ((bool)m_settings.Local)
+			{
 				LocalConfiguration conf = new LocalConfiguration();
 			}
-            else { FirstRun fr = new FirstRun(local, firstrun); }
-        }
-
+			else
+				DBHelper.ConnectToRemoteDB(m_settings.RemoteDatabasePath);
+		}
         public void Starting() { }
         public void Stopping() { }
     }

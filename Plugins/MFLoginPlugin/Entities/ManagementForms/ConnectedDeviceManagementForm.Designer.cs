@@ -35,10 +35,10 @@
 			this.serial_label = new System.Windows.Forms.Label();
 			this.inverted_checkBox = new System.Windows.Forms.CheckBox();
 			this.newKey_groupBox = new System.Windows.Forms.GroupBox();
+			this.serialsListBox_label = new System.Windows.Forms.Label();
 			this.reset_button = new System.Windows.Forms.Button();
 			this.detectKey_button = new System.Windows.Forms.Button();
 			this.serials_listBox = new System.Windows.Forms.ListBox();
-			this.serialsListBox_label = new System.Windows.Forms.Label();
 			this.existingKeys_groupBox = new System.Windows.Forms.GroupBox();
 			this.createdKeys_listBox = new System.Windows.Forms.ListBox();
 			this.newKey_groupBox.SuspendLayout();
@@ -118,6 +118,16 @@
 			this.newKey_groupBox.TabStop = false;
 			this.newKey_groupBox.Text = "New key";
 			// 
+			// serialsListBox_label
+			// 
+			this.serialsListBox_label.AutoSize = true;
+			this.serialsListBox_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+			this.serialsListBox_label.Location = new System.Drawing.Point(318, 16);
+			this.serialsListBox_label.Name = "serialsListBox_label";
+			this.serialsListBox_label.Size = new System.Drawing.Size(121, 17);
+			this.serialsListBox_label.TabIndex = 5;
+			this.serialsListBox_label.Text = "Pick device serial:";
+			// 
 			// reset_button
 			// 
 			this.reset_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -149,22 +159,12 @@
 			this.serials_listBox.TabIndex = 0;
 			this.serials_listBox.SelectedIndexChanged += new System.EventHandler(this.serials_listBox_SelectedIndexChanged);
 			// 
-			// serialsListBox_label
-			// 
-			this.serialsListBox_label.AutoSize = true;
-			this.serialsListBox_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-			this.serialsListBox_label.Location = new System.Drawing.Point(318, 16);
-			this.serialsListBox_label.Name = "serialsListBox_label";
-			this.serialsListBox_label.Size = new System.Drawing.Size(121, 17);
-			this.serialsListBox_label.TabIndex = 5;
-			this.serialsListBox_label.Text = "Pick device serial:";
-			// 
 			// existingKeys_groupBox
 			// 
 			this.existingKeys_groupBox.Controls.Add(this.createdKeys_listBox);
 			this.existingKeys_groupBox.Location = new System.Drawing.Point(285, 208);
 			this.existingKeys_groupBox.Name = "existingKeys_groupBox";
-			this.existingKeys_groupBox.Size = new System.Drawing.Size(275, 186);
+			this.existingKeys_groupBox.Size = new System.Drawing.Size(275, 187);
 			this.existingKeys_groupBox.TabIndex = 10;
 			this.existingKeys_groupBox.TabStop = false;
 			this.existingKeys_groupBox.Text = "Created Keys";

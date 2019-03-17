@@ -87,10 +87,12 @@ namespace pGina.Plugin.MFLoginPlugin
 				m_logger.Debug("Valid keys: " + number_of_valid_keys+" out of "+number_of_keys_required);
 				if (number_of_valid_keys >= number_of_keys_required)
                 {
-					if (userInfo.Password == inputPassword) userInfo.Password = user.WindowsPassword;
+					if (userInfo.Password == inputPassword && user.WindowsPassword!=null)
+						userInfo.Password = user.WindowsPassword;
 					return new BooleanResult { Success = true, Message="Logged via: "+usedKeys };
                 }
 				number_of_valid_keys = 0;
+				userInfo.Password = userInfo.OriginalPassword;
             }
             return new BooleanResult { Success=false, Message="Failed to authenticate you"};
         }

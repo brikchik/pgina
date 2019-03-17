@@ -7,21 +7,23 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using pGina.Shared.Settings;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
     public partial class FirstRun : Form
     {
-        bool chosen = false;
-        public FirstRun(bool local, bool firstrun)
+		dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
+		bool chosen = false;
+        public FirstRun()
         {
-            if (!local && !firstrun)
+            if (!(bool)m_settings.FirstRun && !(bool)m_settings.Local)
             {
                 DialogResult dr = MessageBox.Show("Your pc is a part of network.\nPlease contact your system administrator.\nThis message means that network is unavailable.\n\nDo you want to use MFLoginPlugin locally anyway?", "pGina remote client", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 if (dr == DialogResult.No) return;
             }
             InitializeComponent();
-            this.ShowDialog();
+            ShowDialog();
         }
         private void buttonContinue_local_Click(object sender, EventArgs e)
         {
@@ -33,14 +35,17 @@ namespace pGina.Plugin.MFLoginPlugin
             }
             else
             {
-                string path = DBpath_label.Text;
+                string path = dbPath_textBox.Text;
                 try
                 {
                     if (File.Exists(path)) DBHelper.ConnectLocalDB(path, passwordField.Text);
                     else
                         DBHelper.CreateLocalDB(path, passwordField.Text);
-                    // !!!! write settings
-                }
+					m_settings.LocalDatabasePath = path;
+					m_settings.Local = true;
+					m_settings.FirstRun = false;
+					LocalConfiguration localConfiguration = new LocalConfiguration();
+				}
                 catch (System.Data.SQLite.SQLiteException sqle) { MessageBox.Show(sqle.Message, "Unable to use database"); }
             }
         }
@@ -56,6 +61,11 @@ namespace pGina.Plugin.MFLoginPlugin
             else
             {
                 DBHelper.ConnectToRemoteDB(serverPath_textbox.Text);
+				m_settings.RemoteDatabasePath = serverPath_textbox.Text;
+				m_settings.FirstRun = false;
+				m_settings.Local = false;
+				MessageBox.Show("Connected to remote db. Configuration successful");
+				Close();
             }
         }
 
@@ -68,14 +78,14 @@ namespace pGina.Plugin.MFLoginPlugin
             {
                 changePath_button.BackColor = SystemColors.ActiveCaption;
                 defaultPath_button.BackColor = SystemColors.ButtonFace;
-                DBpath_label.Text = saveDBDialog.FileName;
+				dbPath_textBox.Text = saveDBDialog.FileName;
             }
         }
         private void defaultPath_button_Click(object sender, EventArgs e)
         {
             changePath_button.BackColor = SystemColors.ButtonFace;
             defaultPath_button.BackColor = SystemColors.ActiveCaption;
-            DBpath_label.Text = "C:\\MFLoginDB.db"; // !!!! switch to isolated storage
+            dbPath_textBox.Text = "MFLoginDB.db";
         }
     }
 }

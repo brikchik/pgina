@@ -23,7 +23,7 @@ namespace pGina.Plugin.MFLoginPlugin
             SQLiteConnection.CreateFile(path);
             ConnectLocalDB(path, password);
             SQLiteCommand sqlc = connection.CreateCommand();
-            sqlc.CommandText = File.ReadAllText("create_db.sql");
+            sqlc.CommandText = File.ReadAllText("Plugins/create_db.sql");
             sqlc.ExecuteNonQuery();
         }
         public static void ConnectLocalDB(string path, string password)
@@ -54,7 +54,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return Users.ToArray();
 		}
-		public static Key[] ReadKeys(string type="")
+		public static Key[] ReadKeys(string type="", AuthMethod am=null)
 		{
 			List<Key> Keys = new List<Key>();
 			if (connection.State != System.Data.ConnectionState.Open) return null;
@@ -63,6 +63,15 @@ namespace pGina.Plugin.MFLoginPlugin
 			{
 				sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE TYPE=$TYPE;", connection);
 				sqlc.Parameters.AddWithValue("$TYPE", type);
+			};
+			if (am != null)
+			{
+				sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE KID=$key1 OR KID=$key2 OR KID=$key3 OR KID=$key4 OR KID=$key5;", connection);
+				if (am.K1 != null) sqlc.Parameters.AddWithValue("$key1", am.K1.KID); else sqlc.Parameters.AddWithValue("$key1", 0);
+				if (am.K2 != null) sqlc.Parameters.AddWithValue("$key2", am.K2.KID); else sqlc.Parameters.AddWithValue("$key2", 0);
+				if (am.K3 != null) sqlc.Parameters.AddWithValue("$key3", am.K3.KID); else sqlc.Parameters.AddWithValue("$key3", 0);
+				if (am.K4 != null) sqlc.Parameters.AddWithValue("$key4", am.K4.KID); else sqlc.Parameters.AddWithValue("$key4", 0);
+				if (am.K5 != null) sqlc.Parameters.AddWithValue("$key5", am.K5.KID); else sqlc.Parameters.AddWithValue("$key5", 0);
 			}
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			while (r.Read())
@@ -73,11 +82,16 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return Keys.ToArray();
 		}
-		public static AuthMethod[] ReadAuthMethods()
+		public static AuthMethod[] ReadAuthMethods(ulong keyID=0)
 		{
 			List<AuthMethod> AMs = new List<AuthMethod>();
 			if (connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHODS;", connection);
+			if (keyID != 0)
+			{
+				sqlc.CommandText = "SELECT * FROM AUTH_METHOD WHERE K1=$key OR K2=$key OR K3=$key OR K4=$key OR K5=$key;";
+				sqlc.Parameters.AddWithValue("$key", keyID);
+			}
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			while (r.Read())
 			{

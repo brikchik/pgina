@@ -42,7 +42,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "Password": key = new PasswordKey(key.KID); break;
 				case "ConnectedDevice": key = new ConnectedDevice(key.KID); break;
 				case "BluetoothDevice": key = new BluetoothDevice(key.KID); break;
-				default: break;
+				default: key = null; m_logger.Error("Unable to recognize key type: "+type); break;
 			}
 			return key; // get appropriate key class
 		}
@@ -113,6 +113,13 @@ namespace pGina.Plugin.MFLoginPlugin
 			sqlc.Parameters.AddWithValue("$Hash", Hash);
 			return (sqlc.ExecuteNonQuery()==1);
 		}
+		public bool Remove()
+		{
+			SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM KEYS WHERE KID=$KID", DBHelper.connection);
+			sqlc.Parameters.AddWithValue("$KID", KID);
+			bool success = (sqlc.ExecuteNonQuery() == 1);
+			return success;
+		}
 		public void ComputeHash() { Hash = ""+KID; } // !!!!!!!!!!!!
 		public bool IsValid()
 		{
@@ -123,7 +130,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		public override string ToString()
 		{
 			String type = Type + " (" + KID + ")" + ": " + Description;
-			if (Serial != "") type += " #SN:" + Serial;
+			if (Serial != "" && Serial!=null) type += "   SN: " + Serial;
 			return type; //serial added if exists
 		}
 		public virtual bool CheckKey(string password) { m_logger.Debug("Key.CheckKey called... That wasn't supposed to happen"); return false; }// All _keys_ behave similarly. abstract key is wrong

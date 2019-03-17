@@ -86,6 +86,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		{
 			Key key = (Key)createdKeys_listBox.SelectedItem;
 			serial_textBox.Text = key.Serial;
+			description_textBox.Text = key.Description;
 		}
 	}
 	public static class Win32Api // handles plug&play devices list update

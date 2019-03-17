@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "BluetoothDevice (unreliable!)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-			System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-			System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
 			this.changeRole_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.user_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,7 +43,11 @@
 			this.advancedSettings_tabPage = new System.Windows.Forms.TabPage();
 			this.runSetup_button = new System.Windows.Forms.Button();
 			this.keys_tabPage = new System.Windows.Forms.TabPage();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.keyRemoval_checkBox = new System.Windows.Forms.CheckBox();
+			this.deleteKey_button = new System.Windows.Forms.Button();
 			this.keyInfo = new System.Windows.Forms.GroupBox();
+			this.keySerial_textBox = new System.Windows.Forms.TextBox();
 			this.keyConfigure_button = new System.Windows.Forms.Button();
 			this.keyData_checkBox = new System.Windows.Forms.CheckBox();
 			this.keyPassword_checkBox = new System.Windows.Forms.CheckBox();
@@ -58,11 +62,6 @@
 			this.auth_tabPage = new System.Windows.Forms.TabPage();
 			this.fastChoice_groupBox = new System.Windows.Forms.GroupBox();
 			this.fastChoiceTypes_listView = new System.Windows.Forms.ListView();
-			this.user_groupBox = new System.Windows.Forms.GroupBox();
-			this.userIconPictureBox = new System.Windows.Forms.PictureBox();
-			this.keepPassword_checkBox = new System.Windows.Forms.CheckBox();
-			this.role_textBox = new System.Windows.Forms.TextBox();
-			this.userName_textBox = new System.Windows.Forms.TextBox();
 			this.authConfig = new System.Windows.Forms.GroupBox();
 			this.description_textBox = new System.Windows.Forms.TextBox();
 			this.description_label = new System.Windows.Forms.Label();
@@ -70,10 +69,10 @@
 			this.removeAuthMethod_button = new System.Windows.Forms.Button();
 			this.newAuthMethod_button = new System.Windows.Forms.Button();
 			this.authMethods_listBox = new System.Windows.Forms.ListBox();
-			this.openingPictureBox = new System.Windows.Forms.PictureBox();
 			this.keysRequired_label = new System.Windows.Forms.Label();
-			this.successPictureBox = new System.Windows.Forms.PictureBox();
 			this.keysRequired_NumUpDown = new System.Windows.Forms.NumericUpDown();
+			this.openingPictureBox = new System.Windows.Forms.PictureBox();
+			this.successPictureBox = new System.Windows.Forms.PictureBox();
 			this.key5Label = new System.Windows.Forms.Label();
 			this.key4Label = new System.Windows.Forms.Label();
 			this.key3Label = new System.Windows.Forms.Label();
@@ -87,25 +86,36 @@
 			this.UsersGroupBox = new System.Windows.Forms.GroupBox();
 			this.removeUser_button = new System.Windows.Forms.Button();
 			this.addUser_button = new System.Windows.Forms.Button();
-			this.userListBox = new System.Windows.Forms.ListBox();
+			this.user_ListBox = new System.Windows.Forms.ListBox();
+			this.user_groupBox = new System.Windows.Forms.GroupBox();
+			this.userIconPictureBox = new System.Windows.Forms.PictureBox();
+			this.keepPassword_checkBox = new System.Windows.Forms.CheckBox();
+			this.role_textBox = new System.Windows.Forms.TextBox();
+			this.userName_textBox = new System.Windows.Forms.TextBox();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.summary_tabPage = new System.Windows.Forms.TabPage();
+			this.collapseAll_button = new System.Windows.Forms.Button();
+			this.expandAll_button = new System.Windows.Forms.Button();
+			this.refreshSummary_button = new System.Windows.Forms.Button();
+			this.summary_treeView = new System.Windows.Forms.TreeView();
 			this.changeRole_contextMenuStrip.SuspendLayout();
 			this.controlPanel.SuspendLayout();
 			this.advancedSettings_tabPage.SuspendLayout();
 			this.keys_tabPage.SuspendLayout();
+			this.panel2.SuspendLayout();
 			this.keyInfo.SuspendLayout();
 			this.auth_tabPage.SuspendLayout();
 			this.fastChoice_groupBox.SuspendLayout();
-			this.user_groupBox.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.userIconPictureBox)).BeginInit();
 			this.authConfig.SuspendLayout();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.keysRequired_NumUpDown)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.openingPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.successPictureBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.keysRequired_NumUpDown)).BeginInit();
 			this.UsersGroupBox.SuspendLayout();
+			this.user_groupBox.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.userIconPictureBox)).BeginInit();
 			this.tabControl.SuspendLayout();
+			this.summary_tabPage.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// changeRole_contextMenuStrip
@@ -151,7 +161,6 @@
 			this.controlPanel.Size = new System.Drawing.Size(984, 28);
 			this.controlPanel.TabIndex = 6;
 			this.controlPanel.Text = "toolStrip1";
-			this.controlPanel.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.controlPanel_ItemClicked);
 			// 
 			// toolStripButton3
 			// 
@@ -195,6 +204,7 @@
 			// 
 			// keys_tabPage
 			// 
+			this.keys_tabPage.Controls.Add(this.panel2);
 			this.keys_tabPage.Controls.Add(this.keyInfo);
 			this.keys_tabPage.Controls.Add(this.refreshKeyList_button);
 			this.keys_tabPage.Controls.Add(this.removeUnusedKeys_button);
@@ -207,10 +217,46 @@
 			this.keys_tabPage.TabIndex = 2;
 			this.keys_tabPage.Text = "Keys";
 			this.keys_tabPage.UseVisualStyleBackColor = true;
+			this.keys_tabPage.Enter += new System.EventHandler(this.keys_tabPage_Enter);
+			// 
+			// panel2
+			// 
+			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+			this.panel2.Controls.Add(this.keyRemoval_checkBox);
+			this.panel2.Controls.Add(this.deleteKey_button);
+			this.panel2.Location = new System.Drawing.Point(429, 288);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(539, 87);
+			this.panel2.TabIndex = 18;
+			// 
+			// keyRemoval_checkBox
+			// 
+			this.keyRemoval_checkBox.AutoEllipsis = true;
+			this.keyRemoval_checkBox.Location = new System.Drawing.Point(9, 6);
+			this.keyRemoval_checkBox.Name = "keyRemoval_checkBox";
+			this.keyRemoval_checkBox.Size = new System.Drawing.Size(527, 39);
+			this.keyRemoval_checkBox.TabIndex = 9;
+			this.keyRemoval_checkBox.Text = "I understand that the key(s) will be removed from the authentication methods and " +
+    "the methods may stop to work";
+			this.keyRemoval_checkBox.UseVisualStyleBackColor = true;
+			// 
+			// deleteKey_button
+			// 
+			this.deleteKey_button.BackColor = System.Drawing.Color.Tomato;
+			this.deleteKey_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.deleteKey_button.ForeColor = System.Drawing.SystemColors.Control;
+			this.deleteKey_button.Location = new System.Drawing.Point(2, 45);
+			this.deleteKey_button.Name = "deleteKey_button";
+			this.deleteKey_button.Size = new System.Drawing.Size(534, 40);
+			this.deleteKey_button.TabIndex = 8;
+			this.deleteKey_button.Text = "DELETE KEY(S)";
+			this.deleteKey_button.UseVisualStyleBackColor = false;
+			this.deleteKey_button.Click += new System.EventHandler(this.deleteKey_button_Click);
 			// 
 			// keyInfo
 			// 
 			this.keyInfo.BackColor = System.Drawing.Color.SkyBlue;
+			this.keyInfo.Controls.Add(this.keySerial_textBox);
 			this.keyInfo.Controls.Add(this.keyConfigure_button);
 			this.keyInfo.Controls.Add(this.keyData_checkBox);
 			this.keyInfo.Controls.Add(this.keyPassword_checkBox);
@@ -220,20 +266,27 @@
 			this.keyInfo.Controls.Add(this.keyDescription_textBox);
 			this.keyInfo.Controls.Add(this.keyDescription_label);
 			this.keyInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-			this.keyInfo.Location = new System.Drawing.Point(273, 7);
+			this.keyInfo.Location = new System.Drawing.Point(429, 7);
 			this.keyInfo.Name = "keyInfo";
-			this.keyInfo.Size = new System.Drawing.Size(458, 185);
+			this.keyInfo.Size = new System.Drawing.Size(539, 275);
 			this.keyInfo.TabIndex = 17;
 			this.keyInfo.TabStop = false;
 			this.keyInfo.Text = "Key information";
-			this.keyInfo.Enter += new System.EventHandler(this.keyInfo_Enter);
+			// 
+			// keySerial_textBox
+			// 
+			this.keySerial_textBox.Location = new System.Drawing.Point(10, 151);
+			this.keySerial_textBox.Name = "keySerial_textBox";
+			this.keySerial_textBox.Size = new System.Drawing.Size(291, 23);
+			this.keySerial_textBox.TabIndex = 8;
+			this.keySerial_textBox.TextChanged += new System.EventHandler(this.keySerial_textBox_TextChanged);
 			// 
 			// keyConfigure_button
 			// 
 			this.keyConfigure_button.Enabled = false;
-			this.keyConfigure_button.Location = new System.Drawing.Point(6, 150);
+			this.keyConfigure_button.Location = new System.Drawing.Point(6, 216);
 			this.keyConfigure_button.Name = "keyConfigure_button";
-			this.keyConfigure_button.Size = new System.Drawing.Size(445, 29);
+			this.keyConfigure_button.Size = new System.Drawing.Size(527, 53);
 			this.keyConfigure_button.TabIndex = 7;
 			this.keyConfigure_button.Text = "Configure";
 			this.keyConfigure_button.UseVisualStyleBackColor = true;
@@ -245,12 +298,12 @@
 			this.keyData_checkBox.BackColor = System.Drawing.Color.White;
 			this.keyData_checkBox.Enabled = false;
 			this.keyData_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-			this.keyData_checkBox.Location = new System.Drawing.Point(337, 120);
+			this.keyData_checkBox.Location = new System.Drawing.Point(157, 186);
 			this.keyData_checkBox.Name = "keyData_checkBox";
 			this.keyData_checkBox.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-			this.keyData_checkBox.Size = new System.Drawing.Size(112, 24);
+			this.keyData_checkBox.Size = new System.Drawing.Size(144, 24);
 			this.keyData_checkBox.TabIndex = 6;
-			this.keyData_checkBox.Text = "Other data";
+			this.keyData_checkBox.Text = "Has other data";
 			this.keyData_checkBox.UseVisualStyleBackColor = false;
 			// 
 			// keyPassword_checkBox
@@ -259,7 +312,7 @@
 			this.keyPassword_checkBox.BackColor = System.Drawing.Color.White;
 			this.keyPassword_checkBox.Enabled = false;
 			this.keyPassword_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-			this.keyPassword_checkBox.Location = new System.Drawing.Point(190, 120);
+			this.keyPassword_checkBox.Location = new System.Drawing.Point(10, 186);
 			this.keyPassword_checkBox.Name = "keyPassword_checkBox";
 			this.keyPassword_checkBox.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
 			this.keyPassword_checkBox.Size = new System.Drawing.Size(141, 24);
@@ -307,7 +360,7 @@
 			this.keyDescription_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
 			this.keyDescription_textBox.Location = new System.Drawing.Point(107, 50);
 			this.keyDescription_textBox.Name = "keyDescription_textBox";
-			this.keyDescription_textBox.Size = new System.Drawing.Size(322, 26);
+			this.keyDescription_textBox.Size = new System.Drawing.Size(426, 26);
 			this.keyDescription_textBox.TabIndex = 1;
 			this.keyDescription_textBox.TextChanged += new System.EventHandler(this.keyDescription_textBox_TextChanged);
 			// 
@@ -323,9 +376,9 @@
 			// 
 			// refreshKeyList_button
 			// 
-			this.refreshKeyList_button.Location = new System.Drawing.Point(8, 317);
+			this.refreshKeyList_button.Location = new System.Drawing.Point(8, 332);
 			this.refreshKeyList_button.Name = "refreshKeyList_button";
-			this.refreshKeyList_button.Size = new System.Drawing.Size(123, 58);
+			this.refreshKeyList_button.Size = new System.Drawing.Size(200, 43);
 			this.refreshKeyList_button.TabIndex = 16;
 			this.refreshKeyList_button.Text = "Refresh";
 			this.refreshKeyList_button.UseVisualStyleBackColor = true;
@@ -333,9 +386,9 @@
 			// 
 			// removeUnusedKeys_button
 			// 
-			this.removeUnusedKeys_button.Location = new System.Drawing.Point(137, 317);
+			this.removeUnusedKeys_button.Location = new System.Drawing.Point(223, 332);
 			this.removeUnusedKeys_button.Name = "removeUnusedKeys_button";
-			this.removeUnusedKeys_button.Size = new System.Drawing.Size(130, 58);
+			this.removeUnusedKeys_button.Size = new System.Drawing.Size(200, 43);
 			this.removeUnusedKeys_button.TabIndex = 15;
 			this.removeUnusedKeys_button.Text = "Remove all unused keys from database";
 			this.removeUnusedKeys_button.UseVisualStyleBackColor = true;
@@ -347,16 +400,17 @@
 			this.keysListBox.ItemHeight = 15;
 			this.keysListBox.Location = new System.Drawing.Point(8, 7);
 			this.keysListBox.Name = "keysListBox";
-			this.keysListBox.Size = new System.Drawing.Size(259, 304);
+			this.keysListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+			this.keysListBox.Size = new System.Drawing.Size(415, 319);
 			this.keysListBox.TabIndex = 14;
 			this.keysListBox.SelectedIndexChanged += new System.EventHandler(this.keysListBox_SelectedIndexChanged);
 			// 
 			// auth_tabPage
 			// 
 			this.auth_tabPage.Controls.Add(this.fastChoice_groupBox);
-			this.auth_tabPage.Controls.Add(this.user_groupBox);
 			this.auth_tabPage.Controls.Add(this.authConfig);
 			this.auth_tabPage.Controls.Add(this.UsersGroupBox);
+			this.auth_tabPage.Controls.Add(this.user_groupBox);
 			this.auth_tabPage.Location = new System.Drawing.Point(4, 24);
 			this.auth_tabPage.Margin = new System.Windows.Forms.Padding(4);
 			this.auth_tabPage.Name = "auth_tabPage";
@@ -370,7 +424,7 @@
 			// 
 			this.fastChoice_groupBox.BackColor = System.Drawing.Color.Thistle;
 			this.fastChoice_groupBox.Controls.Add(this.fastChoiceTypes_listView);
-			this.fastChoice_groupBox.Location = new System.Drawing.Point(474, 235);
+			this.fastChoice_groupBox.Location = new System.Drawing.Point(474, 8);
 			this.fastChoice_groupBox.Name = "fastChoice_groupBox";
 			this.fastChoice_groupBox.Size = new System.Drawing.Size(494, 138);
 			this.fastChoice_groupBox.TabIndex = 19;
@@ -382,13 +436,13 @@
 			this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
 			this.fastChoiceTypes_listView.AutoArrange = false;
 			this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			listViewItem7.Tag = "BluetoothDevice";
-			listViewItem8.Tag = "ConnectedDevice";
-			listViewItem9.Tag = "Password";
+			listViewItem10.Tag = "BluetoothDevice";
+			listViewItem11.Tag = "ConnectedDevice";
+			listViewItem12.Tag = "Password";
 			this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9});
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
 			this.fastChoiceTypes_listView.LabelWrap = false;
 			this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
 			this.fastChoiceTypes_listView.MultiSelect = false;
@@ -399,11 +453,298 @@
 			this.fastChoiceTypes_listView.TabIndex = 4;
 			this.fastChoiceTypes_listView.UseCompatibleStateImageBehavior = false;
 			this.fastChoiceTypes_listView.View = System.Windows.Forms.View.Tile;
-			this.fastChoiceTypes_listView.SelectedIndexChanged += new System.EventHandler(this.fastChoiceTypes_listView_SelectedIndexChanged);
 			this.fastChoiceTypes_listView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.fastChoiceTypes_listView_MouseDoubleClick);
 			this.fastChoiceTypes_listView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseDown);
 			this.fastChoiceTypes_listView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseMove);
 			this.fastChoiceTypes_listView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragSource_MouseUp);
+			// 
+			// authConfig
+			// 
+			this.authConfig.BackColor = System.Drawing.Color.SkyBlue;
+			this.authConfig.Controls.Add(this.description_textBox);
+			this.authConfig.Controls.Add(this.description_label);
+			this.authConfig.Controls.Add(this.panel1);
+			this.authConfig.Controls.Add(this.keysRequired_label);
+			this.authConfig.Controls.Add(this.keysRequired_NumUpDown);
+			this.authConfig.Controls.Add(this.openingPictureBox);
+			this.authConfig.Controls.Add(this.successPictureBox);
+			this.authConfig.Controls.Add(this.key5Label);
+			this.authConfig.Controls.Add(this.key4Label);
+			this.authConfig.Controls.Add(this.key3Label);
+			this.authConfig.Controls.Add(this.key2Label);
+			this.authConfig.Controls.Add(this.key1Label);
+			this.authConfig.Controls.Add(this.key3Button);
+			this.authConfig.Controls.Add(this.key5Button);
+			this.authConfig.Controls.Add(this.key4Button);
+			this.authConfig.Controls.Add(this.key1Button);
+			this.authConfig.Controls.Add(this.key2Button);
+			this.authConfig.Location = new System.Drawing.Point(253, 154);
+			this.authConfig.Name = "authConfig";
+			this.authConfig.Size = new System.Drawing.Size(715, 221);
+			this.authConfig.TabIndex = 12;
+			this.authConfig.TabStop = false;
+			this.authConfig.Text = "User authentication";
+			// 
+			// description_textBox
+			// 
+			this.description_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+			this.description_textBox.Location = new System.Drawing.Point(399, 145);
+			this.description_textBox.Name = "description_textBox";
+			this.description_textBox.Size = new System.Drawing.Size(271, 26);
+			this.description_textBox.TabIndex = 36;
+			this.description_textBox.TextChanged += new System.EventHandler(this.description_textBox_TextChanged);
+			// 
+			// description_label
+			// 
+			this.description_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+			this.description_label.Location = new System.Drawing.Point(399, 117);
+			this.description_label.Name = "description_label";
+			this.description_label.Size = new System.Drawing.Size(270, 25);
+			this.description_label.TabIndex = 35;
+			this.description_label.Text = "Authentication method description:";
+			this.description_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// panel1
+			// 
+			this.panel1.BackColor = System.Drawing.SystemColors.ScrollBar;
+			this.panel1.Controls.Add(this.removeAuthMethod_button);
+			this.panel1.Controls.Add(this.newAuthMethod_button);
+			this.panel1.Controls.Add(this.authMethods_listBox);
+			this.panel1.Location = new System.Drawing.Point(7, 117);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(379, 98);
+			this.panel1.TabIndex = 34;
+			// 
+			// removeAuthMethod_button
+			// 
+			this.removeAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this.removeAuthMethod_button.Location = new System.Drawing.Point(219, 51);
+			this.removeAuthMethod_button.Name = "removeAuthMethod_button";
+			this.removeAuthMethod_button.Size = new System.Drawing.Size(147, 39);
+			this.removeAuthMethod_button.TabIndex = 4;
+			this.removeAuthMethod_button.Text = "REMOVE authentication method";
+			this.removeAuthMethod_button.UseVisualStyleBackColor = true;
+			this.removeAuthMethod_button.Click += new System.EventHandler(this.removeAuthMethod_button_Click);
+			// 
+			// newAuthMethod_button
+			// 
+			this.newAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this.newAuthMethod_button.Location = new System.Drawing.Point(219, 6);
+			this.newAuthMethod_button.Name = "newAuthMethod_button";
+			this.newAuthMethod_button.Size = new System.Drawing.Size(147, 39);
+			this.newAuthMethod_button.TabIndex = 3;
+			this.newAuthMethod_button.Text = "NEW authentication method";
+			this.newAuthMethod_button.UseVisualStyleBackColor = true;
+			this.newAuthMethod_button.Click += new System.EventHandler(this.newAuthMethod_button_Click);
+			// 
+			// authMethods_listBox
+			// 
+			this.authMethods_listBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+			this.authMethods_listBox.ItemHeight = 16;
+			this.authMethods_listBox.Location = new System.Drawing.Point(4, 6);
+			this.authMethods_listBox.Name = "authMethods_listBox";
+			this.authMethods_listBox.Size = new System.Drawing.Size(209, 84);
+			this.authMethods_listBox.TabIndex = 0;
+			this.authMethods_listBox.SelectedIndexChanged += new System.EventHandler(this.authMethods_listBox_SelectedIndexChanged);
+			// 
+			// keysRequired_label
+			// 
+			this.keysRequired_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+			this.keysRequired_label.Location = new System.Drawing.Point(399, 183);
+			this.keysRequired_label.Name = "keysRequired_label";
+			this.keysRequired_label.Size = new System.Drawing.Size(204, 28);
+			this.keysRequired_label.TabIndex = 33;
+			this.keysRequired_label.Text = "How many keys are required?";
+			this.keysRequired_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// keysRequired_NumUpDown
+			// 
+			this.keysRequired_NumUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+			this.keysRequired_NumUpDown.Location = new System.Drawing.Point(610, 182);
+			this.keysRequired_NumUpDown.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+			this.keysRequired_NumUpDown.Name = "keysRequired_NumUpDown";
+			this.keysRequired_NumUpDown.Size = new System.Drawing.Size(59, 29);
+			this.keysRequired_NumUpDown.TabIndex = 32;
+			this.keysRequired_NumUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+			this.keysRequired_NumUpDown.ValueChanged += new System.EventHandler(this.keysRequired_NumUpDown_ValueChanged);
+			// 
+			// openingPictureBox
+			// 
+			this.openingPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.opening;
+			this.openingPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.openingPictureBox.Location = new System.Drawing.Point(7, 20);
+			this.openingPictureBox.Name = "openingPictureBox";
+			this.openingPictureBox.Size = new System.Drawing.Size(75, 88);
+			this.openingPictureBox.TabIndex = 19;
+			this.openingPictureBox.TabStop = false;
+			// 
+			// successPictureBox
+			// 
+			this.successPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.success;
+			this.successPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.successPictureBox.Location = new System.Drawing.Point(635, 18);
+			this.successPictureBox.Name = "successPictureBox";
+			this.successPictureBox.Size = new System.Drawing.Size(74, 89);
+			this.successPictureBox.TabIndex = 18;
+			this.successPictureBox.TabStop = false;
+			// 
+			// key5Label
+			// 
+			this.key5Label.Location = new System.Drawing.Point(526, 18);
+			this.key5Label.Name = "key5Label";
+			this.key5Label.Size = new System.Drawing.Size(95, 20);
+			this.key5Label.TabIndex = 16;
+			this.key5Label.Text = "Key 5";
+			this.key5Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// key4Label
+			// 
+			this.key4Label.Location = new System.Drawing.Point(417, 18);
+			this.key4Label.Name = "key4Label";
+			this.key4Label.Size = new System.Drawing.Size(95, 20);
+			this.key4Label.TabIndex = 15;
+			this.key4Label.Text = "Key 4";
+			this.key4Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// key3Label
+			// 
+			this.key3Label.Location = new System.Drawing.Point(307, 18);
+			this.key3Label.Name = "key3Label";
+			this.key3Label.Size = new System.Drawing.Size(95, 20);
+			this.key3Label.TabIndex = 14;
+			this.key3Label.Text = "Key 3";
+			this.key3Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// key2Label
+			// 
+			this.key2Label.Location = new System.Drawing.Point(198, 18);
+			this.key2Label.Name = "key2Label";
+			this.key2Label.Size = new System.Drawing.Size(95, 20);
+			this.key2Label.TabIndex = 13;
+			this.key2Label.Text = "Key 2";
+			this.key2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// key1Label
+			// 
+			this.key1Label.Location = new System.Drawing.Point(94, 19);
+			this.key1Label.Name = "key1Label";
+			this.key1Label.Size = new System.Drawing.Size(95, 20);
+			this.key1Label.TabIndex = 12;
+			this.key1Label.Text = "Key 1";
+			this.key1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// key3Button
+			// 
+			this.key3Button.AllowDrop = true;
+			this.key3Button.Location = new System.Drawing.Point(307, 41);
+			this.key3Button.Name = "key3Button";
+			this.key3Button.Size = new System.Drawing.Size(100, 66);
+			this.key3Button.TabIndex = 9;
+			this.key3Button.UseVisualStyleBackColor = true;
+			this.key3Button.Click += new System.EventHandler(this.OpenKeyConfig);
+			this.key3Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
+			this.key3Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
+			// 
+			// key5Button
+			// 
+			this.key5Button.AllowDrop = true;
+			this.key5Button.Location = new System.Drawing.Point(526, 41);
+			this.key5Button.Name = "key5Button";
+			this.key5Button.Size = new System.Drawing.Size(100, 66);
+			this.key5Button.TabIndex = 11;
+			this.key5Button.UseVisualStyleBackColor = true;
+			this.key5Button.Click += new System.EventHandler(this.OpenKeyConfig);
+			this.key5Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
+			this.key5Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
+			// 
+			// key4Button
+			// 
+			this.key4Button.AllowDrop = true;
+			this.key4Button.Location = new System.Drawing.Point(417, 41);
+			this.key4Button.Name = "key4Button";
+			this.key4Button.Size = new System.Drawing.Size(100, 66);
+			this.key4Button.TabIndex = 10;
+			this.key4Button.UseVisualStyleBackColor = true;
+			this.key4Button.Click += new System.EventHandler(this.OpenKeyConfig);
+			this.key4Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
+			this.key4Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
+			// 
+			// key1Button
+			// 
+			this.key1Button.AllowDrop = true;
+			this.key1Button.Location = new System.Drawing.Point(94, 42);
+			this.key1Button.Name = "key1Button";
+			this.key1Button.Size = new System.Drawing.Size(95, 66);
+			this.key1Button.TabIndex = 7;
+			this.key1Button.UseVisualStyleBackColor = true;
+			this.key1Button.Click += new System.EventHandler(this.OpenKeyConfig);
+			this.key1Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
+			this.key1Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
+			// 
+			// key2Button
+			// 
+			this.key2Button.AllowDrop = true;
+			this.key2Button.Location = new System.Drawing.Point(198, 41);
+			this.key2Button.Name = "key2Button";
+			this.key2Button.Size = new System.Drawing.Size(100, 66);
+			this.key2Button.TabIndex = 8;
+			this.key2Button.UseVisualStyleBackColor = true;
+			this.key2Button.Click += new System.EventHandler(this.OpenKeyConfig);
+			this.key2Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
+			this.key2Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
+			// 
+			// UsersGroupBox
+			// 
+			this.UsersGroupBox.BackColor = System.Drawing.Color.Gainsboro;
+			this.UsersGroupBox.Controls.Add(this.removeUser_button);
+			this.UsersGroupBox.Controls.Add(this.addUser_button);
+			this.UsersGroupBox.Controls.Add(this.user_ListBox);
+			this.UsersGroupBox.Location = new System.Drawing.Point(9, 8);
+			this.UsersGroupBox.Name = "UsersGroupBox";
+			this.UsersGroupBox.Size = new System.Drawing.Size(238, 367);
+			this.UsersGroupBox.TabIndex = 6;
+			this.UsersGroupBox.TabStop = false;
+			this.UsersGroupBox.Text = "Users";
+			// 
+			// removeUser_button
+			// 
+			this.removeUser_button.Location = new System.Drawing.Point(122, 335);
+			this.removeUser_button.Name = "removeUser_button";
+			this.removeUser_button.Size = new System.Drawing.Size(110, 26);
+			this.removeUser_button.TabIndex = 8;
+			this.removeUser_button.Text = "Remove";
+			this.removeUser_button.UseVisualStyleBackColor = true;
+			this.removeUser_button.Click += new System.EventHandler(this.removeUser_button_Click);
+			// 
+			// addUser_button
+			// 
+			this.addUser_button.Location = new System.Drawing.Point(6, 335);
+			this.addUser_button.Name = "addUser_button";
+			this.addUser_button.Size = new System.Drawing.Size(110, 26);
+			this.addUser_button.TabIndex = 6;
+			this.addUser_button.Text = "Add";
+			this.addUser_button.UseVisualStyleBackColor = true;
+			this.addUser_button.Click += new System.EventHandler(this.addUser_button_Click);
+			// 
+			// user_ListBox
+			// 
+			this.user_ListBox.FormattingEnabled = true;
+			this.user_ListBox.ItemHeight = 15;
+			this.user_ListBox.Location = new System.Drawing.Point(6, 27);
+			this.user_ListBox.Name = "user_ListBox";
+			this.user_ListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+			this.user_ListBox.Size = new System.Drawing.Size(226, 304);
+			this.user_ListBox.TabIndex = 5;
+			this.user_ListBox.SelectedIndexChanged += new System.EventHandler(this.userListBox_SelectedIndexChanged);
+			this.user_ListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.userListBox_MouseDown);
 			// 
 			// user_groupBox
 			// 
@@ -412,9 +753,9 @@
 			this.user_groupBox.Controls.Add(this.keepPassword_checkBox);
 			this.user_groupBox.Controls.Add(this.role_textBox);
 			this.user_groupBox.Controls.Add(this.userName_textBox);
-			this.user_groupBox.Location = new System.Drawing.Point(253, 235);
+			this.user_groupBox.Location = new System.Drawing.Point(253, 8);
 			this.user_groupBox.Name = "user_groupBox";
-			this.user_groupBox.Size = new System.Drawing.Size(214, 140);
+			this.user_groupBox.Size = new System.Drawing.Size(214, 138);
 			this.user_groupBox.TabIndex = 18;
 			this.user_groupBox.TabStop = false;
 			// 
@@ -474,294 +815,6 @@
 			this.userName_textBox.TabStop = false;
 			this.userName_textBox.Text = "Username";
 			// 
-			// authConfig
-			// 
-			this.authConfig.BackColor = System.Drawing.Color.SkyBlue;
-			this.authConfig.Controls.Add(this.description_textBox);
-			this.authConfig.Controls.Add(this.description_label);
-			this.authConfig.Controls.Add(this.panel1);
-			this.authConfig.Controls.Add(this.openingPictureBox);
-			this.authConfig.Controls.Add(this.keysRequired_label);
-			this.authConfig.Controls.Add(this.successPictureBox);
-			this.authConfig.Controls.Add(this.keysRequired_NumUpDown);
-			this.authConfig.Controls.Add(this.key5Label);
-			this.authConfig.Controls.Add(this.key4Label);
-			this.authConfig.Controls.Add(this.key3Label);
-			this.authConfig.Controls.Add(this.key2Label);
-			this.authConfig.Controls.Add(this.key1Label);
-			this.authConfig.Controls.Add(this.key3Button);
-			this.authConfig.Controls.Add(this.key5Button);
-			this.authConfig.Controls.Add(this.key4Button);
-			this.authConfig.Controls.Add(this.key1Button);
-			this.authConfig.Controls.Add(this.key2Button);
-			this.authConfig.Location = new System.Drawing.Point(253, 8);
-			this.authConfig.Name = "authConfig";
-			this.authConfig.Size = new System.Drawing.Size(715, 221);
-			this.authConfig.TabIndex = 12;
-			this.authConfig.TabStop = false;
-			this.authConfig.Text = "User authentication";
-			// 
-			// description_textBox
-			// 
-			this.description_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-			this.description_textBox.Location = new System.Drawing.Point(399, 49);
-			this.description_textBox.Name = "description_textBox";
-			this.description_textBox.Size = new System.Drawing.Size(271, 26);
-			this.description_textBox.TabIndex = 26;
-			this.description_textBox.TextChanged += new System.EventHandler(this.description_textBox_TextChanged);
-			// 
-			// description_label
-			// 
-			this.description_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.description_label.Location = new System.Drawing.Point(399, 21);
-			this.description_label.Name = "description_label";
-			this.description_label.Size = new System.Drawing.Size(270, 25);
-			this.description_label.TabIndex = 25;
-			this.description_label.Text = "Authentication method description:";
-			this.description_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.SystemColors.ScrollBar;
-			this.panel1.Controls.Add(this.removeAuthMethod_button);
-			this.panel1.Controls.Add(this.newAuthMethod_button);
-			this.panel1.Controls.Add(this.authMethods_listBox);
-			this.panel1.Location = new System.Drawing.Point(7, 21);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(379, 98);
-			this.panel1.TabIndex = 24;
-			// 
-			// removeAuthMethod_button
-			// 
-			this.removeAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this.removeAuthMethod_button.Location = new System.Drawing.Point(219, 51);
-			this.removeAuthMethod_button.Name = "removeAuthMethod_button";
-			this.removeAuthMethod_button.Size = new System.Drawing.Size(147, 39);
-			this.removeAuthMethod_button.TabIndex = 4;
-			this.removeAuthMethod_button.Text = "REMOVE authentication method";
-			this.removeAuthMethod_button.UseVisualStyleBackColor = true;
-			this.removeAuthMethod_button.Click += new System.EventHandler(this.button1_Click);
-			// 
-			// newAuthMethod_button
-			// 
-			this.newAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-			this.newAuthMethod_button.Location = new System.Drawing.Point(219, 6);
-			this.newAuthMethod_button.Name = "newAuthMethod_button";
-			this.newAuthMethod_button.Size = new System.Drawing.Size(147, 39);
-			this.newAuthMethod_button.TabIndex = 3;
-			this.newAuthMethod_button.Text = "NEW authentication method";
-			this.newAuthMethod_button.UseVisualStyleBackColor = true;
-			this.newAuthMethod_button.Click += new System.EventHandler(this.newAuthMethod_button_Click);
-			// 
-			// authMethods_listBox
-			// 
-			this.authMethods_listBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.authMethods_listBox.ItemHeight = 16;
-			this.authMethods_listBox.Location = new System.Drawing.Point(4, 6);
-			this.authMethods_listBox.Name = "authMethods_listBox";
-			this.authMethods_listBox.Size = new System.Drawing.Size(209, 84);
-			this.authMethods_listBox.TabIndex = 0;
-			this.authMethods_listBox.SelectedIndexChanged += new System.EventHandler(this.authMethods_listBox_SelectedIndexChanged);
-			// 
-			// openingPictureBox
-			// 
-			this.openingPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.opening;
-			this.openingPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.openingPictureBox.Location = new System.Drawing.Point(7, 126);
-			this.openingPictureBox.Name = "openingPictureBox";
-			this.openingPictureBox.Size = new System.Drawing.Size(75, 88);
-			this.openingPictureBox.TabIndex = 19;
-			this.openingPictureBox.TabStop = false;
-			// 
-			// keysRequired_label
-			// 
-			this.keysRequired_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-			this.keysRequired_label.Location = new System.Drawing.Point(399, 87);
-			this.keysRequired_label.Name = "keysRequired_label";
-			this.keysRequired_label.Size = new System.Drawing.Size(204, 28);
-			this.keysRequired_label.TabIndex = 20;
-			this.keysRequired_label.Text = "How many keys are required?";
-			this.keysRequired_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// successPictureBox
-			// 
-			this.successPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.success;
-			this.successPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.successPictureBox.Location = new System.Drawing.Point(635, 124);
-			this.successPictureBox.Name = "successPictureBox";
-			this.successPictureBox.Size = new System.Drawing.Size(74, 89);
-			this.successPictureBox.TabIndex = 18;
-			this.successPictureBox.TabStop = false;
-			// 
-			// keysRequired_NumUpDown
-			// 
-			this.keysRequired_NumUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-			this.keysRequired_NumUpDown.Location = new System.Drawing.Point(610, 86);
-			this.keysRequired_NumUpDown.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			this.keysRequired_NumUpDown.Name = "keysRequired_NumUpDown";
-			this.keysRequired_NumUpDown.Size = new System.Drawing.Size(59, 29);
-			this.keysRequired_NumUpDown.TabIndex = 13;
-			this.keysRequired_NumUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-			this.keysRequired_NumUpDown.ValueChanged += new System.EventHandler(this.keysRequired_NumUpDown_ValueChanged);
-			// 
-			// key5Label
-			// 
-			this.key5Label.Location = new System.Drawing.Point(526, 124);
-			this.key5Label.Name = "key5Label";
-			this.key5Label.Size = new System.Drawing.Size(95, 20);
-			this.key5Label.TabIndex = 16;
-			this.key5Label.Text = "Key 5";
-			this.key5Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// key4Label
-			// 
-			this.key4Label.Location = new System.Drawing.Point(417, 124);
-			this.key4Label.Name = "key4Label";
-			this.key4Label.Size = new System.Drawing.Size(95, 20);
-			this.key4Label.TabIndex = 15;
-			this.key4Label.Text = "Key 4";
-			this.key4Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			this.key4Label.Click += new System.EventHandler(this.key4Label_Click);
-			// 
-			// key3Label
-			// 
-			this.key3Label.Location = new System.Drawing.Point(307, 124);
-			this.key3Label.Name = "key3Label";
-			this.key3Label.Size = new System.Drawing.Size(95, 20);
-			this.key3Label.TabIndex = 14;
-			this.key3Label.Text = "Key 3";
-			this.key3Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// key2Label
-			// 
-			this.key2Label.Location = new System.Drawing.Point(198, 124);
-			this.key2Label.Name = "key2Label";
-			this.key2Label.Size = new System.Drawing.Size(95, 20);
-			this.key2Label.TabIndex = 13;
-			this.key2Label.Text = "Key 2";
-			this.key2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// key1Label
-			// 
-			this.key1Label.Location = new System.Drawing.Point(94, 125);
-			this.key1Label.Name = "key1Label";
-			this.key1Label.Size = new System.Drawing.Size(95, 20);
-			this.key1Label.TabIndex = 12;
-			this.key1Label.Text = "Key 1";
-			this.key1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// key3Button
-			// 
-			this.key3Button.AllowDrop = true;
-			this.key3Button.Location = new System.Drawing.Point(307, 147);
-			this.key3Button.Name = "key3Button";
-			this.key3Button.Size = new System.Drawing.Size(100, 66);
-			this.key3Button.TabIndex = 9;
-			this.key3Button.UseVisualStyleBackColor = true;
-			this.key3Button.Click += new System.EventHandler(this.OpenKeyConfig);
-			this.key3Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
-			this.key3Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
-			// 
-			// key5Button
-			// 
-			this.key5Button.AllowDrop = true;
-			this.key5Button.Location = new System.Drawing.Point(526, 147);
-			this.key5Button.Name = "key5Button";
-			this.key5Button.Size = new System.Drawing.Size(100, 66);
-			this.key5Button.TabIndex = 11;
-			this.key5Button.UseVisualStyleBackColor = true;
-			this.key5Button.Click += new System.EventHandler(this.OpenKeyConfig);
-			this.key5Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
-			this.key5Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
-			// 
-			// key4Button
-			// 
-			this.key4Button.AllowDrop = true;
-			this.key4Button.Location = new System.Drawing.Point(417, 147);
-			this.key4Button.Name = "key4Button";
-			this.key4Button.Size = new System.Drawing.Size(100, 66);
-			this.key4Button.TabIndex = 10;
-			this.key4Button.UseVisualStyleBackColor = true;
-			this.key4Button.Click += new System.EventHandler(this.OpenKeyConfig);
-			this.key4Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
-			this.key4Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
-			// 
-			// key1Button
-			// 
-			this.key1Button.AllowDrop = true;
-			this.key1Button.Location = new System.Drawing.Point(94, 148);
-			this.key1Button.Name = "key1Button";
-			this.key1Button.Size = new System.Drawing.Size(95, 66);
-			this.key1Button.TabIndex = 7;
-			this.key1Button.UseVisualStyleBackColor = true;
-			this.key1Button.Click += new System.EventHandler(this.OpenKeyConfig);
-			this.key1Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
-			this.key1Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
-			// 
-			// key2Button
-			// 
-			this.key2Button.AllowDrop = true;
-			this.key2Button.Location = new System.Drawing.Point(198, 147);
-			this.key2Button.Name = "key2Button";
-			this.key2Button.Size = new System.Drawing.Size(100, 66);
-			this.key2Button.TabIndex = 8;
-			this.key2Button.UseVisualStyleBackColor = true;
-			this.key2Button.Click += new System.EventHandler(this.OpenKeyConfig);
-			this.key2Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
-			this.key2Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
-			// 
-			// UsersGroupBox
-			// 
-			this.UsersGroupBox.BackColor = System.Drawing.Color.Gainsboro;
-			this.UsersGroupBox.Controls.Add(this.removeUser_button);
-			this.UsersGroupBox.Controls.Add(this.addUser_button);
-			this.UsersGroupBox.Controls.Add(this.userListBox);
-			this.UsersGroupBox.Location = new System.Drawing.Point(9, 8);
-			this.UsersGroupBox.Name = "UsersGroupBox";
-			this.UsersGroupBox.Size = new System.Drawing.Size(238, 367);
-			this.UsersGroupBox.TabIndex = 6;
-			this.UsersGroupBox.TabStop = false;
-			this.UsersGroupBox.Text = "Users";
-			// 
-			// removeUser_button
-			// 
-			this.removeUser_button.Location = new System.Drawing.Point(122, 335);
-			this.removeUser_button.Name = "removeUser_button";
-			this.removeUser_button.Size = new System.Drawing.Size(110, 26);
-			this.removeUser_button.TabIndex = 8;
-			this.removeUser_button.Text = "Remove";
-			this.removeUser_button.UseVisualStyleBackColor = true;
-			this.removeUser_button.Click += new System.EventHandler(this.removeUser_button_Click);
-			// 
-			// addUser_button
-			// 
-			this.addUser_button.Location = new System.Drawing.Point(6, 335);
-			this.addUser_button.Name = "addUser_button";
-			this.addUser_button.Size = new System.Drawing.Size(110, 26);
-			this.addUser_button.TabIndex = 6;
-			this.addUser_button.Text = "Add";
-			this.addUser_button.UseVisualStyleBackColor = true;
-			this.addUser_button.Click += new System.EventHandler(this.addUser_button_Click);
-			// 
-			// userListBox
-			// 
-			this.userListBox.FormattingEnabled = true;
-			this.userListBox.ItemHeight = 15;
-			this.userListBox.Location = new System.Drawing.Point(6, 27);
-			this.userListBox.Name = "userListBox";
-			this.userListBox.Size = new System.Drawing.Size(226, 304);
-			this.userListBox.TabIndex = 5;
-			this.userListBox.SelectedIndexChanged += new System.EventHandler(this.userListBox_SelectedIndexChanged);
-			this.userListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.userListBox_MouseDown);
-			// 
 			// tabControl
 			// 
 			this.tabControl.Controls.Add(this.auth_tabPage);
@@ -777,10 +830,13 @@
 			this.tabControl.Size = new System.Drawing.Size(984, 410);
 			this.tabControl.TabIndex = 5;
 			this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
-			this.tabControl.Click += new System.EventHandler(this.tabControl_Click);
 			// 
 			// summary_tabPage
 			// 
+			this.summary_tabPage.Controls.Add(this.collapseAll_button);
+			this.summary_tabPage.Controls.Add(this.expandAll_button);
+			this.summary_tabPage.Controls.Add(this.refreshSummary_button);
+			this.summary_tabPage.Controls.Add(this.summary_treeView);
 			this.summary_tabPage.Location = new System.Drawing.Point(4, 24);
 			this.summary_tabPage.Name = "summary_tabPage";
 			this.summary_tabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -788,6 +844,44 @@
 			this.summary_tabPage.TabIndex = 4;
 			this.summary_tabPage.Text = "Information summary";
 			this.summary_tabPage.UseVisualStyleBackColor = true;
+			this.summary_tabPage.Enter += new System.EventHandler(this.summary_tabPage_Enter);
+			// 
+			// collapseAll_button
+			// 
+			this.collapseAll_button.Location = new System.Drawing.Point(851, 256);
+			this.collapseAll_button.Name = "collapseAll_button";
+			this.collapseAll_button.Size = new System.Drawing.Size(114, 120);
+			this.collapseAll_button.TabIndex = 3;
+			this.collapseAll_button.Text = "Collapse all";
+			this.collapseAll_button.UseVisualStyleBackColor = true;
+			this.collapseAll_button.Click += new System.EventHandler(this.collapseAll_button_Click);
+			// 
+			// expandAll_button
+			// 
+			this.expandAll_button.Location = new System.Drawing.Point(851, 130);
+			this.expandAll_button.Name = "expandAll_button";
+			this.expandAll_button.Size = new System.Drawing.Size(114, 120);
+			this.expandAll_button.TabIndex = 2;
+			this.expandAll_button.Text = "Expand all";
+			this.expandAll_button.UseVisualStyleBackColor = true;
+			this.expandAll_button.Click += new System.EventHandler(this.expandAll_button_Click);
+			// 
+			// refreshSummary_button
+			// 
+			this.refreshSummary_button.Location = new System.Drawing.Point(851, 12);
+			this.refreshSummary_button.Name = "refreshSummary_button";
+			this.refreshSummary_button.Size = new System.Drawing.Size(114, 112);
+			this.refreshSummary_button.TabIndex = 1;
+			this.refreshSummary_button.Text = "Refresh";
+			this.refreshSummary_button.UseVisualStyleBackColor = true;
+			this.refreshSummary_button.Click += new System.EventHandler(this.refreshSummary_button_Click);
+			// 
+			// summary_treeView
+			// 
+			this.summary_treeView.Location = new System.Drawing.Point(8, 12);
+			this.summary_treeView.Name = "summary_treeView";
+			this.summary_treeView.Size = new System.Drawing.Size(837, 364);
+			this.summary_treeView.TabIndex = 0;
 			// 
 			// LocalConfiguration
 			// 
@@ -803,26 +897,29 @@
 			this.Name = "LocalConfiguration";
 			this.ShowIcon = false;
 			this.Text = "Plugin Configuration";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LocalConfiguration_FormClosed);
 			this.changeRole_contextMenuStrip.ResumeLayout(false);
 			this.controlPanel.ResumeLayout(false);
 			this.controlPanel.PerformLayout();
 			this.advancedSettings_tabPage.ResumeLayout(false);
 			this.keys_tabPage.ResumeLayout(false);
+			this.panel2.ResumeLayout(false);
 			this.keyInfo.ResumeLayout(false);
 			this.keyInfo.PerformLayout();
 			this.auth_tabPage.ResumeLayout(false);
 			this.fastChoice_groupBox.ResumeLayout(false);
-			this.user_groupBox.ResumeLayout(false);
-			this.user_groupBox.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.userIconPictureBox)).EndInit();
 			this.authConfig.ResumeLayout(false);
 			this.authConfig.PerformLayout();
 			this.panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.keysRequired_NumUpDown)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.openingPictureBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.successPictureBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.keysRequired_NumUpDown)).EndInit();
 			this.UsersGroupBox.ResumeLayout(false);
+			this.user_groupBox.ResumeLayout(false);
+			this.user_groupBox.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.userIconPictureBox)).EndInit();
 			this.tabControl.ResumeLayout(false);
+			this.summary_tabPage.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
@@ -848,16 +945,8 @@
 		private System.Windows.Forms.TextBox role_textBox;
 		private System.Windows.Forms.TextBox userName_textBox;
 		private System.Windows.Forms.GroupBox authConfig;
-		private System.Windows.Forms.TextBox description_textBox;
-		private System.Windows.Forms.Label description_label;
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Button removeAuthMethod_button;
-		private System.Windows.Forms.Button newAuthMethod_button;
-		private System.Windows.Forms.ListBox authMethods_listBox;
 		private System.Windows.Forms.PictureBox openingPictureBox;
-		private System.Windows.Forms.Label keysRequired_label;
 		private System.Windows.Forms.PictureBox successPictureBox;
-		private System.Windows.Forms.NumericUpDown keysRequired_NumUpDown;
 		private System.Windows.Forms.Label key5Label;
 		private System.Windows.Forms.Label key4Label;
 		private System.Windows.Forms.Label key3Label;
@@ -871,7 +960,7 @@
 		private System.Windows.Forms.GroupBox UsersGroupBox;
 		private System.Windows.Forms.Button removeUser_button;
 		private System.Windows.Forms.Button addUser_button;
-		private System.Windows.Forms.ListBox userListBox;
+		private System.Windows.Forms.ListBox user_ListBox;
 		private System.Windows.Forms.TabControl tabControl;
 		private System.Windows.Forms.GroupBox keyInfo;
 		private System.Windows.Forms.TextBox keyDescription_textBox;
@@ -883,5 +972,21 @@
 		private System.Windows.Forms.CheckBox keySerial_checkBox;
 		private System.Windows.Forms.Button keyConfigure_button;
 		private System.Windows.Forms.TabPage summary_tabPage;
+		private System.Windows.Forms.Button deleteKey_button;
+		private System.Windows.Forms.CheckBox keyRemoval_checkBox;
+		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.TextBox description_textBox;
+		private System.Windows.Forms.Label description_label;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Button removeAuthMethod_button;
+		private System.Windows.Forms.Button newAuthMethod_button;
+		private System.Windows.Forms.ListBox authMethods_listBox;
+		private System.Windows.Forms.Label keysRequired_label;
+		private System.Windows.Forms.NumericUpDown keysRequired_NumUpDown;
+		private System.Windows.Forms.TreeView summary_treeView;
+		private System.Windows.Forms.Button refreshSummary_button;
+		private System.Windows.Forms.Button collapseAll_button;
+		private System.Windows.Forms.Button expandAll_button;
+		private System.Windows.Forms.TextBox keySerial_textBox;
 	}
 }

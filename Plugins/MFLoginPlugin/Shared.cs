@@ -34,5 +34,13 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return result.ToString();
 		}
+		public static string hashed(string text)
+		{
+			SHA256 sha = new SHA256CryptoServiceProvider();
+			byte[] checkSum = sha.ComputeHash(Encoding.UTF8.GetBytes(text));
+			string result = BitConverter.ToString(checkSum).Replace("-", String.Empty);
+			return result;
+		}
+		
 	}
 }
