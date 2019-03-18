@@ -18,12 +18,29 @@ namespace pGina.Plugin.MFLoginPlugin
     class DBHelper 
     {
 		public static SQLiteConnection connection;
+        private const String DBCreationQuery = @"
+-- Table: AUTH_METHOD
+DROP TABLE IF EXISTS AUTH_METHOD;
+CREATE TABLE AUTH_METHOD (AMID NUMERIC (16) UNIQUE,UID NUMERIC (16) NOT NULL REFERENCES USERS (UID), K1 NUMERIC (16), K2 NUMERIC (16), K3 NUMERIC (16), K4 NUMERIC (16), K5 NUMERIC (16), Description TEXT NOT NULL, Number_of_keys INTEGER, Hash TEXT NOT NULL);
+
+-- Table: KEYS
+DROP TABLE IF EXISTS KEYS;
+CREATE TABLE KEYS (KID NUMERIC (16) PRIMARY KEY UNIQUE NOT NULL, Description TEXT NOT NULL, Inverted BOOLEAN NOT NULL, Type TEXT NOT NULL, Serial TEXT, Password TEXT, Data TEXT, Hash TEXT NOT NULL);
+
+-- Table: LOGIN_ATTEMPTS
+DROP TABLE IF EXISTS LOGIN_ATTEMPTS;
+CREATE TABLE LOGIN_ATTEMPTS (UID NUMERIC (16) NOT NULL, User TEXT NOT NULL, Keys TEXT NOT NULL, Time DATETIME NOT NULL, Success BOOLEAN NOT NULL, Auth_method NUMERIC(16) NOT NULL,Hash TEXT NOT NULL);
+
+-- Table: USERS
+DROP TABLE IF EXISTS USERS;
+CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (128) NOT NULL UNIQUE, ROLE STRING(128) NOT NULL, WindowsPassword STRING(128), Hash TEXT NOT NULL);
+"; // wanted to read it from file but it seems to be useless
         public static void CreateLocalDB(string path, string password)
         {
             SQLiteConnection.CreateFile(path);
             ConnectLocalDB(path, password);
             SQLiteCommand sqlc = connection.CreateCommand();
-            sqlc.CommandText = File.ReadAllText("Plugins/create_db.sql");
+            sqlc.CommandText = DBCreationQuery;
             sqlc.ExecuteNonQuery();
         }
         public static void ConnectLocalDB(string path, string password)

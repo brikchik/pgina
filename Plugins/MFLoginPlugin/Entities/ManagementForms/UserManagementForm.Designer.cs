@@ -55,9 +55,9 @@
 			this.name_groupBox.Controls.Add(this.userNameCorrect_label);
 			this.name_groupBox.Controls.Add(this.username_textBox);
 			this.name_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-			this.name_groupBox.Location = new System.Drawing.Point(13, 18);
+			this.name_groupBox.Location = new System.Drawing.Point(13, 12);
 			this.name_groupBox.Name = "name_groupBox";
-			this.name_groupBox.Size = new System.Drawing.Size(273, 103);
+			this.name_groupBox.Size = new System.Drawing.Size(273, 109);
 			this.name_groupBox.TabIndex = 1;
 			this.name_groupBox.TabStop = false;
 			this.name_groupBox.Text = "Username";
@@ -119,10 +119,10 @@
 			// systemUsers_textBox
 			// 
 			this.systemUsers_textBox.AcceptsReturn = true;
-			this.systemUsers_textBox.Location = new System.Drawing.Point(305, 18);
+			this.systemUsers_textBox.Location = new System.Drawing.Point(305, 12);
 			this.systemUsers_textBox.Multiline = true;
 			this.systemUsers_textBox.Name = "systemUsers_textBox";
-			this.systemUsers_textBox.Size = new System.Drawing.Size(322, 215);
+			this.systemUsers_textBox.Size = new System.Drawing.Size(322, 221);
 			this.systemUsers_textBox.TabIndex = 3;
 			this.systemUsers_textBox.Text = "system users have to be enumerated here to add them to pGina management (\"pGina c" +
     "reated\" comment)";

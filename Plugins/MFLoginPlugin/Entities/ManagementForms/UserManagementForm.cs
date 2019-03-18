@@ -19,7 +19,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 			InitializeComponent();
 		}
 
-		internal User NewUser { get; set; } = null;
+		internal User NewUser { get; set; }
 
 		private void AddUserForm_Load(object sender, EventArgs e)
 		{

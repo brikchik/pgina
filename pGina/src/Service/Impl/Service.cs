@@ -457,13 +457,20 @@ namespace pGina.Service.Impl
                                     {
                                         // that should never ever happen
                                         m_logger.ErrorFormat("User {0} is Locked in Session {1} but the username doesn't match the session information pGina contains. '{0}' vs. '{2}'", sessionDriver.UserInformation.Username, Locked_sessionID, uInfo.Username);
-                                        return new LoginResponseMessage() { Result = false, Message = String.Format("User {0} is Locked in Session {1} but the username doesn't match the session information pGina contains\n\n'{0}' vs '{2}'", sessionDriver.UserInformation.Username, Locked_sessionID, uInfo.Username) };
-                                    }
+										 return new LoginResponseMessage() { Result = false, Message = String.Format("User {0} is Locked in Session {1} but the username doesn't match the session information pGina contains\n\n'{0}' vs '{2}'", sessionDriver.UserInformation.Username, Locked_sessionID, uInfo.Username) };
+									 }
                                 }
                                 else
                                 {
                                     m_logger.ErrorFormat("User {0} is Locked in Session {1} but was not authenticated by pGina. Unable to find SessionProperty in m_sessionPropertyCache.Get({1})", sessionDriver.UserInformation.Username, Locked_sessionID);
-                                    return new LoginResponseMessage() { Result = false, Message = String.Format("User {0} is Locked in Session {1} but was not authenticated by pGina\n\nIt is possible that another Credential Provider was used\nor the pGina service has crashed.\n", sessionDriver.UserInformation.Username, Locked_sessionID) };
+                                    // ######################
+                                    // that shouldn't happen
+                                    // HOWEVER, IT HAPPENS IN WINDOWS 10 after the latest Microsoft changes
+                                    // Locked Windows 10 users are processed here for some reason
+                                    // This condition is ignored for UNLOCK SCENARIO
+                                    // Till someone manages to find an APPROPRIATE SOLUTION (if ever)
+                                    // ######################
+                                    // return new LoginResponseMessage() { Result = false, Message = String.Format("User {0} is Locked in Session {1} but was not authenticated by pGina\n\nIt is possible that another Credential Provider was used\nor the pGina service has crashed.\n", sessionDriver.UserInformation.Username, Locked_sessionID) };
                                 }
                             }
                             else
@@ -506,6 +513,12 @@ namespace pGina.Service.Impl
                             }
                         }
                     }
+                    // ###################
+                    // I don't agree with this approach. Locked users should be authenticated by plugins
+                    // How is the user with a smart card supposed to log in via password?
+                    // Plugins are to check this themselves
+                    // ###################
+                    /*
                     if (!isLoggedIN)
                     {
                         result = sessionDriver.PerformLoginProcess();
@@ -526,7 +539,12 @@ namespace pGina.Service.Impl
                             };
                         }
                     }
-
+                    */
+                    result = sessionDriver.PerformLoginProcess();
+                    // 
+                    // locked user is not processed by WinAPI
+                    // END OF changes
+                    
                     if (result.Success && (!isLoggedIN || msg.Reason == LoginRequestMessage.LoginReason.CredUI || isUACLoggedIN))
                     {
                         lock (m_sessionPropertyCache)

@@ -164,9 +164,6 @@
     <None Include="Properties\DataSources\pGina.Plugin.MFLoginPlugin.Entities.LogEntity.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="create_db.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\opening.png" />
     <None Include="Resources\success.png" />
     <None Include="Resources\user_logo.png" />

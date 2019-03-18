@@ -85,7 +85,7 @@ namespace pGina.Plugin.MFLoginPlugin
         {
             changePath_button.BackColor = SystemColors.ButtonFace;
             defaultPath_button.BackColor = SystemColors.ActiveCaption;
-            dbPath_textBox.Text = "MFLoginDB.db";
+            dbPath_textBox.Text = "C:/Program files/pGina.fork/Plugins/MFLoginDB.db";
         }
     }
 }

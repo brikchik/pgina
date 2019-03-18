@@ -8,14 +8,17 @@ using pGina.Shared.Interfaces;
 using pGina.Plugin.MFLoginPlugin.Entities.Keys;
 using pGina.Plugin.MFLoginPlugin.Entities;
 using log4net;
+using pGina.Shared.Settings;
 namespace pGina.Plugin.MFLoginPlugin
 {
     class AuthenticationManager
     {
+        
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
 		public static BooleanResult Authenticate(UserInformation userInfo)
         {
-			DBHelper.ConnectLocalDB("C:/MFLoginDB.db","");
+            dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
+			DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath,"");
 			String inputPassword = userInfo.Password;
             User user = new User();
             if (!user.FillByName(userInfo.Username))
@@ -94,7 +97,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				number_of_valid_keys = 0;
 				userInfo.Password = userInfo.OriginalPassword;
             }
-            return new BooleanResult { Success=false, Message="Failed to authenticate you"};
+            return new BooleanResult { Success=false, Message="MFLogin failed to authenticate you"};
         }
 		
     }
