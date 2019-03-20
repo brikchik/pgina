@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
+using System.Net;
+using System.IO;
 namespace pGina.Plugin.MFLoginPlugin
 {
 	class Shared
@@ -17,6 +19,24 @@ namespace pGina.Plugin.MFLoginPlugin
 			processStartInfo.Arguments = "/C "+command;
 			process.StartInfo = processStartInfo;
 			process.Start();
+		}
+		public static string HttpGet(string url)
+		{
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+			request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+			using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+			using (Stream stream = response.GetResponseStream())
+			using (StreamReader reader = new StreamReader(stream))
+			{
+				return reader.ReadToEnd();
+			}
+		}
+		public static bool CheckHttpAddress(string address)
+		{
+			Uri uriResult;
+			bool result = Uri.TryCreate(address, UriKind.Absolute, out uriResult)
+				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+			return result;
 		}
 		public static string GetUniqueKey(int size)
 		{
@@ -34,13 +54,12 @@ namespace pGina.Plugin.MFLoginPlugin
 			}
 			return result.ToString();
 		}
-		public static string hashed(string text)
+		public static string Hashed(string text)
 		{
 			SHA256 sha = new SHA256CryptoServiceProvider();
 			byte[] checkSum = sha.ComputeHash(Encoding.UTF8.GetBytes(text));
 			string result = BitConverter.ToString(checkSum).Replace("-", String.Empty);
 			return result;
 		}
-		
 	}
 }

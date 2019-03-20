@@ -29,6 +29,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "Password": key=new PasswordKey(kid); break;
 				case "ConnectedDevice": key= new ConnectedDevice(kid); break;
 				case "BluetoothDevice": key = new BluetoothDevice(kid); break;
+				case "HttpRequest": key = new HttpRequestKey(kid); break;
 				default:break;
 			}
 			if(key!=null)key.Fill();
@@ -42,6 +43,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "Password": key = new PasswordKey(key.KID); break;
 				case "ConnectedDevice": key = new ConnectedDevice(key.KID); break;
 				case "BluetoothDevice": key = new BluetoothDevice(key.KID); break;
+				case "HttpRequest": key = new HttpRequestKey(key.KID); break;
 				default: key = null; m_logger.Error("Unable to recognize key type: "+type); break;
 			}
 			return key; // get appropriate key class

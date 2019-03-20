@@ -33,10 +33,11 @@ namespace pGina.Plugin.MFLoginPlugin
 				m_settings.SetDefault("LocalDatabasePath", "C:/Program Files/pGina.fork/MFLoginDB.db");
 				m_settings.SetDefault("RemoteDatabasePath", "");
 				m_settings.SetDefault("Description", m_defaultDescription);
-                m_settings.SetDefault("DBPassword", "");
-                // ####### password is to be stored in a safer place, not Windows regisry
+                m_settings.SetDefault("DBPassword", new byte[] { });
+				m_settings.SetDefault("DBPasswordSalt", new byte[] { });
+				// ####### password is to be stored in a safer place, not Windows regisry
 
-                m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
+				m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
         }
 
@@ -100,12 +101,22 @@ namespace pGina.Plugin.MFLoginPlugin
 				FirstRun fr = new FirstRun();
 			}
 			else
-			if ((bool)m_settings.Local)
 			{
-				LocalConfiguration conf = new LocalConfiguration();
+				bool local = (bool)m_settings.Local;
+				if (local)
+				{
+					LocalConfiguration conf = new LocalConfiguration();
+				}
+				else
+				{
+					BooleanResult connectionSuccess=DBHelper.ConnectToRemoteDB((string)m_settings.RemoteDatabasePath);
+					if (!connectionSuccess.Success)
+					{
+						m_logger.Error("Unable to connect to remote database");
+						FirstRun fr = new FirstRun();
+					}
+				}
 			}
-			else
-				DBHelper.ConnectToRemoteDB(m_settings.RemoteDatabasePath);
 		}
         public void Starting() { }
         public void Stopping() { }

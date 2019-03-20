@@ -63,6 +63,7 @@
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -73,6 +74,13 @@
   <ItemGroup>
     <Compile Include="AuthenticationManager.cs" />
     <Compile Include="Entities\AuthMethod.cs" />
+    <Compile Include="Entities\Keys\HttpRequestKey.cs" />
+    <Compile Include="Entities\ManagementForms\HttpRequestManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entities\ManagementForms\HttpRequestManagementForm.Designer.cs">
+      <DependentUpon>HttpRequestManagementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ManagementForms\UserManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +134,9 @@
     <Compile Include="Shared.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Entities\ManagementForms\HttpRequestManagementForm.resx">
+      <DependentUpon>HttpRequestManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Entities\ManagementForms\UserManagementForm.resx">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
     </EmbeddedResource>

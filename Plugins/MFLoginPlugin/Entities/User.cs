@@ -125,6 +125,18 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			catch (Exception e) { m_logger.Error(e.Message); return false; }
 			return true;
 		}
+        public bool AddToPGina()
+        {
+            try
+            {
+                DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+                DirectoryEntry user = directoryEntry.Children.Find(Name, "user");
+                user.Invoke("Put", new object[] { "Description", "pGina created" });
+                user.CommitChanges();
+            }
+            catch (Exception e) { m_logger.Error(e.Message); return false; }
+            return true;
+        }
 		public bool NewPassword()
 		{
 			try

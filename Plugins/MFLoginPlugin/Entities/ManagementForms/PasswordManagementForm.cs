@@ -29,7 +29,6 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
             if (pass1 != pass2)
             {
                 temp_label.Text = "Passwords don't match!";
-                password_textBox1.Focus();
             }
             else
             {

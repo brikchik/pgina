@@ -15,17 +15,17 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
             PasswordManagementForm pmf = new PasswordManagementForm(KID);
             pmf.ShowDialog();
 			if (!pmf.IsValid) return false;
-			Password = Shared.hashed(pmf.NewPassword+KID+Type);
+			Password = Shared.Hashed(pmf.NewPassword+KID+Type);
 			Description = pmf.NewDescription;
 			Inverted = pmf.Inverted;
 			return true;
         }
 		public override bool CheckKey(string password) {
 			bool success = false;
-			success = (Shared.hashed(password+KID+Type) == Password);
+			success = (Shared.Hashed(password+KID+Type) == Password);
 			if (Inverted) success = !success;
 			log4net.LogManager.GetLogger("MFLoginPlugin").Debug("Password "+Description+"; Inverted: "+Inverted+"; Success: "+success);
 			return success;
-		} // !!!!
+		}
     }
 }

@@ -35,7 +35,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 				bool isAdmin = ((NewUser.Role == "Administrator") ? true : false);
 				bool success = false;
 
-                if (!NewUser.ExistsInSystem()) success = NewUser.AddToSystem(); else { success = true; NewUser.NewPassword();}
+                if (!NewUser.ExistsInSystem()) success = NewUser.AddToSystem(); else { success = true; NewUser.NewPassword(); NewUser.AddToPGina(); }
 				NewUser.MakeAdmin(isAdmin);
 				if (success) NewUser.Save();
 				IsValid = true;

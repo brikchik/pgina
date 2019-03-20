@@ -7,7 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+
 using pGina.Shared.Settings;
+using System.Security.Cryptography;
+using pGina.Shared.Types;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -31,6 +34,7 @@ namespace pGina.Plugin.MFLoginPlugin
             {
                 chosen = true;
                 buttonContinue_network.Visible = false;
+				buttonContinue_network.Enabled = false;
                 passwordField.Focus();
             }
             else
@@ -38,18 +42,17 @@ namespace pGina.Plugin.MFLoginPlugin
                 string path = dbPath_textBox.Text;
                 try
                 {
-                    m_settings.DBPassword = passwordField.Text;
-                    if (File.Exists(path)) DBHelper.ConnectLocalDB(path, passwordField.Text);
-                    else
-                    {
-                        DBHelper.CreateLocalDB(path, passwordField.Text);
-                    }
+					m_settings.DBPasswordSalt = Encoding.ASCII.GetBytes(Shared.GetUniqueKey(64));
+					byte[] protectedPassword = ProtectedData.Protect(Encoding.ASCII.GetBytes(Shared.Hashed(passwordField.Text)), (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine);
+					m_settings.DBPassword = protectedPassword;
+					BooleanResult databaseExists = DBHelper.ConnectLocalDB(path, Shared.Hashed(passwordField.Text));
+					if (!databaseExists.Success) DBHelper.CreateLocalDB(path, Shared.Hashed(passwordField.Text));
 					m_settings.LocalDatabasePath = path;
 					m_settings.Local = true;
 					m_settings.FirstRun = false;
                     Close();
 				}
-                catch (Exception sqle) { MessageBox.Show(sqle.Message, "Unable to work with database"); }
+                catch (Exception ex) { MessageBox.Show(ex.Message, "Unable to work with database"); }
             }
         }
 
@@ -59,20 +62,22 @@ namespace pGina.Plugin.MFLoginPlugin
             {
                 chosen = true;
                 buttonContinue_local.Visible = false;
+				buttonContinue_local.Enabled = false;
                 serverPath_textbox.Focus();
             }
             else
             {
-                try
-                {
-                    DBHelper.ConnectToRemoteDB(serverPath_textbox.Text);
-                    m_settings.RemoteDatabasePath = serverPath_textbox.Text;
-                    m_settings.FirstRun = false;
-                    m_settings.Local = false;
-                    MessageBox.Show("Connected to remote db. Configuration successful");
-                    Close();
-                }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
+				BooleanResult connectionSuccess = DBHelper.ConnectToRemoteDB(serverPath_textbox.Text);
+				if (!connectionSuccess.Success)
+				{
+					MessageBox.Show("Unable to connect, check if server address is correct");
+					return;
+				}
+                m_settings.RemoteDatabasePath = serverPath_textbox.Text;
+                m_settings.FirstRun = false;
+                m_settings.Local = false;
+                MessageBox.Show("Connected to remote db. Configuration successful");
+                Close();
             }
         }
 

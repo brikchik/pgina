@@ -11,14 +11,14 @@ using System.IO;
 
 using System.Data.SQLite;
 using pGina.Plugin.MFLoginPlugin.Entities;
-using pGina.Plugin.MFLoginPlugin.Entities.Keys;
+using pGina.Shared.Types;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
     class DBHelper 
     {
 		public static SQLiteConnection connection;
-        private const String DBCreationQuery = @"
+        private const string DBCreationQuery = @"
 -- Table: AUTH_METHOD
 DROP TABLE IF EXISTS AUTH_METHOD;
 CREATE TABLE AUTH_METHOD (AMID NUMERIC (16) UNIQUE,UID NUMERIC (16) NOT NULL REFERENCES USERS (UID), K1 NUMERIC (16), K2 NUMERIC (16), K3 NUMERIC (16), K4 NUMERIC (16), K5 NUMERIC (16), Description TEXT NOT NULL, Number_of_keys INTEGER, Hash TEXT NOT NULL);
@@ -35,37 +35,55 @@ CREATE TABLE LOGIN_ATTEMPTS (UID NUMERIC (16) NOT NULL, User TEXT NOT NULL, Keys
 DROP TABLE IF EXISTS USERS;
 CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (128) NOT NULL UNIQUE, ROLE STRING(128) NOT NULL, WindowsPassword STRING(128), Hash TEXT NOT NULL);
 "; // wanted to read it from file but it seems to be useless
-        public static void CreateLocalDB(string path, string password)
+        public static BooleanResult CreateLocalDB(string path, string password)
         {
             try
             {
+				if (File.Exists(path)) File.Delete(path);
                 SQLiteConnection.CreateFile(path);
-                ConnectLocalDB(path, password);
-                SQLiteCommand sqlc = connection.CreateCommand();
-                sqlc.CommandText = DBCreationQuery;
-                sqlc.ExecuteNonQuery();
+				BooleanResult connectionSuccess = ConnectLocalDB(path, password);
+				if (connectionSuccess.Message == "Database corrupted")
+				{
+					SQLiteCommand sqlc = connection.CreateCommand();
+					sqlc.CommandText = DBCreationQuery;
+					sqlc.ExecuteNonQuery();
+				}
+				else return connectionSuccess;
             }
-            catch (Exception e){ throw new Exception("Path is incorrect. Error: "+e.Message); }
+            catch (Exception ex){ return new BooleanResult() { Success=false, Message=ex.Message }; }
+			return new BooleanResult() { Success = true };
         }
-        public static void ConnectLocalDB(string path, string password)
+        public static BooleanResult ConnectLocalDB(string path, string password)
         {
-            SQLiteConnectionStringBuilder sQLiteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
-            sQLiteConnectionStringBuilder.Add("Data Source", path);
-            sQLiteConnectionStringBuilder.Add("Version", 3);
-            sQLiteConnectionStringBuilder.Add("Password", password);
-            connection = new SQLiteConnection(sQLiteConnectionStringBuilder.ConnectionString);
-            connection.Open();
+			try
+			{
+				SQLiteConnectionStringBuilder sQLiteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
+				sQLiteConnectionStringBuilder.Add("Data Source", path);
+				sQLiteConnectionStringBuilder.Add("Version", 3);
+				sQLiteConnectionStringBuilder.Add("Password", password);
+				connection = new SQLiteConnection(sQLiteConnectionStringBuilder.ConnectionString);
+				connection.Open();
+				SQLiteCommand sqlc = new SQLiteCommand("SELECT COUNT(name) FROM sqlite_master WHERE type='table';", connection);
+				ulong a = ulong.Parse(sqlc.ExecuteScalar().ToString());
+				if (a != 4) return new BooleanResult() { Success = false, Message="Database corrupted or the password is wrong" };
+			}
+			catch (Exception ex){ return new BooleanResult() { Success = false, Message=ex.Message }; }
+			return new BooleanResult() { Success = true } ;
         }
-        public static void Disconnect()
+        public static BooleanResult Disconnect()
         {
-            connection.Shutdown();
-            connection.Close();
-            connection.Dispose();
+			try
+			{
+				connection.Shutdown();
+				connection.Close();
+				connection = null;
+			}
+			catch (Exception ex) { return new BooleanResult() { Success = false, Message = ex.Message }; }
+			return new BooleanResult() { Success = true };
         }
 		public static User[] ReadUsers()
 		{
 			List<User> Users = new List<User>();
-			if (connection != null && connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS;", connection);
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			while (r.Read())
@@ -79,7 +97,6 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 		public static Key[] ReadKeys(string type="", AuthMethod am=null)
 		{
 			List<Key> Keys = new List<Key>();
-			if (connection !=null && connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS;", connection);
 			if (type != "")
 			{
@@ -107,7 +124,6 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 		public static AuthMethod[] ReadAuthMethods(ulong keyID=0)
 		{
 			List<AuthMethod> AMs = new List<AuthMethod>();
-			if (connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHODS;", connection);
 			if (keyID != 0)
 			{
@@ -123,7 +139,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 			}
 			return AMs.ToArray();
 		}
-		public static void ConnectToRemoteDB(string path) { throw new NotImplementedException(); }
+		public static BooleanResult ConnectToRemoteDB(string path) { return new BooleanResult() { Success = false, Message = "Not implemented" }; }
 
 		public static AuthMethod[] GetAuthMethods(User user) {
 			List<AuthMethod> authMethods=new List<AuthMethod>();
@@ -146,16 +162,12 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 		}
         public static void CleanDB()
         {
-            try
+		    foreach (User user in ReadUsers())
             {
-                foreach (User user in ReadUsers())
-                {
-                    if (!user.ExistsInSystem()) user.Remove();
-                }
-                SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM AUTH_METHOD WHERE UID NOT IN (SELECT UID FROM USERS);", DBHelper.connection);
-                sqlc.ExecuteScalar();
+                if (!user.ExistsInSystem()) user.Remove();
             }
-            catch { }
+            SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM AUTH_METHOD WHERE UID NOT IN (SELECT UID FROM USERS);", DBHelper.connection);
+            sqlc.ExecuteScalar();
         }
         /*
         public static void WriteLogAttempt(LogEntity le) { }

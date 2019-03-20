@@ -7,6 +7,9 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using pGina.Shared.Types;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -18,18 +21,15 @@ namespace pGina.Plugin.MFLoginPlugin
 		public LocalConfiguration()
         {
 			InitializeComponent();
-            database_label.Text = @"Please use the setup dialog to change database path
-Current database path:
-";
+            database_label.Text = @"Please use the setup dialog to change database path.
+Current database path: ";
             database_label.Text += (string)m_settings.LocalDatabasePath;
-			try
+			string DBPassword= Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
+			BooleanResult connectionSuccess=DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
+			if (connectionSuccess.Success)databaseLoaded = true;
+			else
 			{
-                if ((bool)m_settings.Local) DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath, (string)m_settings.DBPassword);
-				else
-                    DBHelper.ConnectToRemoteDB((string)m_settings.RemoteDatabasePath);
-                UpdateUserList();
-                databaseLoaded = true;
-			} catch {
+				databaseLoaded = false;
 				advancedSettings_tabPage.Text = "PROBLEMS WITH DATABASE";
                 tabControl.SelectTab(advancedSettings_tabPage);
 			}
@@ -37,6 +37,7 @@ Current database path:
 		}
 		private void UpdateUserList()
 		{
+			if (!databaseLoaded) return;
 			user_ListBox.Items.Clear();
 			User[] users = DBHelper.ReadUsers();
 			user_ListBox.Items.AddRange(users);
@@ -47,19 +48,15 @@ Current database path:
 			}
 			else
 				switchUserInfoInterface(false);
-			
 		}
-
         private void btnOk_Click(object sender, EventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
+            Close();
         }
-
         private void runSetup_button_Click(object sender, EventArgs e)
         {
             FirstRun fr = new FirstRun();
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -139,6 +136,7 @@ Current database path:
 		 */
 		private void OpenKeyConfig(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			bool isEmpty = (((Button)sender).Tag == null);
 			((Button)sender).Tag = null;
 			((Button)sender).Text = "";
@@ -173,6 +171,7 @@ Current database path:
 		}
 		private void RefreshAuthMethods()
 		{
+			if (!databaseLoaded) return;
 			try
 			{
 				authMethods_listBox.Items.Clear();
@@ -211,6 +210,7 @@ Current database path:
 		}
 		private void keepPassword_checkBox_Click(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			if (((CheckBox)sender).CheckState == CheckState.Unchecked)
 			{
 				DialogResult dr = MessageBox.Show("Do you want to remove password from the OS?\nYou will not be able to LOG IN if you LOSE OR ERASE YOUR KEY\n\nI KNOW WHAT I AM DOING", "Stored password removal", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
@@ -240,6 +240,7 @@ Current database path:
 		}
 		private void UpdateKeys()
 		{
+			if (!databaseLoaded) return;
 			AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
 			try { key1Button.Tag = am.K1; key1Button.Text = am.K1.Description; } catch { key1Button.Text = ""; }
 			try { key2Button.Tag = am.K2; key2Button.Text = am.K2.Description; } catch { key2Button.Text = ""; }
@@ -255,7 +256,8 @@ Current database path:
 		}
 		private void removeUser_button_Click(object sender, EventArgs e)
 		{
-            DialogResult accepted = MessageBox.Show("Are you sure?", "User removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+			if (!databaseLoaded) return;
+			DialogResult accepted = MessageBox.Show("Are you sure?", "User removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (accepted == DialogResult.No) return;
 			foreach (User user in user_ListBox.SelectedItems)
 			{
@@ -273,6 +275,7 @@ Current database path:
 		}
 		private void addUser_button_Click(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			UserManagementForm addUserForm = new UserManagementForm();
 			addUserForm.ShowDialog();
 			if (addUserForm.IsValid)
@@ -284,6 +287,7 @@ Current database path:
 		}
 		private void keysRequired_NumUpDown_ValueChanged(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			((AuthMethod)authMethods_listBox.SelectedItem).Number_of_keys = (int)keysRequired_NumUpDown.Value;
 			((AuthMethod)authMethods_listBox.SelectedItem).Save();
 		}
@@ -292,6 +296,7 @@ Current database path:
 			AddMethod();
 		}
 		private void AddMethod() {
+			if (!databaseLoaded) return;
 			AuthMethod am = new AuthMethod((User)user_ListBox.SelectedItem);
 			authMethods_listBox.Items.Add(am);
 			am.Save();
@@ -299,6 +304,7 @@ Current database path:
 		}
 		private void fastChoiceTypes_listView_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
+			if (!databaseLoaded) return;
 			// key has to be added to a free slot (1-5)
 			Key key = Key.DefineKey(fastChoiceTypes_listView.SelectedItems[0].Tag.ToString());
 			if (key == null)
@@ -333,30 +339,29 @@ Current database path:
 		}
 		private void UpdateKeyList()
 		{
+			if (!databaseLoaded) return;
 			Key[] keys = DBHelper.ReadKeys();
 			keysListBox.Items.Clear();
 			keysListBox.Items.AddRange(keys);
 		}
 		private void removeUnusedKeys_button_Click(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			try
 			{
 				DBHelper.RemoveUnusedKeys();
-				if (sender == removeUnusedKeys_button) UpdateKeyList();
 			}
-			catch (Exception exception){ m_logger.Error("Unable to remove unused keys: "+exception.Message); }
-		}
-		private void refreshKeyList_button_Click(object sender, EventArgs e)
-		{
-			UpdateKeyList();
+			catch (Exception ex){ m_logger.Error("Unable to remove unused keys: "+ex.Message); }
 		}
 		private void description_textBox_TextChanged(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			((AuthMethod)authMethods_listBox.SelectedItem).Description = description_textBox.Text;
 			((AuthMethod)authMethods_listBox.SelectedItem).Save();
 		}
 		private void changeRole_contextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
 		{
+			if (!databaseLoaded) return;
 			((User)user_ListBox.SelectedItem).Role = e.ClickedItem.Text;
 			((User)user_ListBox.SelectedItem).MakeAdmin(e.ClickedItem.Text=="Administrator");
 			((User)user_ListBox.SelectedItem).Save();
@@ -383,6 +388,7 @@ Current database path:
 		{
 			keyDescription_textBox.Enabled = value;
 			keyInverted_checkBox.Enabled = value;
+			keySerial_textBox.Enabled = value;
 		}
 		private void keysListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -408,12 +414,14 @@ Current database path:
 		}
 		private void keyDescription_textBox_TextChanged(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			Key key = (Key)keysListBox.SelectedItem;
 			key.Description = keyDescription_textBox.Text;
 			key.Save();
 		}
 		private void keyInverted_checkBox_CheckedChanged(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			Key key = (Key)keysListBox.SelectedItem;
 			key.Inverted = keyInverted_checkBox.Checked;
 			key.Save();
@@ -428,6 +436,7 @@ Current database path:
 		}
 		private void removeAuthMethod_button_Click(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			AuthMethod am = ((AuthMethod)authMethods_listBox.SelectedItem);
 			if (am == null) return;
 			am.Delete();
@@ -440,6 +449,7 @@ Current database path:
 		}
 		private void deleteKey_button_Click(object sender, EventArgs e)
 		{
+			if (!databaseLoaded) return;
 			if (keyRemoval_checkBox.Checked)
 			{
                 if (keysListBox.SelectedItems.Count == 0) return;
@@ -475,6 +485,7 @@ Current database path:
 		}
 		private void refreshSummary()
 		{
+			if (!databaseLoaded) return;
 			summary_treeView.Nodes.Clear();
 			foreach (User user in DBHelper.ReadUsers())
 			{
@@ -497,7 +508,7 @@ Current database path:
 		}
 		private void refreshSummary_button_Click(object sender, EventArgs e)
 		{
-			refreshSummary();
+			
 		}
 		private void summary_tabPage_Enter(object sender, EventArgs e)
 		{
@@ -546,7 +557,8 @@ Current database path:
                 {
                     DBHelper.Disconnect();
                     System.IO.File.Delete((string)m_settings.LocalDatabasePath);
-                    DBHelper.CreateLocalDB((string)m_settings.LocalDatabasePath, (string)m_settings.DBPassword);
+					string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
+					DBHelper.CreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
                     databaseLoaded = true;
                 }
                 catch (Exception ex){ MessageBox.Show("Unable to erase database"+ex.Message+"\n Try again later.", "Database erase"); }
@@ -564,14 +576,21 @@ Current database path:
 
         private void advancedSettings_tabPage_Enter(object sender, EventArgs e)
         {
-            if (!databaseLoaded) tabControl.SelectTab("advancedSettings_tabPage");
-            else
-                advancedSettings_tabPage.Text = "Advanced settings";
-        }
+			if (!databaseLoaded)
+			{
+				tabControl.SelectTab("advancedSettings_tabPage");
+				DBOpened_checkBox.Checked = false;
+			}
+			else
+			{
+				advancedSettings_tabPage.Text = "Advanced settings";
+				DBOpened_checkBox.Checked = true;
+			}
+		}
 
         private void logs_tabPage_Enter(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet");
-        }
+			
+		}
 	}
 }
