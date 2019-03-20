@@ -18,16 +18,20 @@ namespace pGina.Plugin.MFLoginPlugin
 		public LocalConfiguration()
         {
 			InitializeComponent();
+            database_label.Text = @"Please use the setup dialog to change database path
+Current database path:
+";
+            database_label.Text += (string)m_settings.LocalDatabasePath;
 			try
 			{
-				if ((bool)m_settings.Local) DBHelper.ConnectLocalDB((String)m_settings.LocalDatabasePath, "");
+                if ((bool)m_settings.Local) DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath, (string)m_settings.DBPassword);
 				else
-					DBHelper.ConnectToRemoteDB(m_settings.RemoteDatabasePath);
-				LoadData();
-				databaseLoaded = true;
+                    DBHelper.ConnectToRemoteDB((string)m_settings.RemoteDatabasePath);
+                UpdateUserList();
+                databaseLoaded = true;
 			} catch {
 				advancedSettings_tabPage.Text = "PROBLEMS WITH DATABASE";
-				tabControl.SelectTab("advancedSettings_tabPage");
+                tabControl.SelectTab(advancedSettings_tabPage);
 			}
 			ShowDialog();
 		}
@@ -44,10 +48,6 @@ namespace pGina.Plugin.MFLoginPlugin
 			else
 				switchUserInfoInterface(false);
 			
-		}
-		private void LoadData()
-		{
-			UpdateUserList();
 		}
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -166,6 +166,10 @@ namespace pGina.Plugin.MFLoginPlugin
 			authMethods_listBox.Enabled = value;
 			description_textBox.Enabled = value;
 			fastChoiceTypes_listView.Enabled = value;
+            if (!value) {
+                userName_textBox.Text = "";
+                role_textBox.Text = "";
+            }
 		}
 		private void RefreshAuthMethods()
 		{
@@ -251,11 +255,16 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		private void removeUser_button_Click(object sender, EventArgs e)
 		{
+            DialogResult accepted = MessageBox.Show("Are you sure?", "User removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (accepted == DialogResult.No) return;
 			foreach (User user in user_ListBox.SelectedItems)
 			{
 				try
 				{
-					if (!user.RemoveFromSystem()) MessageBox.Show("Unable to remove user from system");
+                    if (removeWindowsUser_checkBox.Checked)
+                    {
+                        if (!user.RemoveFromSystem()) MessageBox.Show("Unable to remove user from system");
+                    }
 					user.Remove();
 				}
 				catch (Exception ex) { m_logger.Error(ex.Message); }
@@ -333,7 +342,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			try
 			{
 				DBHelper.RemoveUnusedKeys();
-				UpdateKeyList();
+				if (sender == removeUnusedKeys_button) UpdateKeyList();
 			}
 			catch (Exception exception){ m_logger.Error("Unable to remove unused keys: "+exception.Message); }
 		}
@@ -374,9 +383,6 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 			keyDescription_textBox.Enabled = value;
 			keyInverted_checkBox.Enabled = value;
-			keyData_checkBox.Enabled = value;
-			keySerial_checkBox.Enabled = value;
-			keyPassword_checkBox.Enabled = value;
 		}
 		private void keysListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -418,9 +424,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		}
 		private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (!databaseLoaded) tabControl.SelectTab("advancedSettings_tabPage");
-			else
-				advancedSettings_tabPage.Text = "Advanced settings";
+            
 		}
 		private void removeAuthMethod_button_Click(object sender, EventArgs e)
 		{
@@ -438,6 +442,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 			if (keyRemoval_checkBox.Checked)
 			{
+                if (keysListBox.SelectedItems.Count == 0) return;
 				String result = "";
 				foreach (object keyObject in keysListBox.SelectedItems)
 				{
@@ -520,5 +525,53 @@ namespace pGina.Plugin.MFLoginPlugin
 		{
 			
 		}
+
+        private void database_groupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cleanDB_button_Click(object sender, EventArgs e)
+        {
+            DBHelper.CleanDB();
+        }
+
+        private void dbErase_button_Click(object sender, EventArgs e)
+        {
+            DialogResult accepted = MessageBox.Show("Are you sure?", "Database erase", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (accepted == DialogResult.No) return;
+            if (dbErase_checkBox.Checked)
+            {
+                try
+                {
+                    DBHelper.Disconnect();
+                    System.IO.File.Delete((string)m_settings.LocalDatabasePath);
+                    DBHelper.CreateLocalDB((string)m_settings.LocalDatabasePath, (string)m_settings.DBPassword);
+                    databaseLoaded = true;
+                }
+                catch (Exception ex){ MessageBox.Show("Unable to erase database"+ex.Message+"\n Try again later.", "Database erase"); }
+            }
+        }
+
+        private void auth_tabPage_Enter(object sender, EventArgs e)
+        {
+            try
+            {
+                if (databaseLoaded) UpdateUserList();
+            }
+            catch { MessageBox.Show("Database is corrupted"); tabControl.SelectTab(advancedSettings_tabPage); }
+        }
+
+        private void advancedSettings_tabPage_Enter(object sender, EventArgs e)
+        {
+            if (!databaseLoaded) tabControl.SelectTab("advancedSettings_tabPage");
+            else
+                advancedSettings_tabPage.Text = "Advanced settings";
+        }
+
+        private void logs_tabPage_Enter(object sender, EventArgs e)
+        {
+            MessageBox.Show("Not implemented yet");
+        }
 	}
 }

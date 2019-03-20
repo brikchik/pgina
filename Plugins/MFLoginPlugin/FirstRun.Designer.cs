@@ -138,15 +138,15 @@
             this.dbPath_textBox.Name = "dbPath_textBox";
             this.dbPath_textBox.Size = new System.Drawing.Size(318, 22);
             this.dbPath_textBox.TabIndex = 9;
-            this.dbPath_textBox.Text = "C:/Program files/pGina.fork/Plugins/MFLoginDB.db";
+            this.dbPath_textBox.Text = "C:/Program files/pGina.fork/MFLoginDB.db";
             // 
             // FirstRun
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(710, 146);
             this.Controls.Add(this.buttonContinue_network);
-            this.Controls.Add(this.dbPath_textBox);
             this.Controls.Add(this.buttonContinue_local);
+            this.Controls.Add(this.dbPath_textBox);
             this.Controls.Add(this.defaultPath_button);
             this.Controls.Add(this.changePath_button);
             this.Controls.Add(this.password_label);

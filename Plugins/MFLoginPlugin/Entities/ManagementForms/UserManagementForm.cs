@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Windows.Forms;
 using pGina.Plugin.MFLoginPlugin;
@@ -18,13 +19,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		{
 			InitializeComponent();
 		}
-
 		internal User NewUser { get; set; }
-
-		private void AddUserForm_Load(object sender, EventArgs e)
-		{
-
-		}
 		private bool correct = false;
 		private void addUser_button_Click(object sender, EventArgs e)
 		{
@@ -39,7 +34,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 
 				bool isAdmin = ((NewUser.Role == "Administrator") ? true : false);
 				bool success = false;
-				if (!NewUser.ExistsInSystem()) success=NewUser.AddToSystem();
+
+                if (!NewUser.ExistsInSystem()) success = NewUser.AddToSystem(); else { success = true; NewUser.NewPassword();}
 				NewUser.MakeAdmin(isAdmin);
 				if (success) NewUser.Save();
 				IsValid = true;
@@ -60,5 +56,45 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 				correct = true;
 			}
 		}
+        private List<string> SystemUsers=new List<string>();
+        private void AddUserForm_Load(object sender, EventArgs e)
+        {
+            ManagementObjectSearcher usersSearcher = new ManagementObjectSearcher(@"SELECT * FROM Win32_UserAccount");
+            ManagementObjectCollection users = usersSearcher.Get();
+
+            var localUsers = users.Cast<ManagementObject>().Where(
+                u => (bool)u["LocalAccount"] == true &&
+                     (bool)u["Disabled"] == false &&
+                     (bool)u["Lockout"] == false &&
+                     int.Parse(u["SIDType"].ToString()) == 1 &&
+                     u["Name"].ToString() != "HomeGroupUser$");
+
+            foreach (ManagementObject mo in localUsers)
+            {
+                SystemUsers.Add(mo["Name"].ToString());
+            }
+            systemUsers_listBox.Items.AddRange(SystemUsers.ToArray());
+            pickUser_comboBox.Items.AddRange(SystemUsers.ToArray());
+        }
+
+        private void systemUsers_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (systemUsers_listBox.SelectedItem !=null) username_textBox.Text = systemUsers_listBox.SelectedItem.ToString();
+        }
+
+        private void pickUser_comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (pickUser_comboBox.SelectedItem != null && SystemUsers.Contains(pickUser_comboBox.SelectedItem.ToString())) username_textBox.Text = pickUser_comboBox.SelectedItem.ToString();
+        }
+
+        private void role_groupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void warning_label_Click(object sender, EventArgs e)
+        {
+
+        }
 	}
 }

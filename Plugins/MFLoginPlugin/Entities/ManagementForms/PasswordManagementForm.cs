@@ -21,7 +21,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		public string NewDescription;
 		public bool Inverted;
 		public bool IsValid = false;
-        private void create_password_button_Click(object sender, EventArgs e)
+        private bool validPasswords = false;
+        private void checkPasswords(object sender, EventArgs e)
         {
             string pass1 = password_textBox1.Text;
             string pass2 = password_textBox2.Text;
@@ -31,6 +32,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
                 password_textBox1.Focus();
             }
             else
+            {
+                validPasswords = true;
+                temp_label.Text = "Passwords match";
+            }
+        }
+        private void create_password_button_Click(object sender, EventArgs e)
+        {
+            if (validPasswords)
             {
                 NewPassword = password_textBox1.Text;
 				NewDescription = description_textBox.Text;

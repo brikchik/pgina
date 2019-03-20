@@ -38,15 +38,18 @@ namespace pGina.Plugin.MFLoginPlugin
                 string path = dbPath_textBox.Text;
                 try
                 {
+                    m_settings.DBPassword = passwordField.Text;
                     if (File.Exists(path)) DBHelper.ConnectLocalDB(path, passwordField.Text);
                     else
+                    {
                         DBHelper.CreateLocalDB(path, passwordField.Text);
+                    }
 					m_settings.LocalDatabasePath = path;
 					m_settings.Local = true;
 					m_settings.FirstRun = false;
-					LocalConfiguration localConfiguration = new LocalConfiguration();
+                    Close();
 				}
-                catch (System.Data.SQLite.SQLiteException sqle) { MessageBox.Show(sqle.Message, "Unable to use database"); }
+                catch (Exception sqle) { MessageBox.Show(sqle.Message, "Unable to work with database"); }
             }
         }
 
@@ -60,12 +63,16 @@ namespace pGina.Plugin.MFLoginPlugin
             }
             else
             {
-                DBHelper.ConnectToRemoteDB(serverPath_textbox.Text);
-				m_settings.RemoteDatabasePath = serverPath_textbox.Text;
-				m_settings.FirstRun = false;
-				m_settings.Local = false;
-				MessageBox.Show("Connected to remote db. Configuration successful");
-				Close();
+                try
+                {
+                    DBHelper.ConnectToRemoteDB(serverPath_textbox.Text);
+                    m_settings.RemoteDatabasePath = serverPath_textbox.Text;
+                    m_settings.FirstRun = false;
+                    m_settings.Local = false;
+                    MessageBox.Show("Connected to remote db. Configuration successful");
+                    Close();
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
 
@@ -85,7 +92,7 @@ namespace pGina.Plugin.MFLoginPlugin
         {
             changePath_button.BackColor = SystemColors.ButtonFace;
             defaultPath_button.BackColor = SystemColors.ActiveCaption;
-            dbPath_textBox.Text = "C:/Program files/pGina.fork/Plugins/MFLoginDB.db";
+            dbPath_textBox.Text = "C:/Program files/pGina.fork/MFLoginDB.db";
         }
     }
 }

@@ -18,7 +18,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		public static BooleanResult Authenticate(UserInformation userInfo)
         {
             dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
-			DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath,"");
+            DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath, (string)m_settings.DBPassword);
 			String inputPassword = userInfo.Password;
             User user = new User();
             if (!user.FillByName(userInfo.Username))

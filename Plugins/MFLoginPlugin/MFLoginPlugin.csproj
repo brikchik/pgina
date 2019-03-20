@@ -79,12 +79,6 @@
     <Compile Include="Entities\ManagementForms\UserManagementForm.Designer.cs">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ManagementForms\KeySelectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Entities\ManagementForms\KeySelectionForm.Designer.cs">
-      <DependentUpon>KeySelectionForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Entities\Keys\BluetoothDevice.cs" />
     <Compile Include="LocalConfiguration.cs">
       <SubType>Form</SubType>
@@ -140,9 +134,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Entities\ManagementForms\ConnectedDeviceManagementForm.resx">
       <DependentUpon>ConnectedDeviceManagementForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Entities\ManagementForms\KeySelectionForm.resx">
-      <DependentUpon>KeySelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Entities\ManagementForms\PasswordManagementForm.resx">
       <DependentUpon>PasswordManagementForm.cs</DependentUpon>

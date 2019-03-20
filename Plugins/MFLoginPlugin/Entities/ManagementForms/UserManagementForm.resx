@@ -117,4 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="warning_label.Text" xml:space="preserve">
+    <value>WARNING: If you add an existing user to pGina, their password will be reset to random string.
+Some encrypted documents, stored passwords and sertificates may become unavailable.
+pGina users with multi-factor login can not log in via system password and are unable to change their password using Windows tools.</value>
+  </data>
 </root>

@@ -30,9 +30,11 @@ namespace pGina.Plugin.MFLoginPlugin
                 m_settings = new pGinaDynamicSettings(SimpleUuid);
 				m_settings.SetDefault("FirstRun",true);
                 m_settings.SetDefault("Local", false);
-				m_settings.SetDefault("LocalDatabasePath", "MFLoginDB.db");
+				m_settings.SetDefault("LocalDatabasePath", "C:/Program Files/pGina.fork/MFLoginDB.db");
 				m_settings.SetDefault("RemoteDatabasePath", "");
 				m_settings.SetDefault("Description", m_defaultDescription);
+                m_settings.SetDefault("DBPassword", "");
+                // ####### password is to be stored in a safer place, not Windows regisry
 
                 m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }

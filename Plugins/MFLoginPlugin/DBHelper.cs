@@ -37,11 +37,15 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 "; // wanted to read it from file but it seems to be useless
         public static void CreateLocalDB(string path, string password)
         {
-            SQLiteConnection.CreateFile(path);
-            ConnectLocalDB(path, password);
-            SQLiteCommand sqlc = connection.CreateCommand();
-            sqlc.CommandText = DBCreationQuery;
-            sqlc.ExecuteNonQuery();
+            try
+            {
+                SQLiteConnection.CreateFile(path);
+                ConnectLocalDB(path, password);
+                SQLiteCommand sqlc = connection.CreateCommand();
+                sqlc.CommandText = DBCreationQuery;
+                sqlc.ExecuteNonQuery();
+            }
+            catch (Exception e){ throw new Exception("Path is incorrect. Error: "+e.Message); }
         }
         public static void ConnectLocalDB(string path, string password)
         {
@@ -54,13 +58,14 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         }
         public static void Disconnect()
         {
+            connection.Shutdown();
             connection.Close();
             connection.Dispose();
         }
 		public static User[] ReadUsers()
 		{
 			List<User> Users = new List<User>();
-			if (connection.State != System.Data.ConnectionState.Open) return null;
+			if (connection != null && connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS;", connection);
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			while (r.Read())
@@ -74,7 +79,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 		public static Key[] ReadKeys(string type="", AuthMethod am=null)
 		{
 			List<Key> Keys = new List<Key>();
-			if (connection.State != System.Data.ConnectionState.Open) return null;
+			if (connection !=null && connection.State != System.Data.ConnectionState.Open) return null;
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS;", connection);
 			if (type != "")
 			{
@@ -139,6 +144,19 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 			SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM KEYS WHERE KEYS.KID not in (SELECT K1 FROM AUTH_METHOD UNION SELECT K2 FROM AUTH_METHOD UNION SELECT K3 FROM AUTH_METHOD UNION SELECT K4 FROM AUTH_METHOD UNION SELECT K5 FROM AUTH_METHOD);", DBHelper.connection);
 			sqlc.ExecuteScalar();
 		}
+        public static void CleanDB()
+        {
+            try
+            {
+                foreach (User user in ReadUsers())
+                {
+                    if (!user.ExistsInSystem()) user.Remove();
+                }
+                SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM AUTH_METHOD WHERE UID NOT IN (SELECT UID FROM USERS);", DBHelper.connection);
+                sqlc.ExecuteScalar();
+            }
+            catch { }
+        }
         /*
         public static void WriteLogAttempt(LogEntity le) { }
         public static LogEntity ReadLogAttempt() { return new LogEntity(); } // how can this be used??????
