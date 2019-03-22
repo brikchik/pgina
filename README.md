@@ -4,6 +4,22 @@ pGina is a pluggable Open Source GINA and CredentialProvider replacement.
 Plugins are written in managed code and allow for user authentication, session
 management and login time actions.
 
+## This fork
+
+This fork is supposed to work with multi-factor login plugin. Recommended configuration: all plugins except for MFLogin disabled.
+MFLogin plugin allows you to create different authentication methods for each user.
+You can use combination of other plugins to get MFLogin plugin functionality but that doesn't work well.
+
+Each authentication method has up to 5 keys required for the user to log in.
+Keys include:
+* Connectable devices (USB Flash, camera, any other device with a serial number)
+* Password
+* HTTP(S) request
+* Bluetooth devices
+
+Plugin has its own password protected database.
+Windows users can be added to pGina from the configuration tool. User password is set to a huge random string then.
+
 ## License
 
 Copyright (c) 2016, pGina Team
