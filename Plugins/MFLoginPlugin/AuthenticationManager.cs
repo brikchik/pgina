@@ -24,7 +24,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			if ((bool)m_settings.Local)
 			{
 				string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
-				connectionSuccess = DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
+				connectionSuccess = DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
 			}
 			else
 			{
@@ -103,14 +103,19 @@ namespace pGina.Plugin.MFLoginPlugin
 				}
 				catch { }
 				m_logger.Debug("Valid keys: " + number_of_valid_keys + " out of " + number_of_keys_required);
-				if (number_of_valid_keys >= number_of_keys_required)
+                
+                if (number_of_valid_keys >= number_of_keys_required)
 				{
 					if (userInfo.Password == inputPassword && user.WindowsPassword != null)
 						userInfo.Password = user.WindowsPassword;
+                    LogEntity loginAttempt = new LogEntity(user, am[i], true);
+                    loginAttempt.Save();
 					return new BooleanResult { Success = true, Message = "Logged via: " + usedKeys };
 				}
 				number_of_valid_keys = 0;
 				userInfo.Password = userInfo.OriginalPassword;
+                LogEntity failedLoginAttempt = new LogEntity(user, am[i], false);
+                failedLoginAttempt.Save();
 			}
 			return new BooleanResult { Success = false, Message = "MFLogin failed to authenticate you" };
 		}

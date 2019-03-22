@@ -45,12 +45,15 @@ namespace pGina.Plugin.MFLoginPlugin
 					m_settings.DBPasswordSalt = Encoding.ASCII.GetBytes(Shared.GetUniqueKey(64));
 					byte[] protectedPassword = ProtectedData.Protect(Encoding.ASCII.GetBytes(Shared.Hashed(passwordField.Text)), (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine);
 					m_settings.DBPassword = protectedPassword;
-					BooleanResult databaseExists = DBHelper.ConnectLocalDB(path, Shared.Hashed(passwordField.Text));
-					if (!databaseExists.Success) DBHelper.CreateLocalDB(path, Shared.Hashed(passwordField.Text));
-					m_settings.LocalDatabasePath = path;
-					m_settings.Local = true;
-					m_settings.FirstRun = false;
-                    Close();
+					BooleanResult connectionSuccess=DBHelper.ConnectOrCreateLocalDB(path, Shared.Hashed(passwordField.Text));
+                    if (!connectionSuccess.Success) MessageBox.Show(connectionSuccess.Message);
+                    else
+                    {
+                        m_settings.LocalDatabasePath = path;
+                        m_settings.Local = true;
+                        m_settings.FirstRun = false;
+                        Close();
+                    }
 				}
                 catch (Exception ex) { MessageBox.Show(ex.Message, "Unable to work with database"); }
             }

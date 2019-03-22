@@ -15,11 +15,11 @@ namespace pGina.Plugin.MFLoginPlugin
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(AMID) AS MAX_AMID FROM AUTH_METHOD", DBHelper.connection);
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			r.Read();
-			try	{AMID = ulong.Parse(r["MAX_AMID"].ToString()) + 1;} catch (Exception e) { AMID = 0; m_logger.Debug("Unable to create new Auth_method"); }
+			try	{AMID = ulong.Parse(r["MAX_AMID"].ToString()) + 1;} catch { AMID = 1; m_logger.Debug("Unable to create new Auth_method"); }
 		}
 		public AuthMethod(ulong amid)
 		{
-			if (amid != 0) AMID = amid;
+			AMID = amid;
 		}
 		public ulong AMID=0;
         public ulong UID=0;
@@ -31,7 +31,15 @@ namespace pGina.Plugin.MFLoginPlugin
 		public string Description="Auth method";
         public int Number_of_keys=0; // How many keys are required for a successful auth
 		private string Hash="";
-		private void ComputeHash() { Hash = "" + AMID + " " + UID; }
+        public void ComputeHash() { 
+            Hash = Shared.Hashed(Description+AMID+UID+K1+K2+K3+K4+K5+Number_of_keys);
+        }
+        public bool IsValid()
+        {
+            string currentHash = Hash;
+            ComputeHash();
+            return (currentHash == Hash);
+        }
 		public bool Fill()
 		{
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHOD WHERE AMID=$AMID", DBHelper.connection);
@@ -40,15 +48,16 @@ namespace pGina.Plugin.MFLoginPlugin
 			if (r.Read())
 			{
 				UID = ulong.Parse(r["UID"].ToString());
-				try { K1 = Key.DefineKey(ulong.Parse(r["K1"].ToString())); } catch (Exception e) { m_logger.Debug("K1 not loaded"); }
-				try { K2 = Key.DefineKey(ulong.Parse(r["K2"].ToString())); } catch (Exception e) { m_logger.Debug("K2 not loaded"); }
-				try { K3 = Key.DefineKey(ulong.Parse(r["K3"].ToString())); } catch (Exception e) { m_logger.Debug("K3 not loaded"); }
-				try { K4 = Key.DefineKey(ulong.Parse(r["K4"].ToString())); } catch (Exception e) { m_logger.Debug("K4 not loaded"); }
-				try { K5 = Key.DefineKey(ulong.Parse(r["K5"].ToString())); } catch (Exception e) { m_logger.Debug("K5 not loaded"); }
+				try { K1 = Key.DefineKey(ulong.Parse(r["K1"].ToString())); } catch { m_logger.Debug("K1 not loaded"); }
+				try { K2 = Key.DefineKey(ulong.Parse(r["K2"].ToString())); } catch { m_logger.Debug("K2 not loaded"); }
+				try { K3 = Key.DefineKey(ulong.Parse(r["K3"].ToString())); } catch { m_logger.Debug("K3 not loaded"); }
+				try { K4 = Key.DefineKey(ulong.Parse(r["K4"].ToString())); } catch { m_logger.Debug("K4 not loaded"); }
+				try { K5 = Key.DefineKey(ulong.Parse(r["K5"].ToString())); } catch { m_logger.Debug("K5 not loaded"); }
 				//we don't care if some keys are null
 				Description = (string)r["Description"];
 				Number_of_keys = int.Parse(r["Number_of_keys"].ToString());
 				Hash = (string)r["Hash"];
+                if (!IsValid()) return false;
 				return true;
 			}
 			else
@@ -72,7 +81,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			try { sqlc.Parameters.AddWithValue("$K5", K5.KID); } catch { sqlc.Parameters.AddWithValue("$K5", 0); }
 			sqlc.Parameters.AddWithValue("$Description", Description);
 			sqlc.Parameters.AddWithValue("$Number_of_keys", Number_of_keys);
-			
+            ComputeHash();
 			sqlc.Parameters.AddWithValue("$Hash", Hash);
 			return (sqlc.ExecuteNonQuery() == 1);
 		}

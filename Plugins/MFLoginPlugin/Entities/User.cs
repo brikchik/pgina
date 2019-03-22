@@ -15,7 +15,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
         private string Hash="";
 		public string WindowsPassword=null; // REAL windows password
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
-		public void ComputeHash() { Hash = Name + UID; } // !!!!!!!!!!!!
+		public void ComputeHash() { Hash = Shared.Hashed(Name + UID + Role + WindowsPassword); }
         public bool IsValid()
         {
             string currentHash = Hash;
@@ -50,6 +50,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 				Role = (string)r["Role"];
 				if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
 				Hash = (string)r["Hash"];
+                if (!IsValid()) return false;
 				return true;
 			}
 			else
@@ -66,6 +67,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 				Role = (string)r["Role"];
 				if (r["WindowsPassword"]!=System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
 				Hash = (string)r["Hash"];
+                if (!IsValid()) return false;
 				return true;
 			}
 			else
@@ -84,6 +86,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			sqlc.Parameters.AddWithValue("$Name", Name);
 			sqlc.Parameters.AddWithValue("$Role", Role);
 			sqlc.Parameters.AddWithValue("$WindowsPassword", WindowsPassword);
+            ComputeHash();
 			sqlc.Parameters.AddWithValue("$Hash", Hash);
 			return (sqlc.ExecuteNonQuery() == 1);
 		}

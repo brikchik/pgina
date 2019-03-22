@@ -25,8 +25,9 @@ namespace pGina.Plugin.MFLoginPlugin
 Current database path: ";
             database_label.Text += (string)m_settings.LocalDatabasePath;
 			string DBPassword= Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
-			BooleanResult connectionSuccess=DBHelper.ConnectLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
-			if (connectionSuccess.Success)databaseLoaded = true;
+			DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
+            bool connectionSuccess = DBHelper.CheckDatabase();
+			if (connectionSuccess)databaseLoaded = true;
 			else
 			{
 				databaseLoaded = false;
@@ -181,7 +182,9 @@ Current database path: ";
 				AuthMethod[] authMethods = DBHelper.GetAuthMethods(user);
 				if (authMethods.Length == 0)
 				{
-					authMethods_listBox.Items.Add(new AuthMethod(user));
+                    AuthMethod firstAM = new AuthMethod(user);
+                    firstAM.Save();
+					authMethods_listBox.Items.Add(firstAM);
 				}
 				else
 				{
@@ -558,8 +561,9 @@ Current database path: ";
                     DBHelper.Disconnect();
                     System.IO.File.Delete((string)m_settings.LocalDatabasePath);
 					string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
-					DBHelper.CreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
-                    databaseLoaded = true;
+					BooleanResult connectionSuccess=DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword, true);
+                    if (connectionSuccess.Success) databaseLoaded = true;
+                    MessageBox.Show(connectionSuccess.Message);
                 }
                 catch (Exception ex){ MessageBox.Show("Unable to erase database"+ex.Message+"\n Try again later.", "Database erase"); }
             }
@@ -590,7 +594,20 @@ Current database path: ";
 
         private void logs_tabPage_Enter(object sender, EventArgs e)
         {
-			
+            try
+            {
+                logs_listBox.Items.Clear();
+                foreach (LogEntity le in DBHelper.ReadLogs())
+                {
+                    logs_listBox.Items.Add(le.ToString());
+                }
+            }
+            catch (Exception ex) { m_logger.Debug(ex.Message); }
 		}
+
+        private void logs_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
 	}
 }

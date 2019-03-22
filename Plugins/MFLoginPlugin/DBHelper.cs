@@ -29,46 +29,75 @@ CREATE TABLE KEYS (KID NUMERIC (16) PRIMARY KEY UNIQUE NOT NULL, Description TEX
 
 -- Table: LOGIN_ATTEMPTS
 DROP TABLE IF EXISTS LOGIN_ATTEMPTS;
-CREATE TABLE LOGIN_ATTEMPTS (UID NUMERIC (16) NOT NULL, User TEXT NOT NULL, Keys TEXT NOT NULL, Time DATETIME NOT NULL, Success BOOLEAN NOT NULL, Auth_method NUMERIC(16) NOT NULL,Hash TEXT NOT NULL);
+CREATE TABLE LOGIN_ATTEMPTS (LEID NUMERIC NOT NULL, UID NUMERIC (16) NOT NULL, Name TEXT, AMID NUMERIC(16) NOT NULL, AMDescription TEXT, KeysUsed TEXT, Success BOOLEAN NOT NULL, Time DATETIME NOT NULL, Hash TEXT NOT NULL);
 
 -- Table: USERS
 DROP TABLE IF EXISTS USERS;
 CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (128) NOT NULL UNIQUE, ROLE STRING(128) NOT NULL, WindowsPassword STRING(128), Hash TEXT NOT NULL);
 "; // wanted to read it from file but it seems to be useless
-        public static BooleanResult CreateLocalDB(string path, string password)
+        public static bool CheckDatabase()
         {
             try
             {
-				if (File.Exists(path)) File.Delete(path);
-                SQLiteConnection.CreateFile(path);
-				BooleanResult connectionSuccess = ConnectLocalDB(path, password);
-				if (connectionSuccess.Message == "Database corrupted")
-				{
-					SQLiteCommand sqlc = connection.CreateCommand();
-					sqlc.CommandText = DBCreationQuery;
-					sqlc.ExecuteNonQuery();
-				}
-				else return connectionSuccess;
+                SQLiteCommand sqlc = new SQLiteCommand("SELECT COUNT(name) FROM sqlite_master WHERE type='table';", connection);
+                ulong a = ulong.Parse(sqlc.ExecuteScalar().ToString());
+                if (a != 4) throw new Exception();
             }
-            catch (Exception ex){ return new BooleanResult() { Success=false, Message=ex.Message }; }
-			return new BooleanResult() { Success = true };
+            catch { return false; }
+            return true;
         }
-        public static BooleanResult ConnectLocalDB(string path, string password)
+        public static BooleanResult ConnectOrCreateLocalDB(string path, string password, bool createNew=false)
         {
-			try
-			{
-				SQLiteConnectionStringBuilder sQLiteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
-				sQLiteConnectionStringBuilder.Add("Data Source", path);
-				sQLiteConnectionStringBuilder.Add("Version", 3);
-				sQLiteConnectionStringBuilder.Add("Password", password);
-				connection = new SQLiteConnection(sQLiteConnectionStringBuilder.ConnectionString);
-				connection.Open();
-				SQLiteCommand sqlc = new SQLiteCommand("SELECT COUNT(name) FROM sqlite_master WHERE type='table';", connection);
-				ulong a = ulong.Parse(sqlc.ExecuteScalar().ToString());
-				if (a != 4) return new BooleanResult() { Success = false, Message="Database corrupted or the password is wrong" };
-			}
-			catch (Exception ex){ return new BooleanResult() { Success = false, Message=ex.Message }; }
-			return new BooleanResult() { Success = true } ;
+            if (connection!=null) connection.Close();
+            if (createNew)
+            {
+                try
+                {
+                    File.Delete(path);
+                }
+                catch {} //we don't care if database file is deleted or not
+                // db can be reset with SQL query
+            }
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    SQLiteConnection.CreateFile(path);
+                    createNew = true;
+                }
+            }
+            catch { return new BooleanResult() { Success = false, Message = "No access to file" }; }
+            
+            SQLiteConnectionStringBuilder sQLiteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
+	    	sQLiteConnectionStringBuilder.Add("Data Source", path);
+			sQLiteConnectionStringBuilder.Add("Version", 3);
+			sQLiteConnectionStringBuilder.Add("Password", password);
+			connection = new SQLiteConnection(sQLiteConnectionStringBuilder.ConnectionString);
+			connection.Open();
+
+            bool connectionSuccess = CheckDatabase();
+            if (connectionSuccess)
+            {
+                if (createNew)
+                {
+                    using (SQLiteCommand sqlc = new SQLiteCommand(DBCreationQuery, connection))
+                        sqlc.ExecuteNonQuery();
+                    return new BooleanResult(){Success=true, Message="Created"};
+                }
+                else
+                    return new BooleanResult(){Success=true, Message="Open"};
+            }
+            else
+            {
+                if (createNew)
+                {
+                    using (SQLiteCommand sqlc = new SQLiteCommand(DBCreationQuery, connection))
+                        sqlc.ExecuteNonQuery();
+                    return new BooleanResult() { Success = true, Message = "Created" };
+                }
+                else
+                return new BooleanResult() {Success=false, Message="Try again. Wrong password or corrupted database"  };
+            }
         }
         public static BooleanResult Disconnect()
         {
@@ -173,8 +202,21 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         public static void WriteLogAttempt(LogEntity le) { }
         public static LogEntity ReadLogAttempt() { return new LogEntity(); } // how can this be used??????
         public static List<LogEntity> ReadLogs(DateTime start, DateTime end) { return new List<LogEntity>(); } //logs in time period
-        public static List<LogEntity> ReadLogs() { return new List<LogEntity>(); } // all logs
-        //
-		*/
+        */
+        public static List<LogEntity> ReadLogs() 
+        {
+            List<LogEntity> logs = new List<LogEntity>();
+            SQLiteCommand sqlc = new SQLiteCommand("SELECT LEID FROM LOGIN_ATTEMPTS", DBHelper.connection);
+            SQLiteDataReader r = sqlc.ExecuteReader();
+            while (r.Read())
+            {
+                ulong leid = ulong.Parse(r["LEID"].ToString());
+                LogEntity le = new LogEntity(leid);
+                le.Fill();
+                logs.Add(le);
+            }
+            return logs;
+        } // all logs
+        
     }
 }

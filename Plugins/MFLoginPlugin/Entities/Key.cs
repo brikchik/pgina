@@ -91,6 +91,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				try { Password = (string)r["Password"]; } catch { };// may be null
 				try { Data = (string)r["Data"];} catch { };// may be null
 				Hash = (string)r["Hash"];
+                if (!IsValid()) return false;
 				return true;
 			}
 			else
@@ -112,6 +113,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			sqlc.Parameters.AddWithValue("$Serial", Serial);
 			sqlc.Parameters.AddWithValue("$Password", Password);
 			sqlc.Parameters.AddWithValue("$Data", Data);
+            ComputeHash();
 			sqlc.Parameters.AddWithValue("$Hash", Hash);
 			return (sqlc.ExecuteNonQuery()==1);
 		}
@@ -122,13 +124,13 @@ namespace pGina.Plugin.MFLoginPlugin
 			bool success = (sqlc.ExecuteNonQuery() == 1);
 			return success;
 		}
-		public void ComputeHash() { Hash = ""+KID; } // !!!!!!!!!!!!
-		public bool IsValid()
-		{
-			string currentHash = Hash;
-			ComputeHash();
-			return (currentHash == Hash);
-		}
+        public void ComputeHash() { Hash = Shared.Hashed(Description + Type + Inverted + KID + Serial + Password+ Data); }
+        public bool IsValid()
+        {
+            string currentHash = Hash;
+            ComputeHash();
+            return (currentHash == Hash);
+        }
 		public override string ToString()
 		{
 			String type = Type + " (" + KID + ")" + ": " + Description;
