@@ -446,33 +446,51 @@ namespace pGina.Service.Impl
                             isLoggedIN = true;
                             if (iUsers.Any(s => s.EndsWith("\\" + sessionDriver.UserInformation.Username, StringComparison.CurrentCultureIgnoreCase)))
                             {
-                                int Locked_sessionID = Convert.ToInt32(iUsers.Find(s => s.EndsWith("\\" + sessionDriver.UserInformation.Username, StringComparison.CurrentCultureIgnoreCase)).Split('\\').First());
-                                m_logger.DebugFormat("User:{0} is Locked in Session:{1}", sessionDriver.UserInformation.Username, Locked_sessionID);
-                                // verify that this unlock is present somewhere in m_sessionPropertyCache
-                                // if not, this login is not backed by m_sessionPropertyCache
-                                if (m_sessionPropertyCache.GetAll().Any(i => i == Locked_sessionID))
-                                {
-                                    UserInformation uInfo = m_sessionPropertyCache.Get(Locked_sessionID).First().GetTrackedSingle<UserInformation>();
-                                    if (!uInfo.Username.Equals(sessionDriver.UserInformation.Username, StringComparison.CurrentCultureIgnoreCase))
-                                    {
-                                        // that should never ever happen
-                                        m_logger.ErrorFormat("User {0} is Locked in Session {1} but the username doesn't match the session information pGina contains. '{0}' vs. '{2}'", sessionDriver.UserInformation.Username, Locked_sessionID, uInfo.Username);
-										 return new LoginResponseMessage() { Result = false, Message = String.Format("User {0} is Locked in Session {1} but the username doesn't match the session information pGina contains\n\n'{0}' vs '{2}'", sessionDriver.UserInformation.Username, Locked_sessionID, uInfo.Username) };
-									 }
-                                }
-                                else
-                                {
-                                    m_logger.ErrorFormat("User {0} is Locked in Session {1} but was not authenticated by pGina. Unable to find SessionProperty in m_sessionPropertyCache.Get({1})", sessionDriver.UserInformation.Username, Locked_sessionID);
-                                    // ######################
-                                    // that shouldn't happen
-                                    // HOWEVER, IT HAPPENS IN WINDOWS 10 after the latest Microsoft changes
-                                    // Locked Windows 10 users are processed here for some reason
-                                    // This condition is ignored for UNLOCK SCENARIO
-                                    // Till someone manages to find an APPROPRIATE SOLUTION (if ever)
-                                    // ######################
-                                    // return new LoginResponseMessage() { Result = false, Message = String.Format("User {0} is Locked in Session {1} but was not authenticated by pGina\n\nIt is possible that another Credential Provider was used\nor the pGina service has crashed.\n", sessionDriver.UserInformation.Username, Locked_sessionID) };
-                                }
-                            }
+								int lockedSessionID = Convert.ToInt32(iUsers.Find(s => s.EndsWith("\\" + sessionDriver.UserInformation.Username, StringComparison.CurrentCultureIgnoreCase)).Split('\\').First());
+								m_logger.DebugFormat("User:{0} is Locked in Session:{1}", sessionDriver.UserInformation.Username, lockedSessionID);
+								bool found = false;
+								foreach (int sessionID in m_sessionPropertyCache.GetAll())
+								{
+									// search for session properties via the username
+									SessionProperties userSessionProperties = null;
+									List<SessionProperties> sessionPropertiesList = m_sessionPropertyCache.Get(sessionID);
+									foreach (SessionProperties sessionProperties in sessionPropertiesList)
+									{
+										UserInformation uInfo = sessionProperties.GetTrackedSingle<UserInformation>();
+										if (uInfo.Username.Equals(sessionDriver.UserInformation.Username, StringComparison.CurrentCultureIgnoreCase))
+										{
+											userSessionProperties = sessionProperties;
+											break;
+										}
+									}
+
+									if (userSessionProperties != null)
+									{
+										if (lockedSessionID != sessionID)
+										{
+											// remove session properties from their old location
+											sessionPropertiesList.Remove(userSessionProperties);
+											if (sessionPropertiesList.Count > 0)
+												m_sessionPropertyCache.Add(sessionID, sessionPropertiesList);
+											else
+												m_sessionPropertyCache.Remove(sessionID);
+
+											// add session properties to their proper location
+											List<SessionProperties> newSessionPropertiesList = m_sessionPropertyCache.Get(lockedSessionID);
+											newSessionPropertiesList.Add(userSessionProperties);
+											m_sessionPropertyCache.Add(lockedSessionID, newSessionPropertiesList);
+										}
+										found = true;
+										break;
+									}
+								}
+								if (!found)
+								{
+									m_logger.ErrorFormat("User {0} is Locked in Session {1} but was not authenticated by pGina. Unable to find SessionProperty in m_sessionPropertyCache.Get({1})", sessionDriver.UserInformation.Username, lockedSessionID);
+									//return new LoginResponseMessage() { Result = false, Message = string.Format("User {0} is Locked in Session {1} but was not authenticated by pGina\n\nIt is possible that another Credential Provider was used\nor the pGina service has crashed.\n", sessionDriver.UserInformation.Username, lockedSessionID) };
+									isLoggedIN = false;
+								}
+							}
                             else
                             {
                                 // verify that this UACed login is present somewhere in m_sessionPropertyCache
