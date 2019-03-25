@@ -39,25 +39,19 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 			{
 				m_logger.Debug("Searching for bluetooth device " + Serial);
 				BluetoothClient bluetoothClient = new BluetoothClient();
-				BluetoothDeviceInfo[] info = bluetoothClient.DiscoverDevices(100);
+				BluetoothDeviceInfo[] info = bluetoothClient.DiscoverDevices();
 				//BluetoothDeviceInfo[] paired = bluetoothClient.DiscoverDevices(255, true, false, false);
 				foreach (BluetoothDeviceInfo device in info)
 				{
-					if (device.DeviceAddress.ToString() == Serial)
+					if (device.DeviceAddress.ToString() == Serial && device.LastSeen>DateTime.Now.Subtract(TimeSpan.FromSeconds(30)))
 					{
 						success = true;
 						break;
 					}
 					//
-					//
-					//
-					// !!!! my pc doesn't have a bluetooth module to develop this key, proper implementation pending
-					// This method is __COMPLETELY__ unreliable.
-					// It works sometimes though (with false positives & false negatives)
-					// Device should be paired in some way for a proper key implementation
-					// m_logger.Debug("Bluetooth not implemented!!!");
-					//
-					//
+					// This method is unreliable as bluetooth address can be copied.
+					// It also has glitches sometimes (with false positives & false negatives)
+					// Device should be paired for the key to be secure
 					//
 				}
 			}

@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "BluetoothDevice (unreliable!)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "Website http request"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             this.changeRole_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.user_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,7 +108,23 @@
             this.expandAll_button = new System.Windows.Forms.Button();
             this.summary_treeView = new System.Windows.Forms.TreeView();
             this.logs_tabPage = new System.Windows.Forms.TabPage();
-            this.logs_listBox = new System.Windows.Forms.ListBox();
+            this.logControl_groupBox = new System.Windows.Forms.GroupBox();
+            this.thisMongthLogs_radioButton = new System.Windows.Forms.RadioButton();
+            this.todayLogs_radioButton = new System.Windows.Forms.RadioButton();
+            this.countLogs_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.allLogs_radioButton = new System.Windows.Forms.RadioButton();
+            this.extraLogs_checkBox = new System.Windows.Forms.CheckBox();
+            this.firstLogs_radioButton = new System.Windows.Forms.RadioButton();
+            this.lastLogs_radioButton = new System.Windows.Forms.RadioButton();
+            this.logs_dataView = new System.Windows.Forms.DataGridView();
+            this.user_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authMethodDescription_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.success_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.time_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.keysUsed_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.leid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.uid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.changeRole_contextMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
             this.advancedSettings_tabPage.SuspendLayout();
@@ -130,6 +146,9 @@
             this.tabControl.SuspendLayout();
             this.summary_tabPage.SuspendLayout();
             this.logs_tabPage.SuspendLayout();
+            this.logControl_groupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.countLogs_numericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logs_dataView)).BeginInit();
             this.SuspendLayout();
             // 
             // changeRole_contextMenuStrip
@@ -538,15 +557,15 @@
             this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.fastChoiceTypes_listView.AutoArrange = false;
             this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem1.Tag = "BluetoothDevice";
-            listViewItem2.Tag = "ConnectedDevice";
-            listViewItem3.Tag = "Password";
-            listViewItem4.Tag = "HttpRequest";
+            listViewItem9.Tag = "BluetoothDevice";
+            listViewItem10.Tag = "ConnectedDevice";
+            listViewItem11.Tag = "Password";
+            listViewItem12.Tag = "HttpRequest";
             this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.fastChoiceTypes_listView.LabelWrap = false;
             this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
             this.fastChoiceTypes_listView.MultiSelect = false;
@@ -753,7 +772,7 @@
             this.key3Button.Size = new System.Drawing.Size(100, 66);
             this.key3Button.TabIndex = 8;
             this.key3Button.UseVisualStyleBackColor = true;
-            this.key3Button.Click += new System.EventHandler(this.OpenKeyConfig);
+            this.key3Button.Click += new System.EventHandler(this.ClearKey);
             this.key3Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
             this.key3Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
             // 
@@ -765,7 +784,7 @@
             this.key5Button.Size = new System.Drawing.Size(100, 66);
             this.key5Button.TabIndex = 10;
             this.key5Button.UseVisualStyleBackColor = true;
-            this.key5Button.Click += new System.EventHandler(this.OpenKeyConfig);
+            this.key5Button.Click += new System.EventHandler(this.ClearKey);
             this.key5Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
             this.key5Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
             // 
@@ -777,7 +796,7 @@
             this.key4Button.Size = new System.Drawing.Size(100, 66);
             this.key4Button.TabIndex = 9;
             this.key4Button.UseVisualStyleBackColor = true;
-            this.key4Button.Click += new System.EventHandler(this.OpenKeyConfig);
+            this.key4Button.Click += new System.EventHandler(this.ClearKey);
             this.key4Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
             this.key4Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
             // 
@@ -789,7 +808,7 @@
             this.key1Button.Size = new System.Drawing.Size(95, 66);
             this.key1Button.TabIndex = 6;
             this.key1Button.UseVisualStyleBackColor = true;
-            this.key1Button.Click += new System.EventHandler(this.OpenKeyConfig);
+            this.key1Button.Click += new System.EventHandler(this.ClearKey);
             this.key1Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
             this.key1Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
             // 
@@ -801,7 +820,7 @@
             this.key2Button.Size = new System.Drawing.Size(100, 66);
             this.key2Button.TabIndex = 7;
             this.key2Button.UseVisualStyleBackColor = true;
-            this.key2Button.Click += new System.EventHandler(this.OpenKeyConfig);
+            this.key2Button.Click += new System.EventHandler(this.ClearKey);
             this.key2Button.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragDrop);
             this.key2Button.DragOver += new System.Windows.Forms.DragEventHandler(this.DragTarget_DragOver);
             // 
@@ -901,6 +920,7 @@
             this.keepPassword_checkBox.Text = "Keep password in the OS";
             this.keepPassword_checkBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.keepPassword_checkBox.UseVisualStyleBackColor = true;
+            this.keepPassword_checkBox.CheckedChanged += new System.EventHandler(this.keepPassword_checkBox_CheckedChanged);
             this.keepPassword_checkBox.Click += new System.EventHandler(this.keepPassword_checkBox_Click);
             // 
             // role_textBox
@@ -937,9 +957,9 @@
             // 
             this.tabControl.Controls.Add(this.auth_tabPage);
             this.tabControl.Controls.Add(this.keys_tabPage);
-            this.tabControl.Controls.Add(this.advancedSettings_tabPage);
             this.tabControl.Controls.Add(this.summary_tabPage);
             this.tabControl.Controls.Add(this.logs_tabPage);
+            this.tabControl.Controls.Add(this.advancedSettings_tabPage);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.tabControl.HotTrack = true;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
@@ -993,7 +1013,8 @@
             // 
             // logs_tabPage
             // 
-            this.logs_tabPage.Controls.Add(this.logs_listBox);
+            this.logs_tabPage.Controls.Add(this.logControl_groupBox);
+            this.logs_tabPage.Controls.Add(this.logs_dataView);
             this.logs_tabPage.Location = new System.Drawing.Point(4, 24);
             this.logs_tabPage.Name = "logs_tabPage";
             this.logs_tabPage.Size = new System.Drawing.Size(976, 382);
@@ -1002,16 +1023,209 @@
             this.logs_tabPage.UseVisualStyleBackColor = true;
             this.logs_tabPage.Enter += new System.EventHandler(this.logs_tabPage_Enter);
             // 
-            // logs_listBox
+            // logControl_groupBox
             // 
-            this.logs_listBox.FormattingEnabled = true;
-            this.logs_listBox.HorizontalScrollbar = true;
-            this.logs_listBox.ItemHeight = 15;
-            this.logs_listBox.Location = new System.Drawing.Point(3, 3);
-            this.logs_listBox.Name = "logs_listBox";
-            this.logs_listBox.Size = new System.Drawing.Size(965, 364);
-            this.logs_listBox.TabIndex = 1;
-            this.logs_listBox.SelectedIndexChanged += new System.EventHandler(this.logs_listBox_SelectedIndexChanged);
+            this.logControl_groupBox.Controls.Add(this.thisMongthLogs_radioButton);
+            this.logControl_groupBox.Controls.Add(this.todayLogs_radioButton);
+            this.logControl_groupBox.Controls.Add(this.countLogs_numericUpDown);
+            this.logControl_groupBox.Controls.Add(this.allLogs_radioButton);
+            this.logControl_groupBox.Controls.Add(this.extraLogs_checkBox);
+            this.logControl_groupBox.Controls.Add(this.firstLogs_radioButton);
+            this.logControl_groupBox.Controls.Add(this.lastLogs_radioButton);
+            this.logControl_groupBox.Location = new System.Drawing.Point(876, 3);
+            this.logControl_groupBox.Name = "logControl_groupBox";
+            this.logControl_groupBox.Size = new System.Drawing.Size(97, 376);
+            this.logControl_groupBox.TabIndex = 3;
+            this.logControl_groupBox.TabStop = false;
+            this.logControl_groupBox.Text = "Log control";
+            this.logControl_groupBox.Enter += new System.EventHandler(this.logControl_groupBox_Enter);
+            // 
+            // thisMongthLogs_radioButton
+            // 
+            this.thisMongthLogs_radioButton.AutoSize = true;
+            this.thisMongthLogs_radioButton.Location = new System.Drawing.Point(6, 235);
+            this.thisMongthLogs_radioButton.Name = "thisMongthLogs_radioButton";
+            this.thisMongthLogs_radioButton.Size = new System.Drawing.Size(99, 20);
+            this.thisMongthLogs_radioButton.TabIndex = 7;
+            this.thisMongthLogs_radioButton.TabStop = true;
+            this.thisMongthLogs_radioButton.Text = "This mongth";
+            this.thisMongthLogs_radioButton.UseVisualStyleBackColor = true;
+            this.thisMongthLogs_radioButton.CheckedChanged += new System.EventHandler(this.thisMongthLogs_radioButton_CheckedChanged);
+            // 
+            // todayLogs_radioButton
+            // 
+            this.todayLogs_radioButton.AutoSize = true;
+            this.todayLogs_radioButton.Location = new System.Drawing.Point(6, 209);
+            this.todayLogs_radioButton.Name = "todayLogs_radioButton";
+            this.todayLogs_radioButton.Size = new System.Drawing.Size(66, 20);
+            this.todayLogs_radioButton.TabIndex = 5;
+            this.todayLogs_radioButton.TabStop = true;
+            this.todayLogs_radioButton.Text = "Today";
+            this.todayLogs_radioButton.UseVisualStyleBackColor = true;
+            this.todayLogs_radioButton.CheckedChanged += new System.EventHandler(this.todayLogs_radioButton_CheckedChanged);
+            // 
+            // countLogs_numericUpDown
+            // 
+            this.countLogs_numericUpDown.Location = new System.Drawing.Point(6, 72);
+            this.countLogs_numericUpDown.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.countLogs_numericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.countLogs_numericUpDown.Name = "countLogs_numericUpDown";
+            this.countLogs_numericUpDown.Size = new System.Drawing.Size(75, 21);
+            this.countLogs_numericUpDown.TabIndex = 4;
+            this.countLogs_numericUpDown.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.countLogs_numericUpDown.ValueChanged += new System.EventHandler(this.countLogs_numericUpDown_ValueChanged);
+            // 
+            // allLogs_radioButton
+            // 
+            this.allLogs_radioButton.AutoSize = true;
+            this.allLogs_radioButton.Location = new System.Drawing.Point(6, 183);
+            this.allLogs_radioButton.Name = "allLogs_radioButton";
+            this.allLogs_radioButton.Size = new System.Drawing.Size(41, 20);
+            this.allLogs_radioButton.TabIndex = 3;
+            this.allLogs_radioButton.Text = "All";
+            this.allLogs_radioButton.UseVisualStyleBackColor = true;
+            this.allLogs_radioButton.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // extraLogs_checkBox
+            // 
+            this.extraLogs_checkBox.AutoSize = true;
+            this.extraLogs_checkBox.Location = new System.Drawing.Point(6, 157);
+            this.extraLogs_checkBox.Name = "extraLogs_checkBox";
+            this.extraLogs_checkBox.Size = new System.Drawing.Size(97, 20);
+            this.extraLogs_checkBox.TabIndex = 2;
+            this.extraLogs_checkBox.Text = "Service info";
+            this.extraLogs_checkBox.UseVisualStyleBackColor = true;
+            this.extraLogs_checkBox.CheckedChanged += new System.EventHandler(this.extraLogs_checkBox_CheckedChanged);
+            // 
+            // firstLogs_radioButton
+            // 
+            this.firstLogs_radioButton.AutoSize = true;
+            this.firstLogs_radioButton.Location = new System.Drawing.Point(6, 20);
+            this.firstLogs_radioButton.Name = "firstLogs_radioButton";
+            this.firstLogs_radioButton.Size = new System.Drawing.Size(65, 20);
+            this.firstLogs_radioButton.TabIndex = 1;
+            this.firstLogs_radioButton.Text = "Oldest";
+            this.firstLogs_radioButton.UseVisualStyleBackColor = true;
+            this.firstLogs_radioButton.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
+            // lastLogs_radioButton
+            // 
+            this.lastLogs_radioButton.AutoSize = true;
+            this.lastLogs_radioButton.Checked = true;
+            this.lastLogs_radioButton.Location = new System.Drawing.Point(6, 46);
+            this.lastLogs_radioButton.Name = "lastLogs_radioButton";
+            this.lastLogs_radioButton.Size = new System.Drawing.Size(71, 20);
+            this.lastLogs_radioButton.TabIndex = 0;
+            this.lastLogs_radioButton.TabStop = true;
+            this.lastLogs_radioButton.Text = "Newest";
+            this.lastLogs_radioButton.UseVisualStyleBackColor = true;
+            this.lastLogs_radioButton.CheckedChanged += new System.EventHandler(this.last100logs_radioButton_CheckedChanged);
+            // 
+            // logs_dataView
+            // 
+            this.logs_dataView.AllowUserToAddRows = false;
+            this.logs_dataView.AllowUserToDeleteRows = false;
+            this.logs_dataView.AllowUserToOrderColumns = true;
+            this.logs_dataView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.logs_dataView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.logs_dataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.logs_dataView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.user_column,
+            this.authMethodDescription_column,
+            this.success_column,
+            this.time_column,
+            this.keysUsed_column,
+            this.leid,
+            this.uid,
+            this.amid});
+            this.logs_dataView.Dock = System.Windows.Forms.DockStyle.Left;
+            this.logs_dataView.Location = new System.Drawing.Point(0, 0);
+            this.logs_dataView.MultiSelect = false;
+            this.logs_dataView.Name = "logs_dataView";
+            this.logs_dataView.ReadOnly = true;
+            this.logs_dataView.RowHeadersVisible = false;
+            this.logs_dataView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.logs_dataView.Size = new System.Drawing.Size(870, 382);
+            this.logs_dataView.TabIndex = 2;
+            // 
+            // user_column
+            // 
+            this.user_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.user_column.Frozen = true;
+            this.user_column.HeaderText = "User";
+            this.user_column.MaxInputLength = 128;
+            this.user_column.Name = "user_column";
+            this.user_column.ReadOnly = true;
+            this.user_column.Width = 62;
+            // 
+            // authMethodDescription_column
+            // 
+            this.authMethodDescription_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            this.authMethodDescription_column.HeaderText = "Method";
+            this.authMethodDescription_column.MaxInputLength = 256;
+            this.authMethodDescription_column.Name = "authMethodDescription_column";
+            this.authMethodDescription_column.ReadOnly = true;
+            this.authMethodDescription_column.Width = 5;
+            // 
+            // success_column
+            // 
+            this.success_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.success_column.HeaderText = "Success";
+            this.success_column.MaxInputLength = 20;
+            this.success_column.Name = "success_column";
+            this.success_column.ReadOnly = true;
+            this.success_column.Width = 85;
+            // 
+            // time_column
+            // 
+            this.time_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.time_column.HeaderText = "Time";
+            this.time_column.Name = "time_column";
+            this.time_column.ReadOnly = true;
+            this.time_column.Width = 64;
+            // 
+            // keysUsed_column
+            // 
+            this.keysUsed_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.keysUsed_column.HeaderText = "Keys";
+            this.keysUsed_column.Name = "keysUsed_column";
+            this.keysUsed_column.ReadOnly = true;
+            // 
+            // leid
+            // 
+            this.leid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.leid.HeaderText = "LEID";
+            this.leid.Name = "leid";
+            this.leid.ReadOnly = true;
+            this.leid.Visible = false;
+            // 
+            // uid
+            // 
+            this.uid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.uid.HeaderText = "UID";
+            this.uid.Name = "uid";
+            this.uid.ReadOnly = true;
+            this.uid.Visible = false;
+            // 
+            // amid
+            // 
+            this.amid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.amid.HeaderText = "AMID";
+            this.amid.Name = "amid";
+            this.amid.ReadOnly = true;
+            this.amid.Visible = false;
             // 
             // LocalConfiguration
             // 
@@ -1055,6 +1269,10 @@
             this.tabControl.ResumeLayout(false);
             this.summary_tabPage.ResumeLayout(false);
             this.logs_tabPage.ResumeLayout(false);
+            this.logControl_groupBox.ResumeLayout(false);
+            this.logControl_groupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.countLogs_numericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logs_dataView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1131,6 +1349,22 @@
         private System.Windows.Forms.CheckBox removeWindowsUser_checkBox;
         private System.Windows.Forms.TabPage logs_tabPage;
         private System.Windows.Forms.CheckBox DBOpened_checkBox;
-        private System.Windows.Forms.ListBox logs_listBox;
+        private System.Windows.Forms.DataGridView logs_dataView;
+        private System.Windows.Forms.GroupBox logControl_groupBox;
+        private System.Windows.Forms.RadioButton firstLogs_radioButton;
+        private System.Windows.Forms.RadioButton lastLogs_radioButton;
+        private System.Windows.Forms.CheckBox extraLogs_checkBox;
+        private System.Windows.Forms.RadioButton allLogs_radioButton;
+        private System.Windows.Forms.NumericUpDown countLogs_numericUpDown;
+        private System.Windows.Forms.DataGridViewTextBoxColumn user_column;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authMethodDescription_column;
+        private System.Windows.Forms.DataGridViewTextBoxColumn success_column;
+        private System.Windows.Forms.DataGridViewTextBoxColumn time_column;
+        private System.Windows.Forms.DataGridViewTextBoxColumn keysUsed_column;
+        private System.Windows.Forms.DataGridViewTextBoxColumn leid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn uid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn amid;
+        private System.Windows.Forms.RadioButton todayLogs_radioButton;
+        private System.Windows.Forms.RadioButton thisMongthLogs_radioButton;
 	}
 }

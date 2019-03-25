@@ -95,7 +95,6 @@
             this.role_groupBox.TabIndex = 2;
             this.role_groupBox.TabStop = false;
             this.role_groupBox.Text = "Role";
-            this.role_groupBox.Enter += new System.EventHandler(this.role_groupBox_Enter);
             // 
             // administrator_radioButton
             // 
@@ -153,7 +152,6 @@
             this.warning_label.Size = new System.Drawing.Size(292, 102);
             this.warning_label.TabIndex = 5;
             this.warning_label.Text = resources.GetString("warning_label.Text");
-            this.warning_label.Click += new System.EventHandler(this.warning_label_Click);
             // 
             // UserManagementForm
             // 
@@ -167,7 +165,7 @@
             this.Controls.Add(this.name_groupBox);
             this.Controls.Add(this.addUser_button);
             this.Name = "UserManagementForm";
-            this.Text = "AddUserForm";
+            this.Text = "New user";
             this.Load += new System.EventHandler(this.AddUserForm_Load);
             this.name_groupBox.ResumeLayout(false);
             this.name_groupBox.PerformLayout();

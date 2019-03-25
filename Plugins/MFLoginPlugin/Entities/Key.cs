@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Data.SQLite;
-using pGina.Plugin.MFLoginPlugin.Entities.Keys;
 using log4net;
+using pGina.Plugin.MFLoginPlugin.Entities.Keys;
 // Key class encapsulates all operations with keys
 // May be used to determine which key type to use
 namespace pGina.Plugin.MFLoginPlugin

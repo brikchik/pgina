@@ -5,11 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
 using System.Data.SQLite;
+using System.IO;
 using pGina.Plugin.MFLoginPlugin.Entities;
 using pGina.Shared.Types;
 
@@ -198,15 +195,20 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
             SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM AUTH_METHOD WHERE UID NOT IN (SELECT UID FROM USERS);", DBHelper.connection);
             sqlc.ExecuteScalar();
         }
-        /*
-        public static void WriteLogAttempt(LogEntity le) { }
-        public static LogEntity ReadLogAttempt() { return new LogEntity(); } // how can this be used??????
-        public static List<LogEntity> ReadLogs(DateTime start, DateTime end) { return new List<LogEntity>(); } //logs in time period
-        */
-        public static List<LogEntity> ReadLogs() 
+        public static List<LogEntity> ReadLogs(string mode="", int count=20) //mode="F100", "L100","All", etc.
         {
             List<LogEntity> logs = new List<LogEntity>();
-            SQLiteCommand sqlc = new SQLiteCommand("SELECT LEID FROM LOGIN_ATTEMPTS", DBHelper.connection);
+            SQLiteCommand sqlc = new SQLiteCommand(DBHelper.connection);
+            sqlc.CommandText = "SELECT LEID FROM LOGIN_ATTEMPTS";
+            switch (mode)
+            {
+                case "All": break;
+                case "F": sqlc.CommandText += " ORDER BY LEID ASC LIMIT " + count; break;
+                case "L": sqlc.CommandText += " ORDER BY LEID DESC LIMIT " + count; break;
+                case "Today": sqlc.CommandText += " WHERE Time >= datetime('now', 'localtime', 'start of day')"; break;
+                case "This month": sqlc.CommandText += " WHERE Time >= datetime('now', 'localtime', 'start of month')"; break;
+                default: break;
+            }
             SQLiteDataReader r = sqlc.ExecuteReader();
             while (r.Read())
             {
@@ -216,7 +218,11 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
                 logs.Add(le);
             }
             return logs;
-        } // all logs
+        }
+        public bool ClearLogs(DateTime border)
+        {
+            throw new NotImplementedException();
+        }
         
     }
 }

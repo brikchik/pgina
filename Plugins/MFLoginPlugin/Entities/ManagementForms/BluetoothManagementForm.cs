@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using InTheHand.Windows.Forms;
 namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
     public partial class BluetoothManagementForm : Form
@@ -42,5 +42,16 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		{
 			Serial = serial_textBox.Text;
 		}
+
+        private void searchBTDevices_button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SelectBluetoothDeviceDialog sbtd = new SelectBluetoothDeviceDialog();
+                sbtd.ShowDialog();
+                serial_textBox.Text = sbtd.SelectedDevice.DeviceAddress.ToString();
+            }
+            catch (Exception ex) { MessageBox.Show("Unable to use bluetooth. "+ex.Message); }
+        }
 	}
 }

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Management;
-using System.Text;
 using System.Windows.Forms;
-using pGina.Plugin.MFLoginPlugin;
 using log4net;
 namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
@@ -85,16 +80,6 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
         private void pickUser_comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (pickUser_comboBox.SelectedItem != null && SystemUsers.Contains(pickUser_comboBox.SelectedItem.ToString())) username_textBox.Text = pickUser_comboBox.SelectedItem.ToString();
-        }
-
-        private void role_groupBox_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void warning_label_Click(object sender, EventArgs e)
-        {
-
         }
 	}
 }

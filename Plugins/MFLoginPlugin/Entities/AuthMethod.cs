@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using pGina.Plugin.MFLoginPlugin.Entities;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using log4net;
+using pGina.Plugin.MFLoginPlugin.Entities;
 namespace pGina.Plugin.MFLoginPlugin
 {
     class AuthMethod

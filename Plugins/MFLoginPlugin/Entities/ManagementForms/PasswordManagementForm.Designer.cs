@@ -144,7 +144,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "PasswordManagementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "New password";
+            this.Text = "Password";
             this.ResumeLayout(false);
             this.PerformLayout();
 

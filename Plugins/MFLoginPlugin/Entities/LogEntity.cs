@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.SQLite;
 
 // log entity is configurable. can be changed.
@@ -48,14 +45,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
             return result;
         }
 
-        ulong LEID = 0; // Log entity ID
-        ulong UID = 0;
-        string Name = null;
-        ulong AMID = 0;
-        string AMDescription = null;
-        string KeysUsed = null;
-        bool Success = false;
-        DateTime Time = DateTime.Now;
+        public ulong LEID = 0; // Log entity ID
+        public ulong UID = 0;
+        public string Name = null;
+        public ulong AMID = 0;
+        public string AMDescription = null;
+        public string KeysUsed = null;
+        public bool Success = false;
+        public DateTime Time = DateTime.Now;
         String Hash = "";
         public void ComputeHash() { Hash = Shared.Hashed(""+LEID+UID+Name+AMID+AMDescription+KeysUsed+Success+Time); }
         public bool IsValid()

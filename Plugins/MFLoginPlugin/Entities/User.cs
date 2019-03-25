@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.SQLite;
 using System.DirectoryServices;
 using log4net;
@@ -34,7 +31,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			{
 				UID = ulong.Parse(r["MAX_UID"].ToString()) + 1;
 			}
-			catch (Exception e) { UID = 1; }
+			catch { UID = 1; }
 		}
 
 		public override string ToString() { return Name; }
