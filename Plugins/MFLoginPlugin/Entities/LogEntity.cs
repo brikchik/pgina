@@ -29,6 +29,23 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
             KeysUsed += (authmethod.K5 == null) ? "" : "--->" + authmethod.K5.ToString();
             Success = success;
         }
+        public LogEntity(User user, string action, bool success)
+        {
+            SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(LEID) AS MAX_LEID FROM LOGIN_ATTEMPTS", DBHelper.connection);
+            SQLiteDataReader r = sqlc.ExecuteReader();
+            r.Read();
+            try
+            {
+                LEID = ulong.Parse(r["MAX_LEID"].ToString()) + 1;
+            }
+            catch { LEID = 1; }
+            UID = user.UID;
+            Name = user.Name;
+            AMID = 0;
+            AMDescription = action;
+            KeysUsed = "";
+            Success = success;
+        }
         public LogEntity(ulong leid)
         {
             LEID = leid;

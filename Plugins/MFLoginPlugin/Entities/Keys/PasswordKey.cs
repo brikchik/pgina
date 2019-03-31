@@ -10,13 +10,13 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
     class PasswordKey: Key
     {
 		public PasswordKey(ulong kid):base(kid){ Type = "Password"; } // specific key
-		public PasswordKey():base(0) { Type = "Password"; } // empty key
-        public override bool AddKey() {
-            PasswordManagementForm pmf = new PasswordManagementForm(KID);
+        public override bool AddKey(string userName = "")
+        {
+            PasswordManagementForm pmf = new PasswordManagementForm(userName);
             pmf.ShowDialog();
 			if (!pmf.IsValid) return false;
-			Password = Shared.Hashed(pmf.NewPassword+KID+Type);
-			Description = pmf.NewDescription;
+			Password = Shared.Hashed(pmf.Password+KID+Type);
+			Description = pmf.Description;
 			Inverted = pmf.Inverted;
 			return true;
         }

@@ -12,13 +12,13 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
     public partial class PasswordManagementForm : Form
     {
-        public PasswordManagementForm(ulong kid)
+        public PasswordManagementForm(string userName)
         {
             InitializeComponent();
-			description_textBox.Text += kid;
+            description_textBox.Text += " for " + userName;
         }
-		public string NewPassword;
-		public string NewDescription;
+		public string Password;
+		public string Description;
 		public bool Inverted;
 		public bool IsValid = false;
         private bool validPasswords = false;
@@ -40,8 +40,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
         {
             if (validPasswords)
             {
-                NewPassword = password_textBox1.Text;
-				NewDescription = description_textBox.Text;
+                Password = password_textBox1.Text;
+				Description = description_textBox.Text;
 				Inverted = inverted_checkBox.Checked;
 				IsValid = true;
 				this.Close();

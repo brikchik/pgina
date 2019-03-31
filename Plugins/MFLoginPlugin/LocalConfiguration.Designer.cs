@@ -29,13 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
-            "BluetoothDevice (unreliable!)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
+            "BluetoothDevice (any device, 5 - 15 seconds to check)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
             "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
+            "Encrypted Password File (with Windows password)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem(new string[] {
             "Website http request"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             this.changeRole_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.user_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +45,7 @@
             this.controlPanel = new System.Windows.Forms.ToolStrip();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.advancedSettings_tabPage = new System.Windows.Forms.TabPage();
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox = new System.Windows.Forms.CheckBox();
             this.backup_groupBox = new System.Windows.Forms.GroupBox();
             this.database_groupBox = new System.Windows.Forms.GroupBox();
             this.DBOpened_checkBox = new System.Windows.Forms.CheckBox();
@@ -54,10 +57,16 @@
             this.database_label = new System.Windows.Forms.Label();
             this.runSetup_button = new System.Windows.Forms.Button();
             this.keys_tabPage = new System.Windows.Forms.TabPage();
+            this.checkKey_groupBox = new System.Windows.Forms.GroupBox();
+            this.checkKeyResult_button = new System.Windows.Forms.Button();
+            this.checkKey_button = new System.Windows.Forms.Button();
+            this.checkPassword_label = new System.Windows.Forms.Label();
+            this.checkPassword_textBox = new System.Windows.Forms.TextBox();
+            this.removeUnusedKeys_button = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.keyRemoval_checkBox = new System.Windows.Forms.CheckBox();
             this.deleteKey_button = new System.Windows.Forms.Button();
-            this.keyInfo = new System.Windows.Forms.GroupBox();
+            this.keyInfo_groupBox = new System.Windows.Forms.GroupBox();
             this.keySerial_textBox = new System.Windows.Forms.TextBox();
             this.keyConfigure_button = new System.Windows.Forms.Button();
             this.keyData_checkBox = new System.Windows.Forms.CheckBox();
@@ -72,6 +81,12 @@
             this.fastChoice_groupBox = new System.Windows.Forms.GroupBox();
             this.fastChoiceTypes_listView = new System.Windows.Forms.ListView();
             this.authConfig = new System.Windows.Forms.GroupBox();
+            this.keysRequired_NumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.successPictureBox = new System.Windows.Forms.PictureBox();
+            this.locked_pictureBox = new System.Windows.Forms.PictureBox();
+            this.testAM_groupBox = new System.Windows.Forms.GroupBox();
+            this.testAMpassword_textBox = new System.Windows.Forms.TextBox();
+            this.openingPictureBox = new System.Windows.Forms.PictureBox();
             this.description_textBox = new System.Windows.Forms.TextBox();
             this.description_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -79,9 +94,6 @@
             this.newAuthMethod_button = new System.Windows.Forms.Button();
             this.authMethods_listBox = new System.Windows.Forms.ListBox();
             this.keysRequired_label = new System.Windows.Forms.Label();
-            this.keysRequired_NumUpDown = new System.Windows.Forms.NumericUpDown();
-            this.openingPictureBox = new System.Windows.Forms.PictureBox();
-            this.successPictureBox = new System.Windows.Forms.PictureBox();
             this.key5Label = new System.Windows.Forms.Label();
             this.key4Label = new System.Windows.Forms.Label();
             this.key3Label = new System.Windows.Forms.Label();
@@ -98,9 +110,9 @@
             this.addUser_button = new System.Windows.Forms.Button();
             this.user_ListBox = new System.Windows.Forms.ListBox();
             this.user_groupBox = new System.Windows.Forms.GroupBox();
+            this.role_textBox = new System.Windows.Forms.Label();
             this.userIconPictureBox = new System.Windows.Forms.PictureBox();
             this.keepPassword_checkBox = new System.Windows.Forms.CheckBox();
-            this.role_textBox = new System.Windows.Forms.TextBox();
             this.userName_textBox = new System.Windows.Forms.TextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.summary_tabPage = new System.Windows.Forms.TabPage();
@@ -109,7 +121,7 @@
             this.summary_treeView = new System.Windows.Forms.TreeView();
             this.logs_tabPage = new System.Windows.Forms.TabPage();
             this.logControl_groupBox = new System.Windows.Forms.GroupBox();
-            this.thisMongthLogs_radioButton = new System.Windows.Forms.RadioButton();
+            this.thisMonthLogs_radioButton = new System.Windows.Forms.RadioButton();
             this.todayLogs_radioButton = new System.Windows.Forms.RadioButton();
             this.countLogs_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.allLogs_radioButton = new System.Windows.Forms.RadioButton();
@@ -131,15 +143,18 @@
             this.database_groupBox.SuspendLayout();
             this.panel3.SuspendLayout();
             this.keys_tabPage.SuspendLayout();
+            this.checkKey_groupBox.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.keyInfo.SuspendLayout();
+            this.keyInfo_groupBox.SuspendLayout();
             this.auth_tabPage.SuspendLayout();
             this.fastChoice_groupBox.SuspendLayout();
             this.authConfig.SuspendLayout();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.keysRequired_NumUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.openingPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.successPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.locked_pictureBox)).BeginInit();
+            this.testAM_groupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.openingPictureBox)).BeginInit();
+            this.panel1.SuspendLayout();
             this.UsersGroupBox.SuspendLayout();
             this.user_groupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.userIconPictureBox)).BeginInit();
@@ -214,6 +229,7 @@
             // 
             // advancedSettings_tabPage
             // 
+            this.advancedSettings_tabPage.Controls.Add(this.advancedSettings_alwaysCheckSelectedKey_checkBox);
             this.advancedSettings_tabPage.Controls.Add(this.backup_groupBox);
             this.advancedSettings_tabPage.Controls.Add(this.database_groupBox);
             this.advancedSettings_tabPage.Location = new System.Drawing.Point(4, 24);
@@ -225,6 +241,17 @@
             this.advancedSettings_tabPage.Text = "Advanced settings";
             this.advancedSettings_tabPage.UseVisualStyleBackColor = true;
             this.advancedSettings_tabPage.Enter += new System.EventHandler(this.advancedSettings_tabPage_Enter);
+            // 
+            // advancedSettings_alwaysCheckSelectedKey_checkBox
+            // 
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.AutoSize = true;
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.Location = new System.Drawing.Point(297, 246);
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.Name = "advancedSettings_alwaysCheckSelectedKey_checkBox";
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.Size = new System.Drawing.Size(328, 20);
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.TabIndex = 14;
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.Text = "Automatically check key in Keys tab when selected";
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.UseVisualStyleBackColor = true;
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.CheckedChanged += new System.EventHandler(this.advancedSettings_alwaysCheckSelectedKey_checkBox_CheckedChanged);
             // 
             // backup_groupBox
             // 
@@ -251,7 +278,6 @@
             this.database_groupBox.TabIndex = 12;
             this.database_groupBox.TabStop = false;
             this.database_groupBox.Text = "Database";
-            this.database_groupBox.Enter += new System.EventHandler(this.database_groupBox_Enter);
             // 
             // DBOpened_checkBox
             // 
@@ -346,8 +372,10 @@
             // 
             // keys_tabPage
             // 
+            this.keys_tabPage.Controls.Add(this.checkKey_groupBox);
+            this.keys_tabPage.Controls.Add(this.removeUnusedKeys_button);
             this.keys_tabPage.Controls.Add(this.panel2);
-            this.keys_tabPage.Controls.Add(this.keyInfo);
+            this.keys_tabPage.Controls.Add(this.keyInfo_groupBox);
             this.keys_tabPage.Controls.Add(this.keysListBox);
             this.keys_tabPage.Location = new System.Drawing.Point(4, 24);
             this.keys_tabPage.Margin = new System.Windows.Forms.Padding(4);
@@ -359,14 +387,76 @@
             this.keys_tabPage.UseVisualStyleBackColor = true;
             this.keys_tabPage.Enter += new System.EventHandler(this.keys_tabPage_Enter);
             // 
+            // checkKey_groupBox
+            // 
+            this.checkKey_groupBox.BackColor = System.Drawing.Color.LightGray;
+            this.checkKey_groupBox.Controls.Add(this.checkKeyResult_button);
+            this.checkKey_groupBox.Controls.Add(this.checkKey_button);
+            this.checkKey_groupBox.Controls.Add(this.checkPassword_label);
+            this.checkKey_groupBox.Controls.Add(this.checkPassword_textBox);
+            this.checkKey_groupBox.Enabled = false;
+            this.checkKey_groupBox.Location = new System.Drawing.Point(401, 288);
+            this.checkKey_groupBox.Name = "checkKey_groupBox";
+            this.checkKey_groupBox.Size = new System.Drawing.Size(250, 87);
+            this.checkKey_groupBox.TabIndex = 20;
+            this.checkKey_groupBox.TabStop = false;
+            this.checkKey_groupBox.Text = "Check key";
+            // 
+            // checkKeyResult_button
+            // 
+            this.checkKeyResult_button.BackColor = System.Drawing.Color.MintCream;
+            this.checkKeyResult_button.Location = new System.Drawing.Point(123, 45);
+            this.checkKeyResult_button.Name = "checkKeyResult_button";
+            this.checkKeyResult_button.Size = new System.Drawing.Size(121, 36);
+            this.checkKeyResult_button.TabIndex = 3;
+            this.checkKeyResult_button.UseVisualStyleBackColor = false;
+            // 
+            // checkKey_button
+            // 
+            this.checkKey_button.Location = new System.Drawing.Point(9, 45);
+            this.checkKey_button.Name = "checkKey_button";
+            this.checkKey_button.Size = new System.Drawing.Size(108, 36);
+            this.checkKey_button.TabIndex = 2;
+            this.checkKey_button.Text = "Check key";
+            this.checkKey_button.UseVisualStyleBackColor = true;
+            this.checkKey_button.Click += new System.EventHandler(this.checkKey_button_Click);
+            // 
+            // checkPassword_label
+            // 
+            this.checkPassword_label.AutoSize = true;
+            this.checkPassword_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.checkPassword_label.Location = new System.Drawing.Point(6, 22);
+            this.checkPassword_label.Name = "checkPassword_label";
+            this.checkPassword_label.Size = new System.Drawing.Size(73, 17);
+            this.checkPassword_label.TabIndex = 1;
+            this.checkPassword_label.Text = "Password:";
+            // 
+            // checkPassword_textBox
+            // 
+            this.checkPassword_textBox.Location = new System.Drawing.Point(85, 20);
+            this.checkPassword_textBox.Name = "checkPassword_textBox";
+            this.checkPassword_textBox.Size = new System.Drawing.Size(159, 21);
+            this.checkPassword_textBox.TabIndex = 0;
+            // 
+            // removeUnusedKeys_button
+            // 
+            this.removeUnusedKeys_button.BackColor = System.Drawing.Color.Khaki;
+            this.removeUnusedKeys_button.Location = new System.Drawing.Point(657, 339);
+            this.removeUnusedKeys_button.Name = "removeUnusedKeys_button";
+            this.removeUnusedKeys_button.Size = new System.Drawing.Size(311, 36);
+            this.removeUnusedKeys_button.TabIndex = 19;
+            this.removeUnusedKeys_button.Text = "Remove all unused keys";
+            this.removeUnusedKeys_button.UseVisualStyleBackColor = false;
+            this.removeUnusedKeys_button.Click += new System.EventHandler(this.removeUnusedKeys_button_Click_1);
+            // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.panel2.Controls.Add(this.keyRemoval_checkBox);
             this.panel2.Controls.Add(this.deleteKey_button);
             this.panel2.Location = new System.Drawing.Point(8, 288);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(415, 87);
+            this.panel2.Size = new System.Drawing.Size(386, 87);
             this.panel2.TabIndex = 18;
             // 
             // keyRemoval_checkBox
@@ -374,7 +464,7 @@
             this.keyRemoval_checkBox.AutoEllipsis = true;
             this.keyRemoval_checkBox.Location = new System.Drawing.Point(9, 6);
             this.keyRemoval_checkBox.Name = "keyRemoval_checkBox";
-            this.keyRemoval_checkBox.Size = new System.Drawing.Size(406, 39);
+            this.keyRemoval_checkBox.Size = new System.Drawing.Size(374, 39);
             this.keyRemoval_checkBox.TabIndex = 5;
             this.keyRemoval_checkBox.Text = "I understand that the key(s) will be removed from the authentication methods and " +
                 "the methods may stop to work";
@@ -382,51 +472,52 @@
             // 
             // deleteKey_button
             // 
-            this.deleteKey_button.BackColor = System.Drawing.Color.Tomato;
-            this.deleteKey_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.deleteKey_button.BackColor = System.Drawing.Color.DarkSalmon;
+            this.deleteKey_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold);
             this.deleteKey_button.ForeColor = System.Drawing.SystemColors.Control;
             this.deleteKey_button.Location = new System.Drawing.Point(2, 45);
             this.deleteKey_button.Name = "deleteKey_button";
-            this.deleteKey_button.Size = new System.Drawing.Size(413, 40);
+            this.deleteKey_button.Size = new System.Drawing.Size(381, 40);
             this.deleteKey_button.TabIndex = 6;
             this.deleteKey_button.Text = "DELETE KEY(S)";
             this.deleteKey_button.UseVisualStyleBackColor = false;
             this.deleteKey_button.Click += new System.EventHandler(this.deleteKey_button_Click);
             // 
-            // keyInfo
+            // keyInfo_groupBox
             // 
-            this.keyInfo.BackColor = System.Drawing.Color.SkyBlue;
-            this.keyInfo.Controls.Add(this.keySerial_textBox);
-            this.keyInfo.Controls.Add(this.keyConfigure_button);
-            this.keyInfo.Controls.Add(this.keyData_checkBox);
-            this.keyInfo.Controls.Add(this.keyPassword_checkBox);
-            this.keyInfo.Controls.Add(this.keySerial_checkBox);
-            this.keyInfo.Controls.Add(this.keyType_label);
-            this.keyInfo.Controls.Add(this.keyInverted_checkBox);
-            this.keyInfo.Controls.Add(this.keyDescription_textBox);
-            this.keyInfo.Controls.Add(this.keyDescription_label);
-            this.keyInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.keyInfo.Location = new System.Drawing.Point(429, 7);
-            this.keyInfo.Name = "keyInfo";
-            this.keyInfo.Size = new System.Drawing.Size(539, 275);
-            this.keyInfo.TabIndex = 17;
-            this.keyInfo.TabStop = false;
-            this.keyInfo.Text = "Key information";
+            this.keyInfo_groupBox.BackColor = System.Drawing.Color.SkyBlue;
+            this.keyInfo_groupBox.Controls.Add(this.keySerial_textBox);
+            this.keyInfo_groupBox.Controls.Add(this.keyConfigure_button);
+            this.keyInfo_groupBox.Controls.Add(this.keyData_checkBox);
+            this.keyInfo_groupBox.Controls.Add(this.keyPassword_checkBox);
+            this.keyInfo_groupBox.Controls.Add(this.keySerial_checkBox);
+            this.keyInfo_groupBox.Controls.Add(this.keyType_label);
+            this.keyInfo_groupBox.Controls.Add(this.keyInverted_checkBox);
+            this.keyInfo_groupBox.Controls.Add(this.keyDescription_textBox);
+            this.keyInfo_groupBox.Controls.Add(this.keyDescription_label);
+            this.keyInfo_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.keyInfo_groupBox.Location = new System.Drawing.Point(657, 7);
+            this.keyInfo_groupBox.Name = "keyInfo_groupBox";
+            this.keyInfo_groupBox.Size = new System.Drawing.Size(311, 326);
+            this.keyInfo_groupBox.TabIndex = 17;
+            this.keyInfo_groupBox.TabStop = false;
+            this.keyInfo_groupBox.Text = "Key information";
             // 
             // keySerial_textBox
             // 
-            this.keySerial_textBox.Location = new System.Drawing.Point(10, 151);
+            this.keySerial_textBox.Enabled = false;
+            this.keySerial_textBox.Location = new System.Drawing.Point(10, 198);
             this.keySerial_textBox.Name = "keySerial_textBox";
-            this.keySerial_textBox.Size = new System.Drawing.Size(291, 23);
+            this.keySerial_textBox.Size = new System.Drawing.Size(295, 23);
             this.keySerial_textBox.TabIndex = 8;
             this.keySerial_textBox.TextChanged += new System.EventHandler(this.keySerial_textBox_TextChanged);
             // 
             // keyConfigure_button
             // 
             this.keyConfigure_button.Enabled = false;
-            this.keyConfigure_button.Location = new System.Drawing.Point(6, 216);
+            this.keyConfigure_button.Location = new System.Drawing.Point(6, 263);
             this.keyConfigure_button.Name = "keyConfigure_button";
-            this.keyConfigure_button.Size = new System.Drawing.Size(527, 53);
+            this.keyConfigure_button.Size = new System.Drawing.Size(299, 53);
             this.keyConfigure_button.TabIndex = 4;
             this.keyConfigure_button.Text = "Advanced key configuration";
             this.keyConfigure_button.UseVisualStyleBackColor = true;
@@ -438,7 +529,7 @@
             this.keyData_checkBox.BackColor = System.Drawing.Color.White;
             this.keyData_checkBox.Enabled = false;
             this.keyData_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.keyData_checkBox.Location = new System.Drawing.Point(157, 186);
+            this.keyData_checkBox.Location = new System.Drawing.Point(157, 233);
             this.keyData_checkBox.Name = "keyData_checkBox";
             this.keyData_checkBox.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.keyData_checkBox.Size = new System.Drawing.Size(144, 24);
@@ -452,7 +543,7 @@
             this.keyPassword_checkBox.BackColor = System.Drawing.Color.White;
             this.keyPassword_checkBox.Enabled = false;
             this.keyPassword_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.keyPassword_checkBox.Location = new System.Drawing.Point(10, 186);
+            this.keyPassword_checkBox.Location = new System.Drawing.Point(10, 233);
             this.keyPassword_checkBox.Name = "keyPassword_checkBox";
             this.keyPassword_checkBox.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.keyPassword_checkBox.Size = new System.Drawing.Size(141, 24);
@@ -466,7 +557,7 @@
             this.keySerial_checkBox.BackColor = System.Drawing.Color.White;
             this.keySerial_checkBox.Enabled = false;
             this.keySerial_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.keySerial_checkBox.Location = new System.Drawing.Point(10, 120);
+            this.keySerial_checkBox.Location = new System.Drawing.Point(10, 167);
             this.keySerial_checkBox.Name = "keySerial_checkBox";
             this.keySerial_checkBox.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.keySerial_checkBox.Size = new System.Drawing.Size(175, 24);
@@ -487,7 +578,7 @@
             // 
             this.keyInverted_checkBox.AutoSize = true;
             this.keyInverted_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.keyInverted_checkBox.Location = new System.Drawing.Point(10, 90);
+            this.keyInverted_checkBox.Location = new System.Drawing.Point(10, 137);
             this.keyInverted_checkBox.Name = "keyInverted_checkBox";
             this.keyInverted_checkBox.Size = new System.Drawing.Size(87, 24);
             this.keyInverted_checkBox.TabIndex = 3;
@@ -498,9 +589,10 @@
             // keyDescription_textBox
             // 
             this.keyDescription_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.keyDescription_textBox.Location = new System.Drawing.Point(107, 50);
+            this.keyDescription_textBox.Location = new System.Drawing.Point(10, 73);
+            this.keyDescription_textBox.Multiline = true;
             this.keyDescription_textBox.Name = "keyDescription_textBox";
-            this.keyDescription_textBox.Size = new System.Drawing.Size(426, 26);
+            this.keyDescription_textBox.Size = new System.Drawing.Size(295, 58);
             this.keyDescription_textBox.TabIndex = 2;
             this.keyDescription_textBox.TextChanged += new System.EventHandler(this.keyDescription_textBox_TextChanged);
             // 
@@ -521,7 +613,7 @@
             this.keysListBox.Location = new System.Drawing.Point(8, 7);
             this.keysListBox.Name = "keysListBox";
             this.keysListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.keysListBox.Size = new System.Drawing.Size(415, 274);
+            this.keysListBox.Size = new System.Drawing.Size(643, 274);
             this.keysListBox.TabIndex = 1;
             this.keysListBox.SelectedIndexChanged += new System.EventHandler(this.keysListBox_SelectedIndexChanged);
             // 
@@ -557,16 +649,17 @@
             this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.fastChoiceTypes_listView.AutoArrange = false;
             this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem9.Tag = "BluetoothDevice";
-            listViewItem10.Tag = "ConnectedDevice";
-            listViewItem11.Tag = "Password";
-            listViewItem12.Tag = "HttpRequest";
+            listViewItem16.Tag = "BluetoothDevice";
+            listViewItem17.Tag = "ConnectedDevice";
+            listViewItem18.Tag = "EncryptedPasswordFileKey";
+            listViewItem19.Tag = "Password";
+            listViewItem20.Tag = "HttpRequest";
             this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
-            this.fastChoiceTypes_listView.LabelWrap = false;
+            listViewItem16,
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20});
             this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
             this.fastChoiceTypes_listView.MultiSelect = false;
             this.fastChoiceTypes_listView.Name = "fastChoiceTypes_listView";
@@ -584,13 +677,14 @@
             // authConfig
             // 
             this.authConfig.BackColor = System.Drawing.Color.SkyBlue;
+            this.authConfig.Controls.Add(this.keysRequired_NumUpDown);
+            this.authConfig.Controls.Add(this.successPictureBox);
+            this.authConfig.Controls.Add(this.locked_pictureBox);
+            this.authConfig.Controls.Add(this.testAM_groupBox);
             this.authConfig.Controls.Add(this.description_textBox);
             this.authConfig.Controls.Add(this.description_label);
             this.authConfig.Controls.Add(this.panel1);
             this.authConfig.Controls.Add(this.keysRequired_label);
-            this.authConfig.Controls.Add(this.keysRequired_NumUpDown);
-            this.authConfig.Controls.Add(this.openingPictureBox);
-            this.authConfig.Controls.Add(this.successPictureBox);
             this.authConfig.Controls.Add(this.key5Label);
             this.authConfig.Controls.Add(this.key4Label);
             this.authConfig.Controls.Add(this.key3Label);
@@ -608,23 +702,97 @@
             this.authConfig.TabStop = false;
             this.authConfig.Text = "User authentication";
             // 
+            // keysRequired_NumUpDown
+            // 
+            this.keysRequired_NumUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.keysRequired_NumUpDown.Location = new System.Drawing.Point(665, 182);
+            this.keysRequired_NumUpDown.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.keysRequired_NumUpDown.Name = "keysRequired_NumUpDown";
+            this.keysRequired_NumUpDown.Size = new System.Drawing.Size(44, 29);
+            this.keysRequired_NumUpDown.TabIndex = 12;
+            this.keysRequired_NumUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.keysRequired_NumUpDown.ValueChanged += new System.EventHandler(this.keysRequired_NumUpDown_ValueChanged);
+            // 
+            // successPictureBox
+            // 
+            this.successPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.success;
+            this.successPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.successPictureBox.Location = new System.Drawing.Point(632, 18);
+            this.successPictureBox.Name = "successPictureBox";
+            this.successPictureBox.Size = new System.Drawing.Size(74, 89);
+            this.successPictureBox.TabIndex = 18;
+            this.successPictureBox.TabStop = false;
+            this.successPictureBox.Visible = false;
+            // 
+            // locked_pictureBox
+            // 
+            this.locked_pictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.lock_7_256;
+            this.locked_pictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.locked_pictureBox.Location = new System.Drawing.Point(627, 18);
+            this.locked_pictureBox.Name = "locked_pictureBox";
+            this.locked_pictureBox.Size = new System.Drawing.Size(82, 89);
+            this.locked_pictureBox.TabIndex = 38;
+            this.locked_pictureBox.TabStop = false;
+            // 
+            // testAM_groupBox
+            // 
+            this.testAM_groupBox.BackColor = System.Drawing.Color.Transparent;
+            this.testAM_groupBox.Controls.Add(this.testAMpassword_textBox);
+            this.testAM_groupBox.Controls.Add(this.openingPictureBox);
+            this.testAM_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.testAM_groupBox.Location = new System.Drawing.Point(6, 20);
+            this.testAM_groupBox.Name = "testAM_groupBox";
+            this.testAM_groupBox.Size = new System.Drawing.Size(82, 195);
+            this.testAM_groupBox.TabIndex = 37;
+            this.testAM_groupBox.TabStop = false;
+            this.testAM_groupBox.Text = "Test current method: type password and click the icon";
+            // 
+            // testAMpassword_textBox
+            // 
+            this.testAMpassword_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.testAMpassword_textBox.Location = new System.Drawing.Point(6, 72);
+            this.testAMpassword_textBox.Name = "testAMpassword_textBox";
+            this.testAMpassword_textBox.PasswordChar = '*';
+            this.testAMpassword_textBox.Size = new System.Drawing.Size(70, 23);
+            this.testAMpassword_textBox.TabIndex = 36;
+            // 
+            // openingPictureBox
+            // 
+            this.openingPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.opening;
+            this.openingPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.openingPictureBox.Location = new System.Drawing.Point(6, 101);
+            this.openingPictureBox.Name = "openingPictureBox";
+            this.openingPictureBox.Size = new System.Drawing.Size(70, 88);
+            this.openingPictureBox.TabIndex = 19;
+            this.openingPictureBox.TabStop = false;
+            this.openingPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.openingPictureBox_MouseClick);
+            this.openingPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.openingPictureBox_Click);
+            // 
             // description_textBox
             // 
             this.description_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.description_textBox.Location = new System.Drawing.Point(399, 145);
+            this.description_textBox.Location = new System.Drawing.Point(465, 145);
             this.description_textBox.Name = "description_textBox";
-            this.description_textBox.Size = new System.Drawing.Size(271, 26);
+            this.description_textBox.Size = new System.Drawing.Size(244, 26);
             this.description_textBox.TabIndex = 11;
             this.description_textBox.TextChanged += new System.EventHandler(this.description_textBox_TextChanged);
             // 
             // description_label
             // 
             this.description_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.description_label.Location = new System.Drawing.Point(399, 117);
+            this.description_label.Location = new System.Drawing.Point(465, 117);
             this.description_label.Name = "description_label";
-            this.description_label.Size = new System.Drawing.Size(270, 25);
+            this.description_label.Size = new System.Drawing.Size(244, 25);
             this.description_label.TabIndex = 35;
-            this.description_label.Text = "Authentication method description:";
+            this.description_label.Text = "Authentication method name:";
             this.description_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel1
@@ -633,17 +801,17 @@
             this.panel1.Controls.Add(this.removeAuthMethod_button);
             this.panel1.Controls.Add(this.newAuthMethod_button);
             this.panel1.Controls.Add(this.authMethods_listBox);
-            this.panel1.Location = new System.Drawing.Point(7, 117);
+            this.panel1.Location = new System.Drawing.Point(94, 117);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(379, 98);
+            this.panel1.Size = new System.Drawing.Size(365, 98);
             this.panel1.TabIndex = 34;
             // 
             // removeAuthMethod_button
             // 
             this.removeAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.removeAuthMethod_button.Location = new System.Drawing.Point(219, 51);
+            this.removeAuthMethod_button.Location = new System.Drawing.Point(222, 51);
             this.removeAuthMethod_button.Name = "removeAuthMethod_button";
-            this.removeAuthMethod_button.Size = new System.Drawing.Size(147, 39);
+            this.removeAuthMethod_button.Size = new System.Drawing.Size(137, 39);
             this.removeAuthMethod_button.TabIndex = 15;
             this.removeAuthMethod_button.Text = "REMOVE authentication method";
             this.removeAuthMethod_button.UseVisualStyleBackColor = true;
@@ -652,9 +820,9 @@
             // newAuthMethod_button
             // 
             this.newAuthMethod_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.newAuthMethod_button.Location = new System.Drawing.Point(219, 6);
+            this.newAuthMethod_button.Location = new System.Drawing.Point(222, 6);
             this.newAuthMethod_button.Name = "newAuthMethod_button";
-            this.newAuthMethod_button.Size = new System.Drawing.Size(147, 39);
+            this.newAuthMethod_button.Size = new System.Drawing.Size(137, 39);
             this.newAuthMethod_button.TabIndex = 14;
             this.newAuthMethod_button.Text = "NEW authentication method";
             this.newAuthMethod_button.UseVisualStyleBackColor = true;
@@ -666,58 +834,19 @@
             this.authMethods_listBox.ItemHeight = 16;
             this.authMethods_listBox.Location = new System.Drawing.Point(4, 6);
             this.authMethods_listBox.Name = "authMethods_listBox";
-            this.authMethods_listBox.Size = new System.Drawing.Size(209, 84);
+            this.authMethods_listBox.Size = new System.Drawing.Size(212, 84);
             this.authMethods_listBox.TabIndex = 13;
             this.authMethods_listBox.SelectedIndexChanged += new System.EventHandler(this.authMethods_listBox_SelectedIndexChanged);
             // 
             // keysRequired_label
             // 
             this.keysRequired_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.keysRequired_label.Location = new System.Drawing.Point(399, 183);
+            this.keysRequired_label.Location = new System.Drawing.Point(465, 183);
             this.keysRequired_label.Name = "keysRequired_label";
-            this.keysRequired_label.Size = new System.Drawing.Size(204, 28);
+            this.keysRequired_label.Size = new System.Drawing.Size(205, 28);
             this.keysRequired_label.TabIndex = 33;
             this.keysRequired_label.Text = "How many keys are required?";
             this.keysRequired_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // keysRequired_NumUpDown
-            // 
-            this.keysRequired_NumUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.keysRequired_NumUpDown.Location = new System.Drawing.Point(610, 182);
-            this.keysRequired_NumUpDown.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.keysRequired_NumUpDown.Name = "keysRequired_NumUpDown";
-            this.keysRequired_NumUpDown.Size = new System.Drawing.Size(59, 29);
-            this.keysRequired_NumUpDown.TabIndex = 12;
-            this.keysRequired_NumUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.keysRequired_NumUpDown.ValueChanged += new System.EventHandler(this.keysRequired_NumUpDown_ValueChanged);
-            // 
-            // openingPictureBox
-            // 
-            this.openingPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.opening;
-            this.openingPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.openingPictureBox.Location = new System.Drawing.Point(7, 20);
-            this.openingPictureBox.Name = "openingPictureBox";
-            this.openingPictureBox.Size = new System.Drawing.Size(75, 88);
-            this.openingPictureBox.TabIndex = 19;
-            this.openingPictureBox.TabStop = false;
-            // 
-            // successPictureBox
-            // 
-            this.successPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.success;
-            this.successPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.successPictureBox.Location = new System.Drawing.Point(635, 18);
-            this.successPictureBox.Name = "successPictureBox";
-            this.successPictureBox.Size = new System.Drawing.Size(74, 89);
-            this.successPictureBox.TabIndex = 18;
-            this.successPictureBox.TabStop = false;
             // 
             // key5Label
             // 
@@ -886,9 +1015,9 @@
             // user_groupBox
             // 
             this.user_groupBox.BackColor = System.Drawing.Color.Wheat;
+            this.user_groupBox.Controls.Add(this.role_textBox);
             this.user_groupBox.Controls.Add(this.userIconPictureBox);
             this.user_groupBox.Controls.Add(this.keepPassword_checkBox);
-            this.user_groupBox.Controls.Add(this.role_textBox);
             this.user_groupBox.Controls.Add(this.userName_textBox);
             this.user_groupBox.Location = new System.Drawing.Point(253, 8);
             this.user_groupBox.Name = "user_groupBox";
@@ -896,48 +1025,44 @@
             this.user_groupBox.TabIndex = 18;
             this.user_groupBox.TabStop = false;
             // 
+            // role_textBox
+            // 
+            this.role_textBox.BackColor = System.Drawing.Color.BlanchedAlmond;
+            this.role_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.role_textBox.Location = new System.Drawing.Point(97, 100);
+            this.role_textBox.Name = "role_textBox";
+            this.role_textBox.Size = new System.Drawing.Size(111, 32);
+            this.role_textBox.TabIndex = 22;
+            this.role_textBox.Text = "Role";
+            this.role_textBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.role_textBox.UseMnemonic = false;
+            // 
             // userIconPictureBox
             // 
             this.userIconPictureBox.BackColor = System.Drawing.Color.SeaShell;
             this.userIconPictureBox.BackgroundImage = global::pGina.Plugin.MFLoginPlugin.Properties.Resources.user_logo;
             this.userIconPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.userIconPictureBox.InitialImage = null;
-            this.userIconPictureBox.Location = new System.Drawing.Point(6, 61);
+            this.userIconPictureBox.Location = new System.Drawing.Point(6, 40);
             this.userIconPictureBox.Name = "userIconPictureBox";
-            this.userIconPictureBox.Size = new System.Drawing.Size(70, 73);
+            this.userIconPictureBox.Size = new System.Drawing.Size(85, 92);
             this.userIconPictureBox.TabIndex = 17;
             this.userIconPictureBox.TabStop = false;
             // 
             // keepPassword_checkBox
             // 
+            this.keepPassword_checkBox.BackColor = System.Drawing.Color.BlanchedAlmond;
             this.keepPassword_checkBox.Checked = true;
             this.keepPassword_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.keepPassword_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.keepPassword_checkBox.Location = new System.Drawing.Point(82, 61);
+            this.keepPassword_checkBox.Location = new System.Drawing.Point(97, 40);
             this.keepPassword_checkBox.Name = "keepPassword_checkBox";
-            this.keepPassword_checkBox.Size = new System.Drawing.Size(126, 43);
+            this.keepPassword_checkBox.Size = new System.Drawing.Size(111, 57);
             this.keepPassword_checkBox.TabIndex = 5;
             this.keepPassword_checkBox.Text = "Keep password in the OS";
             this.keepPassword_checkBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.keepPassword_checkBox.UseVisualStyleBackColor = true;
-            this.keepPassword_checkBox.CheckedChanged += new System.EventHandler(this.keepPassword_checkBox_CheckedChanged);
+            this.keepPassword_checkBox.UseVisualStyleBackColor = false;
             this.keepPassword_checkBox.Click += new System.EventHandler(this.keepPassword_checkBox_Click);
-            // 
-            // role_textBox
-            // 
-            this.role_textBox.BackColor = System.Drawing.SystemColors.Info;
-            this.role_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.role_textBox.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.role_textBox.Location = new System.Drawing.Point(82, 110);
-            this.role_textBox.MaxLength = 30;
-            this.role_textBox.Name = "role_textBox";
-            this.role_textBox.ReadOnly = true;
-            this.role_textBox.Size = new System.Drawing.Size(126, 24);
-            this.role_textBox.TabIndex = 22;
-            this.role_textBox.TabStop = false;
-            this.role_textBox.Text = "Role";
-            this.role_textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.role_textBox.WordWrap = false;
             // 
             // userName_textBox
             // 
@@ -948,7 +1073,7 @@
             this.userName_textBox.Multiline = true;
             this.userName_textBox.Name = "userName_textBox";
             this.userName_textBox.ReadOnly = true;
-            this.userName_textBox.Size = new System.Drawing.Size(202, 49);
+            this.userName_textBox.Size = new System.Drawing.Size(202, 28);
             this.userName_textBox.TabIndex = 21;
             this.userName_textBox.TabStop = false;
             this.userName_textBox.Text = "Username";
@@ -968,7 +1093,6 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(984, 410);
             this.tabControl.TabIndex = 5;
-            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // summary_tabPage
             // 
@@ -1025,7 +1149,7 @@
             // 
             // logControl_groupBox
             // 
-            this.logControl_groupBox.Controls.Add(this.thisMongthLogs_radioButton);
+            this.logControl_groupBox.Controls.Add(this.thisMonthLogs_radioButton);
             this.logControl_groupBox.Controls.Add(this.todayLogs_radioButton);
             this.logControl_groupBox.Controls.Add(this.countLogs_numericUpDown);
             this.logControl_groupBox.Controls.Add(this.allLogs_radioButton);
@@ -1038,19 +1162,18 @@
             this.logControl_groupBox.TabIndex = 3;
             this.logControl_groupBox.TabStop = false;
             this.logControl_groupBox.Text = "Log control";
-            this.logControl_groupBox.Enter += new System.EventHandler(this.logControl_groupBox_Enter);
             // 
-            // thisMongthLogs_radioButton
+            // thisMonthLogs_radioButton
             // 
-            this.thisMongthLogs_radioButton.AutoSize = true;
-            this.thisMongthLogs_radioButton.Location = new System.Drawing.Point(6, 235);
-            this.thisMongthLogs_radioButton.Name = "thisMongthLogs_radioButton";
-            this.thisMongthLogs_radioButton.Size = new System.Drawing.Size(99, 20);
-            this.thisMongthLogs_radioButton.TabIndex = 7;
-            this.thisMongthLogs_radioButton.TabStop = true;
-            this.thisMongthLogs_radioButton.Text = "This mongth";
-            this.thisMongthLogs_radioButton.UseVisualStyleBackColor = true;
-            this.thisMongthLogs_radioButton.CheckedChanged += new System.EventHandler(this.thisMongthLogs_radioButton_CheckedChanged);
+            this.thisMonthLogs_radioButton.AutoSize = true;
+            this.thisMonthLogs_radioButton.Location = new System.Drawing.Point(6, 235);
+            this.thisMonthLogs_radioButton.Name = "thisMonthLogs_radioButton";
+            this.thisMonthLogs_radioButton.Size = new System.Drawing.Size(91, 20);
+            this.thisMonthLogs_radioButton.TabIndex = 7;
+            this.thisMonthLogs_radioButton.TabStop = true;
+            this.thisMonthLogs_radioButton.Text = "This month";
+            this.thisMonthLogs_radioButton.UseVisualStyleBackColor = true;
+            this.thisMonthLogs_radioButton.CheckedChanged += new System.EventHandler(this.thisMonthLogs_radioButton_CheckedChanged);
             // 
             // todayLogs_radioButton
             // 
@@ -1241,26 +1364,31 @@
             this.Name = "LocalConfiguration";
             this.ShowIcon = false;
             this.Text = "Plugin Configuration";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LocalConfiguration_FormClosed);
             this.changeRole_contextMenuStrip.ResumeLayout(false);
             this.controlPanel.ResumeLayout(false);
             this.controlPanel.PerformLayout();
             this.advancedSettings_tabPage.ResumeLayout(false);
+            this.advancedSettings_tabPage.PerformLayout();
             this.database_groupBox.ResumeLayout(false);
             this.database_groupBox.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.keys_tabPage.ResumeLayout(false);
+            this.checkKey_groupBox.ResumeLayout(false);
+            this.checkKey_groupBox.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.keyInfo.ResumeLayout(false);
-            this.keyInfo.PerformLayout();
+            this.keyInfo_groupBox.ResumeLayout(false);
+            this.keyInfo_groupBox.PerformLayout();
             this.auth_tabPage.ResumeLayout(false);
             this.fastChoice_groupBox.ResumeLayout(false);
             this.authConfig.ResumeLayout(false);
             this.authConfig.PerformLayout();
-            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.keysRequired_NumUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.openingPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.successPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.locked_pictureBox)).EndInit();
+            this.testAM_groupBox.ResumeLayout(false);
+            this.testAM_groupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.openingPictureBox)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.UsersGroupBox.ResumeLayout(false);
             this.UsersGroupBox.PerformLayout();
             this.user_groupBox.ResumeLayout(false);
@@ -1292,8 +1420,7 @@
 		private System.Windows.Forms.ListView fastChoiceTypes_listView;
 		private System.Windows.Forms.GroupBox user_groupBox;
 		private System.Windows.Forms.PictureBox userIconPictureBox;
-		private System.Windows.Forms.CheckBox keepPassword_checkBox;
-		private System.Windows.Forms.TextBox role_textBox;
+        private System.Windows.Forms.CheckBox keepPassword_checkBox;
 		private System.Windows.Forms.TextBox userName_textBox;
 		private System.Windows.Forms.GroupBox authConfig;
 		private System.Windows.Forms.PictureBox openingPictureBox;
@@ -1313,7 +1440,7 @@
 		private System.Windows.Forms.Button addUser_button;
 		private System.Windows.Forms.ListBox user_ListBox;
 		private System.Windows.Forms.TabControl tabControl;
-		private System.Windows.Forms.GroupBox keyInfo;
+		private System.Windows.Forms.GroupBox keyInfo_groupBox;
 		private System.Windows.Forms.TextBox keyDescription_textBox;
 		private System.Windows.Forms.Label keyDescription_label;
 		private System.Windows.Forms.CheckBox keyInverted_checkBox;
@@ -1365,6 +1492,17 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn uid;
         private System.Windows.Forms.DataGridViewTextBoxColumn amid;
         private System.Windows.Forms.RadioButton todayLogs_radioButton;
-        private System.Windows.Forms.RadioButton thisMongthLogs_radioButton;
+        private System.Windows.Forms.RadioButton thisMonthLogs_radioButton;
+        private System.Windows.Forms.Button removeUnusedKeys_button;
+        private System.Windows.Forms.GroupBox checkKey_groupBox;
+        private System.Windows.Forms.Button checkKeyResult_button;
+        private System.Windows.Forms.Button checkKey_button;
+        private System.Windows.Forms.Label checkPassword_label;
+        private System.Windows.Forms.TextBox checkPassword_textBox;
+        private System.Windows.Forms.CheckBox advancedSettings_alwaysCheckSelectedKey_checkBox;
+        private System.Windows.Forms.GroupBox testAM_groupBox;
+        private System.Windows.Forms.TextBox testAMpassword_textBox;
+        private System.Windows.Forms.PictureBox locked_pictureBox;
+        private System.Windows.Forms.Label role_textBox;
 	}
 }

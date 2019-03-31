@@ -170,6 +170,7 @@
             this.Controls.Add(this.description_label);
             this.Controls.Add(this.ok_button);
             this.Name = "HttpRequestManagementForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Http request";
             this.ResumeLayout(false);
             this.PerformLayout();

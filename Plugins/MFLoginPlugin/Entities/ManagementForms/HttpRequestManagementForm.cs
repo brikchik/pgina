@@ -11,10 +11,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
 	public partial class HttpRequestManagementForm : Form
 	{
-		public HttpRequestManagementForm(ulong kid)
+		public HttpRequestManagementForm(string userName)
 		{
 			InitializeComponent();
-			description_textBox.Text = "HttpRequest N" + kid;
+			description_textBox.Text = "HttpRequest"+ " for " + userName;
 		}
 		public HttpRequestManagementForm(string address, string response, bool inverted, string description)
 		{

@@ -20,8 +20,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		{
 			if (correct)
 			{
+                // check if user exists already
+                if (new User().FillByName(username_textBox.Text)) return;
 				NewUser = new User();
-				NewUser.WindowsPassword = Shared.GetUniqueKey(100); // random password for every user
+				NewUser.WindowsPassword = Shared.GetUniqueKey(Shared.INTERNAL_USER_PASSWORD_LENGTH); // random password for every user
 				// password may be stored in key afterwards
 				NewUser.Name = username_textBox.Text;
 				if (user_radioButton.Checked) NewUser.Role = "User";

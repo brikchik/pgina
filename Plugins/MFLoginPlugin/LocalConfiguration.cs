@@ -9,6 +9,7 @@ using pGina.Plugin.MFLoginPlugin.Entities;
 using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 using pGina.Shared.Settings;
 using pGina.Shared.Types;
+using System.Threading;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -37,6 +38,7 @@ Current database path: ";
         }
         private void UpdateUserList()
         {
+            successPictureBox.Visible = false;
             if (!databaseLoaded) return;
             user_ListBox.Items.Clear();
             User[] users = DBHelper.ReadUsers();
@@ -100,6 +102,7 @@ Current database path: ";
             Object item = e.Data.GetData(typeof(System.Windows.Forms.ListViewItem));// check if object is empty
             if (e.Effect == DragDropEffects.Move)
             {
+                successPictureBox.Visible = false;
                 ListViewItem lvi = (ListViewItem)item;
                 Key key = Key.DefineKey(lvi.Tag.ToString());
                 if (key == null)
@@ -107,7 +110,11 @@ Current database path: ";
                     m_logger.Debug("Unable to create key of type: " + lvi.Tag.ToString());
                     return;
                 }
-                if (!key.AddKey()) return;
+                try
+                {
+                    if (!key.AddKey(userName_textBox.Text)) return;
+                }
+                catch (Exception ex){ m_logger.Error("unable to create key: "+ex.Message); return; }
                 key.Save();
                 string label = key.ToString();
                 AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
@@ -137,6 +144,7 @@ Current database path: ";
         private void ClearKey(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
+            successPictureBox.Visible = false;
             bool isEmpty = (((Button)sender).Tag == null);
             ((Button)sender).Tag = null;
             ((Button)sender).Text = "";
@@ -201,6 +209,7 @@ Current database path: ";
         }
         private void userListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            successPictureBox.Visible = false;
             if (user_ListBox.SelectedItems.Count > 1)
             {
                 switchUserInfoInterface(false);
@@ -221,7 +230,9 @@ Current database path: ";
                 {
                     ((CheckBox)sender).CheckState = CheckState.Unchecked;
                     ((User)user_ListBox.SelectedItem).WindowsPassword = null;
-                }
+					((User)user_ListBox.SelectedItem).Save();
+
+				}
                 else
                     ((CheckBox)sender).CheckState = CheckState.Checked;
             }
@@ -244,21 +255,26 @@ Current database path: ";
         private void UpdateKeys()
         {
             if (!databaseLoaded) return;
-            AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-            try { key1Button.Tag = am.K1; key1Button.Text = am.K1.Description; }
-            catch { key1Button.Text = ""; }
-            try { key2Button.Tag = am.K2; key2Button.Text = am.K2.Description; }
-            catch { key2Button.Text = ""; }
-            try { key3Button.Tag = am.K3; key3Button.Text = am.K3.Description; }
-            catch { key3Button.Text = ""; }
-            try { key4Button.Tag = am.K4; key4Button.Text = am.K4.Description; }
-            catch { key4Button.Text = ""; }
-            try { key5Button.Tag = am.K5; key5Button.Text = am.K5.Description; }
-            catch { key5Button.Text = ""; }
-            try { keysRequired_NumUpDown.Value = am.Number_of_keys; }
-            catch { }// no AuthMethod chosen
-            try { description_textBox.Text = am.Description; }
-            catch { }// no AuthMethod chosen
+            successPictureBox.Visible = false;
+            AuthMethod am;
+            try
+            {
+                am = (AuthMethod)authMethods_listBox.SelectedItem;
+				if (am == null) throw new Exception("Empty auth method chosen");
+            }
+            catch (Exception ex) { m_logger.Debug(ex.Message); return; }
+            if (am.K1 != null) { key1Button.Tag = am.K1; key1Button.Text = am.K1.Description; }
+            else { key1Button.Text = ""; }
+            if (am.K2 != null) { key2Button.Tag = am.K2; key2Button.Text = am.K2.Description; }
+            else { key2Button.Text = ""; }
+            if (am.K3 != null) { key3Button.Tag = am.K3; key3Button.Text = am.K3.Description; }
+            else { key3Button.Text = ""; }
+            if (am.K4 != null) { key4Button.Tag = am.K4; key4Button.Text = am.K4.Description; }
+            else { key4Button.Text = ""; }
+            if (am.K5 != null) { key5Button.Tag = am.K5; key5Button.Text = am.K5.Description; }
+            else { key5Button.Text = ""; }
+            keysRequired_NumUpDown.Value = (decimal)am.Number_of_keys;
+            description_textBox.Text = am.Description;
         }
         private void authMethods_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -298,6 +314,7 @@ Current database path: ";
         private void keysRequired_NumUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
+            successPictureBox.Visible = false;
             ((AuthMethod)authMethods_listBox.SelectedItem).Number_of_keys = (int)keysRequired_NumUpDown.Value;
             ((AuthMethod)authMethods_listBox.SelectedItem).Save();
         }
@@ -308,6 +325,7 @@ Current database path: ";
         private void AddMethod()
         {
             if (!databaseLoaded) return;
+            successPictureBox.Visible = false;
             AuthMethod am = new AuthMethod((User)user_ListBox.SelectedItem);
             authMethods_listBox.Items.Add(am);
             am.Save();
@@ -335,7 +353,11 @@ Current database path: ";
                 MessageBox.Show("No free key slot.", "Key creation", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (!key.AddKey()) return; // key creation form
+            try
+            {
+                if (!key.AddKey(userName_textBox.Text)) return;
+            }
+            catch (Exception ex) { m_logger.Error("unable to create key: " + ex.Message); return; }
             AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
             key.Save();
             switch (buttonNumber)
@@ -354,7 +376,10 @@ Current database path: ";
             if (!databaseLoaded) return;
             Key[] keys = DBHelper.ReadKeys();
             keysListBox.Items.Clear();
-            keysListBox.Items.AddRange(keys);
+            if (keys != null)
+            {
+                keysListBox.Items.AddRange(keys);
+            }
         }
         private void removeUnusedKeys_button_Click(object sender, EventArgs e)
         {
@@ -398,15 +423,16 @@ Current database path: ";
         }
         private void switchKeyInfoInterface(bool value)
         {
-            keyDescription_textBox.Enabled = value;
-            keyInverted_checkBox.Enabled = value;
-            keySerial_textBox.Enabled = value;
+            keyInfo_groupBox.Enabled = value;
+            checkKey_groupBox.Enabled = value;
         }
         private void keysListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            checkKeyResult_button.BackColor = Color.White;
             if (keysListBox.SelectedItems.Count != 1)
             {
                 switchKeyInfoInterface(false);
+                keySerial_textBox.Enabled = false;
             }
             else
                 try
@@ -418,12 +444,20 @@ Current database path: ";
                     keyInverted_checkBox.Checked = key.Inverted;
 
                     keySerial_checkBox.Checked = (key.Serial != null);
-                    keySerial_textBox.Text = key.Serial;
+                    keySerial_textBox.Enabled = false;
+                    if (key.Serial != null)
+                    {
+                        keySerial_textBox.Enabled = true;
+                        keySerial_textBox.Text = key.Serial;
+                    }
                     keyPassword_checkBox.Checked = (key.Password != null);
                     keyData_checkBox.Checked = (key.Data != null);
                     keyConfigure_button.Enabled = key.IsConfigurable;
+
+                    // auto check if enabled in settings
+                    if ((bool)m_settings.AlwaysCheckSelectedKey) checkKey();
                 }
-                catch { }
+                catch (Exception ex) { m_logger.Debug(ex.Message); }
         }
         private void keyDescription_textBox_TextChanged(object sender, EventArgs e)
         {
@@ -435,22 +469,21 @@ Current database path: ";
         private void keyInverted_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
-            Key key = (Key)keysListBox.SelectedItem;
+			Key key = null;
+			try { key = (Key)keysListBox.SelectedItem; } catch { };
             key.Inverted = keyInverted_checkBox.Checked;
             key.Save();
         }
         private void keyConfigure_button_Click(object sender, EventArgs e)
         {
-            ((Key)keysListBox.SelectedItem).Configure();
-        }
-        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+			try { ((Key)keysListBox.SelectedItem).Configure(); } catch { } 
+			// catch a strange bug of "nothing" being the selected item in listBox
         }
         private void removeAuthMethod_button_Click(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
-            AuthMethod am = ((AuthMethod)authMethods_listBox.SelectedItem);
+			AuthMethod am = null;
+			try { am = ((AuthMethod)authMethods_listBox.SelectedItem); } catch { }
             if (am == null) return;
             am.Delete();
             if (authMethods_listBox.Items.Count <= 1)
@@ -519,10 +552,6 @@ Current database path: ";
             }
             summary_treeView.ExpandAll();
         }
-        private void refreshSummary_button_Click(object sender, EventArgs e)
-        {
-
-        }
         private void summary_tabPage_Enter(object sender, EventArgs e)
         {
             refreshSummary();
@@ -544,15 +573,6 @@ Current database path: ";
             Key key = (Key)keysListBox.SelectedItem;
             key.Serial = keySerial_textBox.Text;
             key.Save();
-        }
-        private void LocalConfiguration_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
-        }
-
-        private void database_groupBox_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void cleanDB_button_Click(object sender, EventArgs e)
@@ -601,6 +621,7 @@ Current database path: ";
                 DBOpened_checkBox.Checked = true;
             }
         }
+        // defaults for logging
         private bool extraLogs = false;
         private string modeLogs = "L";
         private int countLogs = 50;
@@ -640,11 +661,6 @@ Current database path: ";
             FillLogs();
         }
 
-        private void keepPassword_checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             modeLogs = "F";
@@ -681,16 +697,69 @@ Current database path: ";
             FillLogs();
         }
 
-        private void logControl_groupBox_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void thisMongthLogs_radioButton_CheckedChanged(object sender, EventArgs e)
+        private void thisMonthLogs_radioButton_CheckedChanged(object sender, EventArgs e)
         {
             modeLogs = "This month";
             FillLogs();
         }
-    }
+
+        private void removeUnusedKeys_button_Click_1(object sender, EventArgs e)
+        {
+            DBHelper.RemoveUnusedKeys();
+            UpdateKeyList();
+        }
+        private void checkKey()
+        {
+            try
+            {
+                string password = checkPassword_textBox.Text;
+                bool success = ((Key)keysListBox.SelectedItem).CheckKey(password);
+                checkKeyResult_button.BackColor = (success) ? Color.Green : Color.Red;
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); checkKeyResult_button.BackColor = Color.White; }
+        }
+        private void checkKey_button_Click(object sender, EventArgs e)
+        {
+            checkKey();
+        }
+
+        private void advancedSettings_alwaysCheckSelectedKey_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.AlwaysCheckSelectedKey = (advancedSettings_alwaysCheckSelectedKey_checkBox.Checked);
+        }
+
+        private void CheckAuthMethod()
+        {
+            AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+            UserInformation ui = new UserInformation()
+            {
+                Username = userName_textBox.Text,
+                Password = testAMpassword_textBox.Text,
+                OriginalPassword = testAMpassword_textBox.Text
+            };
+            BooleanResult authMethodCheck = AuthenticationManager.TryAuthMethod(am, ui, false);
+            successPictureBox.Visible = authMethodCheck.Success;
+            User user = new User();
+            user.FillByName(ui.Username);
+            if (user.WindowsPassword != null && ui.Password != user.WindowsPassword && ui.Password != ui.OriginalPassword)
+                MessageBox.Show("You certainly can't log in with this authentication method - some keys contain incorrect Windows password.",
+                    "Bad keys", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (user.WindowsPassword == null && ui.Password == ui.OriginalPassword)
+                MessageBox.Show("You can't log in this way as database has no Windows password and keys do not provide it either.",
+                    "Login impossible", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void openingPictureBox_Click(object sender, MouseEventArgs e)
+        {
+            CheckAuthMethod();
+            Thread.Sleep(15);
+            Refresh();
+            // make sure database isn't locked and give plugin some time to do its job
+        }
+
+        private void openingPictureBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+        }
+	}
 }

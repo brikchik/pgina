@@ -11,14 +11,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
     public partial class BluetoothManagementForm : Form
     {
-		public string Description = "BluetoothDevice N";
+		public string Description = "BluetoothDevice";
 		public string Serial = "";
 		public bool Inverted = false;
 		public bool IsValid = false;
-        public BluetoothManagementForm(ulong kid)
+        public BluetoothManagementForm(string userName)
         {
             InitializeComponent();
-			description_textBox.Text += kid;
+			description_textBox.Text += " for "+userName;
         }
 
 		private void description_textBox_TextChanged(object sender, EventArgs e)
@@ -52,6 +52,26 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
                 serial_textBox.Text = sbtd.SelectedDevice.DeviceAddress.ToString();
             }
             catch (Exception ex) { MessageBox.Show("Unable to use bluetooth. "+ex.Message); }
+        }
+
+        private void inverted_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void serial_label_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void description_label_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void description_textBox_TextChanged_1(object sender, EventArgs e)
+        {
+
         }
 	}
 }

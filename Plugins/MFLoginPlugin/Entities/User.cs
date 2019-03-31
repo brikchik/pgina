@@ -24,68 +24,78 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
         public User(ulong uid) { UID = uid;}//database item
 		public User()
 		{
-			SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(UID) AS MAX_UID FROM USERS", DBHelper.connection);
-			SQLiteDataReader r = sqlc.ExecuteReader();
-			r.Read();
-			try
-			{
-				UID = ulong.Parse(r["MAX_UID"].ToString()) + 1;
-			}
-			catch { UID = 1; }
+
+                SQLiteCommand sqlc = new SQLiteCommand("SELECT MAX(UID) AS MAX_UID FROM USERS", DBHelper.connection);
+                SQLiteDataReader r = sqlc.ExecuteReader();
+                r.Read();
+                try
+                {
+                    UID = ulong.Parse(r["MAX_UID"].ToString()) + 1;
+                }
+                catch { UID = 1; }
 		}
 
 		public override string ToString() { return Name; }
 		public bool FillByName(string name)
 		{
-			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE NAME=$NAME", DBHelper.connection);
-			sqlc.Parameters.AddWithValue("$NAME", name);
-			SQLiteDataReader r = sqlc.ExecuteReader();
-			if (r.Read())
-			{
-				UID = ulong.Parse(r["UID"].ToString());
-				Name = (string)r["Name"];
-				Role = (string)r["Role"];
-				if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
-				Hash = (string)r["Hash"];
-                if (!IsValid()) return false;
-				return true;
-			}
-			else
-				return false;
+                SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE NAME=$NAME", DBHelper.connection);
+                sqlc.Parameters.AddWithValue("$NAME", name);
+                SQLiteDataReader r = sqlc.ExecuteReader();
+                if (r.Read())
+                {
+                    UID = ulong.Parse(r["UID"].ToString());
+                    Name = (string)r["Name"];
+                    Role = (string)r["Role"];
+                    if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
+                    Hash = (string)r["Hash"];
+                    if (!IsValid()) return false;
+                    return true;
+                }
+                else
+                    return false;
 		}
 		public bool Fill()
 		{
-			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE UID=$UID", DBHelper.connection);
-			sqlc.Parameters.AddWithValue("$UID", UID);
-			SQLiteDataReader r = sqlc.ExecuteReader();
-			if (r.Read())
-			{
-				Name = (string)r["Name"];
-				Role = (string)r["Role"];
-				if (r["WindowsPassword"]!=System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
-				Hash = (string)r["Hash"];
-                if (!IsValid()) return false;
-				return true;
-			}
-			else
-				return false;
+                SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE UID=$UID", DBHelper.connection);
+                sqlc.Parameters.AddWithValue("$UID", UID);
+                SQLiteDataReader r = sqlc.ExecuteReader();
+                if (r.Read())
+                {
+                    Name = (string)r["Name"];
+                    Role = (string)r["Role"];
+                    if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
+                    Hash = (string)r["Hash"];
+                    if (!IsValid()) return false;
+                    return true;
+                }
+                else
+                    return false;
 		}
 		public bool Save()
 		{
-			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE UID=$UID", DBHelper.connection);
-			sqlc.Parameters.AddWithValue("$UID", UID);
-			bool exists = (sqlc.ExecuteScalar() != null);
-			if (exists)
-				sqlc = new SQLiteCommand("UPDATE USERS SET UID=$UID, Name=$Name,Role=$Role, WindowsPassword=$WindowsPassword, Hash=$Hash WHERE UID=$UID", DBHelper.connection);
-			else
-				sqlc = new SQLiteCommand("INSERT INTO USERS VALUES($UID, $Name,$Role, $WindowsPassword, $Hash)", DBHelper.connection);
-			sqlc.Parameters.AddWithValue("$UID", UID);
-			sqlc.Parameters.AddWithValue("$Name", Name);
-			sqlc.Parameters.AddWithValue("$Role", Role);
-			sqlc.Parameters.AddWithValue("$WindowsPassword", WindowsPassword);
-            ComputeHash();
-			sqlc.Parameters.AddWithValue("$Hash", Hash);
-			return (sqlc.ExecuteNonQuery() == 1);
+                try
+                {
+                    SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE UID=$UID", DBHelper.connection);
+                    sqlc.Parameters.AddWithValue("$UID", UID);
+                    bool exists = (sqlc.ExecuteScalar() != null);
+                    if (exists)
+                        sqlc = new SQLiteCommand("UPDATE USERS SET UID=$UID, Name=$Name,Role=$Role, WindowsPassword=$WindowsPassword, Hash=$Hash WHERE UID=$UID", DBHelper.connection);
+                    else
+                        sqlc = new SQLiteCommand("INSERT INTO USERS VALUES($UID, $Name,$Role, $WindowsPassword, $Hash)", DBHelper.connection);
+                    sqlc.Parameters.AddWithValue("$UID", UID);
+                    sqlc.Parameters.AddWithValue("$Name", Name);
+                    sqlc.Parameters.AddWithValue("$Role", Role);
+                    sqlc.Parameters.AddWithValue("$WindowsPassword", WindowsPassword);
+                    ComputeHash();
+                    sqlc.Parameters.AddWithValue("$Hash", Hash);
+                    return (sqlc.ExecuteNonQuery() == 1);
+                }
+                catch (Exception ex)
+                {
+                    m_logger.Error(ex.Message);
+                    return false;
+                }
+            
 		}
 		public bool Remove()
 		{
@@ -94,6 +104,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			bool success = (sqlc.ExecuteNonQuery()==1);
 			sqlc = new SQLiteCommand("DELETE FROM AUTH_METHODS WHERE UID=$UID", DBHelper.connection);
 			sqlc.Parameters.AddWithValue("$UID", UID);
+
+                LogEntity le = new LogEntity(this, "Removed from MFLogin", true);
+                le.Save();
+            
 			return success;
 		}
 
@@ -121,6 +135,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 				if (grp != null) grp.Invoke("Add", new object[] { newUser.Path.ToString() });
 				try { grp = directoryEntry.Children.Find("Пользователи", "group"); } catch { }
 				if (grp != null) grp.Invoke("Add", new object[] { newUser.Path.ToString() });
+                    LogEntity le = new LogEntity(this, "Created", true);
+                    le.Save();
 			}
 			catch (Exception e) { m_logger.Error(e.Message); return false; }
 			return true;
@@ -135,13 +151,16 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                 user.CommitChanges();
             }
             catch (Exception e) { m_logger.Error(e.Message); return false; }
+                LogEntity le = new LogEntity(this, "Added to MFLogin", true);
+                le.Save();
+            
             return true;
         }
 		public bool NewPassword()
 		{
 			try
 			{
-				WindowsPassword = Shared.GetUniqueKey(100);
+				WindowsPassword = Shared.GetUniqueKey(Shared.INTERNAL_USER_PASSWORD_LENGTH);
 				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
 				DirectoryEntry user = directoryEntry.Children.Find(Name, "user");
 				user.Invoke("SetPassword", new Object[] { WindowsPassword });
@@ -149,6 +168,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 				Save();
 			}
 			catch (Exception e) { m_logger.Error(e.Message); return false; }
+                LogEntity le = new LogEntity(this, "Got a new internal password", true);
+                le.Save();
 			return true;
 		}
 		public bool RemoveFromSystem()
@@ -161,6 +182,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 				if (currentUser.InvokeGet("Description").ToString() == "pGina created")
 				{
 					directoryEntry.Children.Remove(currentUser);
+
+                        LogEntity le = new LogEntity(this, "Removed from Windows", true);
+                        le.Save();
+                    
 				}
 				else throw new Exception(message: "User is not created by pGina: "+Name);
 			}
@@ -185,6 +210,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			}
 			catch (Exception e) { m_logger.Error("Администраторы... " + e.Message); }
 
+                LogEntity le = new LogEntity(this, "Is administrator", admin);
+                le.Save();
 			return true;
 		}
 	}

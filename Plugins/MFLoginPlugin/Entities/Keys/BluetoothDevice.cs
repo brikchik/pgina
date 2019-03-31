@@ -14,17 +14,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 	class BluetoothDevice : Key
 	{
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
-		public BluetoothDevice(ulong kid) : base(kid)
+		public BluetoothDevice(ulong kid) : base(kid) { Type = "BluetoothDevice"; }
+        public override bool AddKey(string userName = "")
 		{
-			Type = "BluetoothDevice";
-		}
-		public BluetoothDevice() : base()
-		{
-			Type = "BluetoothDevice";
-		}
-		public override bool AddKey()
-		{
-			BluetoothManagementForm umf = new BluetoothManagementForm(KID);
+			BluetoothManagementForm umf = new BluetoothManagementForm(userName);
 			umf.ShowDialog();
 			if (!umf.IsValid) return false;
 			Serial = umf.Serial;

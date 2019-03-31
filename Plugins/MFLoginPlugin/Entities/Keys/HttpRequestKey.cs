@@ -13,10 +13,9 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 		// Data field has URL
 		// Password field has the correct response
 		public HttpRequestKey(ulong kid) : base(kid) { Type = "HttpRequest";  IsConfigurable = true; } // specific key
-		public HttpRequestKey() : base(0) { Type = "HttpRequest"; IsConfigurable = true; } // empty key
-		public override bool AddKey()
+		public override bool AddKey(string userName="")
 		{
-			HttpRequestManagementForm httpr = new HttpRequestManagementForm(KID);
+			HttpRequestManagementForm httpr = new HttpRequestManagementForm(userName);
 			httpr.ShowDialog();
 			if (!httpr.IsValid) return false;
 			Data = httpr.Address;

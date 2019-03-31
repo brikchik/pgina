@@ -9,12 +9,13 @@ using System.Data.SQLite;
 using System.IO;
 using pGina.Plugin.MFLoginPlugin.Entities;
 using pGina.Shared.Types;
-
+using log4net;
 namespace pGina.Plugin.MFLoginPlugin
 {
     class DBHelper 
     {
 		public static SQLiteConnection connection;
+        private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
         private const string DBCreationQuery = @"
 -- Table: AUTH_METHOD
 DROP TABLE IF EXISTS AUTH_METHOD;
@@ -36,9 +37,28 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         {
             try
             {
+                // check basic structure
                 SQLiteCommand sqlc = new SQLiteCommand("SELECT COUNT(name) FROM sqlite_master WHERE type='table';", connection);
                 ulong a = ulong.Parse(sqlc.ExecuteScalar().ToString());
                 if (a != 4) throw new Exception();
+				/*
+				 * Those checks spam with excessive log entities
+				 * However, this may be useful to monitor configuration menu use:
+				 * each database connect has "testName user added" and "testName user removed" messages
+				*/
+				/*
+				// check users table
+                User user = new User();
+				user.Name = "testName";
+				user.Role = "User";
+                user.Save();
+                user.Remove();
+                // check keys
+                Key key = Key.DefineKey("Password");
+                key.Save();
+                key.Remove();
+				*/
+				
             }
             catch { return false; }
             return true;
@@ -109,19 +129,31 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         }
 		public static User[] ReadUsers()
 		{
-			List<User> Users = new List<User>();
-			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS;", connection);
-			SQLiteDataReader r = sqlc.ExecuteReader();
-			while (r.Read())
-			{
-				User newUser=new User(ulong.Parse(r["UID"].ToString()));
-				newUser.Fill();
-				Users.Add(newUser);
-			}
-			return Users.ToArray();
+        
+            
+                try
+                {
+                    List<User> Users = new List<User>();
+                    SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS;", connection);
+                    SQLiteDataReader r = sqlc.ExecuteReader();
+                    while (r.Read())
+                    {
+                        User newUser = new User(ulong.Parse(r["UID"].ToString()));
+                        newUser.Fill();
+                        Users.Add(newUser);
+                    }
+                    return Users.ToArray();
+                }
+                catch (Exception ex)
+                {
+                    m_logger.Error(ex.Message);
+                    return null;
+                }
+            
 		}
 		public static Key[] ReadKeys(string type="", AuthMethod am=null)
 		{
+            try{
 			List<Key> Keys = new List<Key>();
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS;", connection);
 			if (type != "")
@@ -146,9 +178,16 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 				Keys.Add(newKey);
 			}
 			return Keys.ToArray();
+            }
+            catch (Exception ex)
+            {
+                m_logger.Error(ex.Message);
+                return null;
+            }
 		}
 		public static AuthMethod[] ReadAuthMethods(ulong keyID=0)
 		{
+            try{
 			List<AuthMethod> AMs = new List<AuthMethod>();
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHODS;", connection);
 			if (keyID != 0)
@@ -164,11 +203,18 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 				AMs.Add(newAM);
 			}
 			return AMs.ToArray();
+            }
+            catch (Exception ex)
+            {
+                m_logger.Error(ex.Message);
+                return null;
+            }
 		}
 		public static BooleanResult ConnectToRemoteDB(string path) { return new BooleanResult() { Success = false, Message = "Not implemented" }; }
 
 		public static AuthMethod[] GetAuthMethods(User user) {
-			List<AuthMethod> authMethods=new List<AuthMethod>();
+			try{
+                List<AuthMethod> authMethods=new List<AuthMethod>();
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHOD WHERE UID=$UID", DBHelper.connection);
 			sqlc.Parameters.AddWithValue("$UID", user.UID);
 			SQLiteDataReader r = sqlc.ExecuteReader();
@@ -180,6 +226,12 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 				authMethods.Add(am);
 			}
 			return authMethods.ToArray();
+            }
+            catch (Exception ex)
+            {
+                m_logger.Error(ex.Message);
+                return null;
+            }
 		}
 		public static void RemoveUnusedKeys()
 		{
@@ -197,6 +249,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         }
         public static List<LogEntity> ReadLogs(string mode="", int count=20) //mode="F100", "L100","All", etc.
         {
+            try{
             List<LogEntity> logs = new List<LogEntity>();
             SQLiteCommand sqlc = new SQLiteCommand(DBHelper.connection);
             sqlc.CommandText = "SELECT LEID FROM LOGIN_ATTEMPTS";
@@ -218,6 +271,12 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
                 logs.Add(le);
             }
             return logs;
+            }
+            catch (Exception ex)
+            {
+                m_logger.Error(ex.Message);
+                return null;
+            }
         }
         public bool ClearLogs(DateTime border)
         {

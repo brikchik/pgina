@@ -13,14 +13,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 {
     public partial class ConnectedDeviceManagementForm : Form
     {
-		public string Description="ConnectedDevice N";
+		public string Description="ConnectedDevice";
 		public string Serial="";
 		public bool Inverted = false;
 		public bool IsValid = false;
-        public ConnectedDeviceManagementForm(ulong kid)
+        public ConnectedDeviceManagementForm(string userName)
         {
             InitializeComponent();
-			description_textBox.Text += kid;
+            description_textBox.Text += " for " + userName;
 			Description = description_textBox.Text;
 			fillSerialsList(serials);
 			createdKeys_listBox.Items.AddRange(DBHelper.ReadKeys("ConnectedDevice"));

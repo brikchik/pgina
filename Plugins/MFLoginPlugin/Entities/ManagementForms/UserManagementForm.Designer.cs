@@ -165,6 +165,7 @@
             this.Controls.Add(this.name_groupBox);
             this.Controls.Add(this.addUser_button);
             this.Name = "UserManagementForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New user";
             this.Load += new System.EventHandler(this.AddUserForm_Load);
             this.name_groupBox.ResumeLayout(false);

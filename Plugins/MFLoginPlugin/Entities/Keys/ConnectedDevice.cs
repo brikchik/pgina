@@ -11,17 +11,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
     class ConnectedDevice : Key
     {
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
-		public ConnectedDevice(UInt64 kid):base(kid)
+		public ConnectedDevice(UInt64 kid):base(kid) { Type = "ConnectedDevice"; }
+        public override bool AddKey(string userName = "")
 		{
-			Type = "ConnectedDevice";
-		}
-		public ConnectedDevice() : base()
-		{
-			Type = "ConnectedDevice";
-		}
-		public override bool AddKey()
-		{
-			ConnectedDeviceManagementForm umf = new ConnectedDeviceManagementForm(KID);
+			ConnectedDeviceManagementForm umf = new ConnectedDeviceManagementForm(userName);
 			umf.ShowDialog();
 			if (!umf.IsValid) return false;
 			Serial = umf.Serial;

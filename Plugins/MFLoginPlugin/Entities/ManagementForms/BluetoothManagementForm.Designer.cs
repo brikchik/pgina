@@ -46,6 +46,7 @@
             this.inverted_checkBox.TabIndex = 7;
             this.inverted_checkBox.Text = "Invert (Device has to be MISSING)";
             this.inverted_checkBox.UseVisualStyleBackColor = true;
+            this.inverted_checkBox.CheckedChanged += new System.EventHandler(this.inverted_checkBox_CheckedChanged);
             // 
             // serial_label
             // 
@@ -56,6 +57,7 @@
             this.serial_label.Size = new System.Drawing.Size(110, 17);
             this.serial_label.TabIndex = 13;
             this.serial_label.Text = "Device address:";
+            this.serial_label.Click += new System.EventHandler(this.serial_label_Click);
             // 
             // serial_textBox
             // 
@@ -75,6 +77,7 @@
             this.description_textBox.Size = new System.Drawing.Size(256, 53);
             this.description_textBox.TabIndex = 8;
             this.description_textBox.Text = "BluetoothDevice N";
+            this.description_textBox.TextChanged += new System.EventHandler(this.description_textBox_TextChanged_1);
             // 
             // description_label
             // 
@@ -85,6 +88,7 @@
             this.description_label.Size = new System.Drawing.Size(83, 17);
             this.description_label.TabIndex = 10;
             this.description_label.Text = "Description:";
+            this.description_label.Click += new System.EventHandler(this.description_label_Click_1);
             // 
             // ok_button
             // 
@@ -119,6 +123,7 @@
             this.Controls.Add(this.description_label);
             this.Controls.Add(this.ok_button);
             this.Name = "BluetoothManagementForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bluetooth key management";
             this.ResumeLayout(false);
             this.PerformLayout();

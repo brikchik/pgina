@@ -28,14 +28,16 @@ namespace pGina.Plugin.MFLoginPlugin
             using(Process me = Process.GetCurrentProcess())
             {
                 m_settings = new pGinaDynamicSettings(SimpleUuid);
-				m_settings.SetDefault("FirstRun",true);
+				// bsic settings:
+                m_settings.SetDefault("FirstRun",true);
                 m_settings.SetDefault("Local", false);
 				m_settings.SetDefault("LocalDatabasePath", "C:/Program Files/pGina.fork/MFLoginDB.db");
 				m_settings.SetDefault("RemoteDatabasePath", "");
 				m_settings.SetDefault("Description", m_defaultDescription);
                 m_settings.SetDefault("DBPassword", new byte[] { });
 				m_settings.SetDefault("DBPasswordSalt", new byte[] { });
-				// ####### password is to be stored in a safer place, not Windows regisry
+				// advanced setings:
+                m_settings.SetDefault("AlwaysCheckSelectedKey", false);
 
 				m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
@@ -90,6 +92,11 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		public BooleanResult AuthorizeUser(SessionProperties properties)
 		{
+            // we save user profile path here every time
+
+
+
+            // ####
 			// We elect to not do any authorization, let the user pass for us
 			return new BooleanResult() { Success = true };
 		}

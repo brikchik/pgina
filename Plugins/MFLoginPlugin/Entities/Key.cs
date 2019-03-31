@@ -26,6 +26,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "ConnectedDevice": key= new ConnectedDevice(kid); break;
 				case "BluetoothDevice": key = new BluetoothDevice(kid); break;
 				case "HttpRequest": key = new HttpRequestKey(kid); break;
+                case "EncryptedPasswordFileKey": key = new EncryptedPasswordFileKey(kid); break;
 				default:break;
 			}
 			if(key!=null)key.Fill();
@@ -40,6 +41,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "ConnectedDevice": key = new ConnectedDevice(key.KID); break;
 				case "BluetoothDevice": key = new BluetoothDevice(key.KID); break;
 				case "HttpRequest": key = new HttpRequestKey(key.KID); break;
+                case "EncryptedPasswordFileKey": key = new EncryptedPasswordFileKey(key.KID); break;
 				default: key = null; m_logger.Error("Unable to recognize key type: "+type); break;
 			}
 			return key; // get appropriate key class
@@ -72,7 +74,7 @@ namespace pGina.Plugin.MFLoginPlugin
 		public Key(ulong kid) { KID = kid; }
 		// management form
 		// each key has to provide a key creation window
-		public virtual bool AddKey() { m_logger.Debug("Key.AddKey called. That wasn't supposed to happen!"); return false; } 
+		public virtual bool AddKey(string userName) { m_logger.Debug("Key.AddKey called. That wasn't supposed to happen!"); return false; } 
 		public bool Fill()
 		{
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE KID=$KID", DBHelper.connection);
@@ -136,6 +138,6 @@ namespace pGina.Plugin.MFLoginPlugin
 		public virtual bool CheckKey(string password) { m_logger.Debug("Key.CheckKey called... That wasn't supposed to happen"); return false; }// All _keys_ behave similarly. abstract key is wrong
 
 		//key MAY contain windows password
-		public string ReturnWindowsPassword() { return null; }
+		public virtual string ReturnWindowsPassword() { return null; }
 	}
 }
