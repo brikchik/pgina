@@ -29,22 +29,25 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem(new string[] {
             "BluetoothDevice (any device, 5 - 15 seconds to check)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem(new string[] {
             "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem(new string[] {
             "Encrypted Password File (with Windows password)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem(new string[] {
             "Website http request"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             this.changeRole_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.user_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.admin_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlPanel = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.ok_toolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.cancel_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.advancedSettings_tabPage = new System.Windows.Forms.TabPage();
+            this.requireAtLeastOneKeyInAuthMethod_checkBox = new System.Windows.Forms.CheckBox();
             this.advancedSettings_alwaysCheckSelectedKey_checkBox = new System.Windows.Forms.CheckBox();
             this.backup_groupBox = new System.Windows.Forms.GroupBox();
             this.database_groupBox = new System.Windows.Forms.GroupBox();
@@ -137,9 +140,23 @@
             this.leid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.uid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.discardChanges_linkLabel = new System.Windows.Forms.LinkLabel();
+            this.onLoadBackupEnabled_checkBox = new System.Windows.Forms.CheckBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.dbBackupWarning_label = new System.Windows.Forms.Label();
+            this.backup_panel = new System.Windows.Forms.Panel();
+            this.backupBackup_button = new System.Windows.Forms.Button();
+            this.backupPath_textBox = new System.Windows.Forms.TextBox();
+            this.backupPassword_textBox = new System.Windows.Forms.TextBox();
+            this.backupPath_button = new System.Windows.Forms.Button();
+            this.backupPassword_label = new System.Windows.Forms.Label();
+            this.otherAdvancedSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.RestoreWindowsUsers_button = new System.Windows.Forms.Button();
             this.changeRole_contextMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
             this.advancedSettings_tabPage.SuspendLayout();
+            this.backup_groupBox.SuspendLayout();
             this.database_groupBox.SuspendLayout();
             this.panel3.SuspendLayout();
             this.keys_tabPage.SuspendLayout();
@@ -164,6 +181,10 @@
             this.logControl_groupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.countLogs_numericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logs_dataView)).BeginInit();
+            this.panel4.SuspendLayout();
+            this.backup_panel.SuspendLayout();
+            this.otherAdvancedSettings_groupBox.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // changeRole_contextMenuStrip
@@ -201,7 +222,9 @@
             this.controlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.controlPanel.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.controlPanel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton3});
+            this.ok_toolStripButton,
+            this.toolStripSeparator1,
+            this.cancel_toolStripButton});
             this.controlPanel.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.controlPanel.Location = new System.Drawing.Point(0, 406);
             this.controlPanel.Name = "controlPanel";
@@ -210,28 +233,53 @@
             this.controlPanel.TabIndex = 6;
             this.controlPanel.Text = "toolStrip1";
             // 
-            // toolStripButton3
+            // ok_toolStripButton
             // 
-            this.toolStripButton3.AutoSize = false;
-            this.toolStripButton3.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton3.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.toolStripButton3.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.toolStripButton3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButton3.Margin = new System.Windows.Forms.Padding(0);
-            this.toolStripButton3.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripButton3.Size = new System.Drawing.Size(983, 28);
-            this.toolStripButton3.Text = "OK";
-            this.toolStripButton3.Click += new System.EventHandler(this.btnOk_Click);
+            this.ok_toolStripButton.AutoSize = false;
+            this.ok_toolStripButton.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.ok_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ok_toolStripButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ok_toolStripButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.ok_toolStripButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ok_toolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.ok_toolStripButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ok_toolStripButton.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
+            this.ok_toolStripButton.Name = "ok_toolStripButton";
+            this.ok_toolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.ok_toolStripButton.Size = new System.Drawing.Size(683, 28);
+            this.ok_toolStripButton.Text = "OK";
+            this.ok_toolStripButton.Click += new System.EventHandler(this.btnOk_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.AutoSize = false;
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(16, 28);
+            // 
+            // cancel_toolStripButton
+            // 
+            this.cancel_toolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.cancel_toolStripButton.AutoSize = false;
+            this.cancel_toolStripButton.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.cancel_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.cancel_toolStripButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cancel_toolStripButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.cancel_toolStripButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cancel_toolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.cancel_toolStripButton.Margin = new System.Windows.Forms.Padding(0);
+            this.cancel_toolStripButton.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
+            this.cancel_toolStripButton.Name = "cancel_toolStripButton";
+            this.cancel_toolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.cancel_toolStripButton.Size = new System.Drawing.Size(283, 28);
+            this.cancel_toolStripButton.Text = "CANCEL";
+            this.cancel_toolStripButton.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // advancedSettings_tabPage
             // 
-            this.advancedSettings_tabPage.Controls.Add(this.advancedSettings_alwaysCheckSelectedKey_checkBox);
-            this.advancedSettings_tabPage.Controls.Add(this.backup_groupBox);
+            this.advancedSettings_tabPage.Controls.Add(this.groupBox1);
+            this.advancedSettings_tabPage.Controls.Add(this.otherAdvancedSettings_groupBox);
             this.advancedSettings_tabPage.Controls.Add(this.database_groupBox);
+            this.advancedSettings_tabPage.Controls.Add(this.backup_groupBox);
             this.advancedSettings_tabPage.Location = new System.Drawing.Point(4, 24);
             this.advancedSettings_tabPage.Margin = new System.Windows.Forms.Padding(4);
             this.advancedSettings_tabPage.Name = "advancedSettings_tabPage";
@@ -240,12 +288,24 @@
             this.advancedSettings_tabPage.TabIndex = 3;
             this.advancedSettings_tabPage.Text = "Advanced settings";
             this.advancedSettings_tabPage.UseVisualStyleBackColor = true;
+            this.advancedSettings_tabPage.Click += new System.EventHandler(this.advancedSettings_tabPage_Click);
             this.advancedSettings_tabPage.Enter += new System.EventHandler(this.advancedSettings_tabPage_Enter);
+            // 
+            // requireAtLeastOneKeyInAuthMethod_checkBox
+            // 
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.AutoSize = true;
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Location = new System.Drawing.Point(9, 53);
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Name = "requireAtLeastOneKeyInAuthMethod_checkBox";
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Size = new System.Drawing.Size(302, 20);
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.TabIndex = 15;
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Text = "Require at least 1 key In authentication method";
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.UseVisualStyleBackColor = true;
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.CheckedChanged += new System.EventHandler(this.requireAtLeastOneKeyInAuthMethod_checkBox_CheckedChanged);
             // 
             // advancedSettings_alwaysCheckSelectedKey_checkBox
             // 
             this.advancedSettings_alwaysCheckSelectedKey_checkBox.AutoSize = true;
-            this.advancedSettings_alwaysCheckSelectedKey_checkBox.Location = new System.Drawing.Point(297, 246);
+            this.advancedSettings_alwaysCheckSelectedKey_checkBox.Location = new System.Drawing.Point(9, 26);
             this.advancedSettings_alwaysCheckSelectedKey_checkBox.Name = "advancedSettings_alwaysCheckSelectedKey_checkBox";
             this.advancedSettings_alwaysCheckSelectedKey_checkBox.Size = new System.Drawing.Size(328, 20);
             this.advancedSettings_alwaysCheckSelectedKey_checkBox.TabIndex = 14;
@@ -255,10 +315,12 @@
             // 
             // backup_groupBox
             // 
+            this.backup_groupBox.Controls.Add(this.backup_panel);
+            this.backup_groupBox.Controls.Add(this.panel4);
             this.backup_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.backup_groupBox.Location = new System.Drawing.Point(297, 18);
+            this.backup_groupBox.Location = new System.Drawing.Point(640, 7);
             this.backup_groupBox.Name = "backup_groupBox";
-            this.backup_groupBox.Size = new System.Drawing.Size(283, 221);
+            this.backup_groupBox.Size = new System.Drawing.Size(328, 222);
             this.backup_groupBox.TabIndex = 13;
             this.backup_groupBox.TabStop = false;
             this.backup_groupBox.Text = "Database backup";
@@ -267,17 +329,16 @@
             // 
             this.database_groupBox.Controls.Add(this.DBOpened_checkBox);
             this.database_groupBox.Controls.Add(this.panel3);
-            this.database_groupBox.Controls.Add(this.cleanDBKeys_button);
-            this.database_groupBox.Controls.Add(this.cleanDB_button);
             this.database_groupBox.Controls.Add(this.database_label);
             this.database_groupBox.Controls.Add(this.runSetup_button);
             this.database_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.database_groupBox.Location = new System.Drawing.Point(9, 18);
+            this.database_groupBox.Location = new System.Drawing.Point(9, 7);
             this.database_groupBox.Name = "database_groupBox";
-            this.database_groupBox.Size = new System.Drawing.Size(281, 357);
+            this.database_groupBox.Size = new System.Drawing.Size(281, 247);
             this.database_groupBox.TabIndex = 12;
             this.database_groupBox.TabStop = false;
             this.database_groupBox.Text = "Database";
+            this.database_groupBox.Enter += new System.EventHandler(this.database_groupBox_Enter);
             // 
             // DBOpened_checkBox
             // 
@@ -294,19 +355,19 @@
             // 
             // panel3
             // 
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.panel3.Controls.Add(this.dbErase_checkBox);
             this.panel3.Controls.Add(this.dbErase_button);
-            this.panel3.Location = new System.Drawing.Point(7, 264);
+            this.panel3.Location = new System.Drawing.Point(7, 165);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(267, 87);
+            this.panel3.Size = new System.Drawing.Size(267, 75);
             this.panel3.TabIndex = 19;
             // 
             // dbErase_checkBox
             // 
             this.dbErase_checkBox.AutoEllipsis = true;
             this.dbErase_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.dbErase_checkBox.Location = new System.Drawing.Point(9, 6);
+            this.dbErase_checkBox.Location = new System.Drawing.Point(9, 2);
             this.dbErase_checkBox.Name = "dbErase_checkBox";
             this.dbErase_checkBox.Size = new System.Drawing.Size(255, 39);
             this.dbErase_checkBox.TabIndex = 4;
@@ -316,11 +377,11 @@
             // dbErase_button
             // 
             this.dbErase_button.BackColor = System.Drawing.Color.Tomato;
-            this.dbErase_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.dbErase_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dbErase_button.ForeColor = System.Drawing.SystemColors.Control;
-            this.dbErase_button.Location = new System.Drawing.Point(2, 45);
+            this.dbErase_button.Location = new System.Drawing.Point(2, 41);
             this.dbErase_button.Name = "dbErase_button";
-            this.dbErase_button.Size = new System.Drawing.Size(262, 40);
+            this.dbErase_button.Size = new System.Drawing.Size(262, 32);
             this.dbErase_button.TabIndex = 5;
             this.dbErase_button.Text = "ERASE DATABASE";
             this.dbErase_button.UseVisualStyleBackColor = false;
@@ -328,9 +389,9 @@
             // 
             // cleanDBKeys_button
             // 
-            this.cleanDBKeys_button.Location = new System.Drawing.Point(7, 228);
+            this.cleanDBKeys_button.Location = new System.Drawing.Point(7, 92);
             this.cleanDBKeys_button.Name = "cleanDBKeys_button";
-            this.cleanDBKeys_button.Size = new System.Drawing.Size(267, 29);
+            this.cleanDBKeys_button.Size = new System.Drawing.Size(324, 29);
             this.cleanDBKeys_button.TabIndex = 3;
             this.cleanDBKeys_button.Text = "Remove all unused keys";
             this.cleanDBKeys_button.UseVisualStyleBackColor = true;
@@ -338,10 +399,10 @@
             // 
             // cleanDB_button
             // 
-            this.cleanDB_button.Location = new System.Drawing.Point(7, 166);
+            this.cleanDB_button.Location = new System.Drawing.Point(7, 21);
             this.cleanDB_button.Margin = new System.Windows.Forms.Padding(4);
             this.cleanDB_button.Name = "cleanDB_button";
-            this.cleanDB_button.Size = new System.Drawing.Size(267, 55);
+            this.cleanDB_button.Size = new System.Drawing.Size(324, 64);
             this.cleanDB_button.TabIndex = 2;
             this.cleanDB_button.Text = "Clean database\r\n(Removes all users that don\'t exist in the OS and all unused auth" +
                 "entication methods)";
@@ -458,6 +519,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(386, 87);
             this.panel2.TabIndex = 18;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // keyRemoval_checkBox
             // 
@@ -649,17 +711,17 @@
             this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.fastChoiceTypes_listView.AutoArrange = false;
             this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem16.Tag = "BluetoothDevice";
-            listViewItem17.Tag = "ConnectedDevice";
-            listViewItem18.Tag = "EncryptedPasswordFileKey";
-            listViewItem19.Tag = "Password";
-            listViewItem20.Tag = "HttpRequest";
+            listViewItem21.Tag = "BluetoothDevice";
+            listViewItem22.Tag = "ConnectedDevice";
+            listViewItem23.Tag = "EncryptedPasswordFileKey";
+            listViewItem24.Tag = "Password";
+            listViewItem25.Tag = "HttpRequest";
             this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem16,
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20});
+            listViewItem21,
+            listViewItem22,
+            listViewItem23,
+            listViewItem24,
+            listViewItem25});
             this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
             this.fastChoiceTypes_listView.MultiSelect = false;
             this.fastChoiceTypes_listView.Name = "fastChoiceTypes_listView";
@@ -1350,6 +1412,145 @@
             this.amid.ReadOnly = true;
             this.amid.Visible = false;
             // 
+            // discardChanges_linkLabel
+            // 
+            this.discardChanges_linkLabel.AutoSize = true;
+            this.discardChanges_linkLabel.Enabled = false;
+            this.discardChanges_linkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.discardChanges_linkLabel.Location = new System.Drawing.Point(8, 49);
+            this.discardChanges_linkLabel.Name = "discardChanges_linkLabel";
+            this.discardChanges_linkLabel.Size = new System.Drawing.Size(280, 17);
+            this.discardChanges_linkLabel.TabIndex = 0;
+            this.discardChanges_linkLabel.TabStop = true;
+            this.discardChanges_linkLabel.Text = "Discard recent changes (this configuration)";
+            this.discardChanges_linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.discardChanges_linkLabel_LinkClicked);
+            // 
+            // onLoadBackupEnabled_checkBox
+            // 
+            this.onLoadBackupEnabled_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.onLoadBackupEnabled_checkBox.Location = new System.Drawing.Point(11, 10);
+            this.onLoadBackupEnabled_checkBox.Name = "onLoadBackupEnabled_checkBox";
+            this.onLoadBackupEnabled_checkBox.Size = new System.Drawing.Size(268, 36);
+            this.onLoadBackupEnabled_checkBox.TabIndex = 1;
+            this.onLoadBackupEnabled_checkBox.Text = "Backup current state on load (may be slow if the database is huge)";
+            this.onLoadBackupEnabled_checkBox.UseVisualStyleBackColor = true;
+            this.onLoadBackupEnabled_checkBox.CheckedChanged += new System.EventHandler(this.onLoadBackupEnabled_checkBox_CheckedChanged);
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel4.Controls.Add(this.dbBackupWarning_label);
+            this.panel4.Controls.Add(this.onLoadBackupEnabled_checkBox);
+            this.panel4.Controls.Add(this.discardChanges_linkLabel);
+            this.panel4.Location = new System.Drawing.Point(7, 19);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(315, 104);
+            this.panel4.TabIndex = 2;
+            // 
+            // dbBackupWarning_label
+            // 
+            this.dbBackupWarning_label.Location = new System.Drawing.Point(8, 71);
+            this.dbBackupWarning_label.Name = "dbBackupWarning_label";
+            this.dbBackupWarning_label.Size = new System.Drawing.Size(304, 27);
+            this.dbBackupWarning_label.TabIndex = 2;
+            this.dbBackupWarning_label.Text = "Does NOT remove Windows users. Use the \"Clean database\" button in the \"Database\" " +
+                "section to remove obsolete data";
+            // 
+            // backup_panel
+            // 
+            this.backup_panel.BackColor = System.Drawing.Color.Cornsilk;
+            this.backup_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.backup_panel.Controls.Add(this.backupPassword_label);
+            this.backup_panel.Controls.Add(this.backupPath_button);
+            this.backup_panel.Controls.Add(this.backupPassword_textBox);
+            this.backup_panel.Controls.Add(this.backupPath_textBox);
+            this.backup_panel.Controls.Add(this.backupBackup_button);
+            this.backup_panel.Location = new System.Drawing.Point(7, 130);
+            this.backup_panel.Name = "backup_panel";
+            this.backup_panel.Size = new System.Drawing.Size(315, 85);
+            this.backup_panel.TabIndex = 3;
+            // 
+            // backupBackup_button
+            // 
+            this.backupBackup_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.backupBackup_button.Location = new System.Drawing.Point(247, 1);
+            this.backupBackup_button.Name = "backupBackup_button";
+            this.backupBackup_button.Size = new System.Drawing.Size(63, 80);
+            this.backupBackup_button.TabIndex = 0;
+            this.backupBackup_button.Text = "Back up now";
+            this.backupBackup_button.UseVisualStyleBackColor = true;
+            this.backupBackup_button.Click += new System.EventHandler(this.backupBackup_button_Click);
+            // 
+            // backupPath_textBox
+            // 
+            this.backupPath_textBox.Location = new System.Drawing.Point(4, 60);
+            this.backupPath_textBox.Name = "backupPath_textBox";
+            this.backupPath_textBox.Size = new System.Drawing.Size(134, 20);
+            this.backupPath_textBox.TabIndex = 1;
+            // 
+            // backupPassword_textBox
+            // 
+            this.backupPassword_textBox.Location = new System.Drawing.Point(152, 60);
+            this.backupPassword_textBox.Name = "backupPassword_textBox";
+            this.backupPassword_textBox.Size = new System.Drawing.Size(89, 20);
+            this.backupPassword_textBox.TabIndex = 2;
+            this.backupPassword_textBox.UseSystemPasswordChar = true;
+            // 
+            // backupPath_button
+            // 
+            this.backupPath_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.backupPath_button.Location = new System.Drawing.Point(4, 4);
+            this.backupPath_button.Name = "backupPath_button";
+            this.backupPath_button.Size = new System.Drawing.Size(134, 50);
+            this.backupPath_button.TabIndex = 3;
+            this.backupPath_button.Text = "Choose path to backup location";
+            this.backupPath_button.UseVisualStyleBackColor = true;
+            this.backupPath_button.Click += new System.EventHandler(this.backupPath_button_Click);
+            // 
+            // backupPassword_label
+            // 
+            this.backupPassword_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.backupPassword_label.Location = new System.Drawing.Point(149, 4);
+            this.backupPassword_label.Name = "backupPassword_label";
+            this.backupPassword_label.Size = new System.Drawing.Size(92, 50);
+            this.backupPassword_label.TabIndex = 4;
+            this.backupPassword_label.Text = "Password for backup database";
+            this.backupPassword_label.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // otherAdvancedSettings_groupBox
+            // 
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.advancedSettings_alwaysCheckSelectedKey_checkBox);
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.requireAtLeastOneKeyInAuthMethod_checkBox);
+            this.otherAdvancedSettings_groupBox.Location = new System.Drawing.Point(9, 275);
+            this.otherAdvancedSettings_groupBox.Name = "otherAdvancedSettings_groupBox";
+            this.otherAdvancedSettings_groupBox.Size = new System.Drawing.Size(350, 100);
+            this.otherAdvancedSettings_groupBox.TabIndex = 16;
+            this.otherAdvancedSettings_groupBox.TabStop = false;
+            this.otherAdvancedSettings_groupBox.Text = "Other settings";
+            this.otherAdvancedSettings_groupBox.Enter += new System.EventHandler(this.otherAdvancedSettings_groupBox_Enter);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.RestoreWindowsUsers_button);
+            this.groupBox1.Controls.Add(this.cleanDB_button);
+            this.groupBox1.Controls.Add(this.cleanDBKeys_button);
+            this.groupBox1.Location = new System.Drawing.Point(296, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(338, 222);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Service features";
+            // 
+            // RestoreWindowsUsers_button
+            // 
+            this.RestoreWindowsUsers_button.Location = new System.Drawing.Point(8, 130);
+            this.RestoreWindowsUsers_button.Name = "RestoreWindowsUsers_button";
+            this.RestoreWindowsUsers_button.Size = new System.Drawing.Size(324, 29);
+            this.RestoreWindowsUsers_button.TabIndex = 4;
+            this.RestoreWindowsUsers_button.Text = "Add all database users to Windows";
+            this.RestoreWindowsUsers_button.UseVisualStyleBackColor = true;
+            this.RestoreWindowsUsers_button.Click += new System.EventHandler(this.RestoreWindowsUsers_button_Click);
+            // 
             // LocalConfiguration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1368,7 +1569,7 @@
             this.controlPanel.ResumeLayout(false);
             this.controlPanel.PerformLayout();
             this.advancedSettings_tabPage.ResumeLayout(false);
-            this.advancedSettings_tabPage.PerformLayout();
+            this.backup_groupBox.ResumeLayout(false);
             this.database_groupBox.ResumeLayout(false);
             this.database_groupBox.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -1401,13 +1602,20 @@
             this.logControl_groupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.countLogs_numericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logs_dataView)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.backup_panel.ResumeLayout(false);
+            this.backup_panel.PerformLayout();
+            this.otherAdvancedSettings_groupBox.ResumeLayout(false);
+            this.otherAdvancedSettings_groupBox.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.ToolStrip controlPanel;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripButton ok_toolStripButton;
 		private System.Windows.Forms.ContextMenuStrip changeRole_contextMenuStrip;
 		private System.Windows.Forms.ToolStripMenuItem user_toolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem admin_toolStripMenuItem;
@@ -1504,5 +1712,21 @@
         private System.Windows.Forms.TextBox testAMpassword_textBox;
         private System.Windows.Forms.PictureBox locked_pictureBox;
         private System.Windows.Forms.Label role_textBox;
+        private System.Windows.Forms.CheckBox requireAtLeastOneKeyInAuthMethod_checkBox;
+        private System.Windows.Forms.ToolStripButton cancel_toolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.LinkLabel discardChanges_linkLabel;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.CheckBox onLoadBackupEnabled_checkBox;
+        private System.Windows.Forms.Label dbBackupWarning_label;
+        private System.Windows.Forms.Panel backup_panel;
+        private System.Windows.Forms.Label backupPassword_label;
+        private System.Windows.Forms.Button backupPath_button;
+        private System.Windows.Forms.TextBox backupPassword_textBox;
+        private System.Windows.Forms.TextBox backupPath_textBox;
+        private System.Windows.Forms.Button backupBackup_button;
+        private System.Windows.Forms.GroupBox otherAdvancedSettings_groupBox;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button RestoreWindowsUsers_button;
 	}
 }

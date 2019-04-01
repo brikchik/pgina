@@ -10,6 +10,7 @@ using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 using pGina.Shared.Settings;
 using pGina.Shared.Types;
 using System.Threading;
+using System.IO;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -21,17 +22,33 @@ namespace pGina.Plugin.MFLoginPlugin
         public LocalConfiguration()
         {
             InitializeComponent();
-            database_label.Text = @"Please use the setup dialog to change database path.
-Current database path: ";
-            database_label.Text += (string)m_settings.LocalDatabasePath;
+            // decrypt password
             string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
+            // connect
             DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
+            // backup
+            if ((bool)m_settings.OnLoadBackupEnabled)
+                DBHelper.BackupDatabase((string)m_settings.LocalDatabasePath + ".old", DBPassword);
+            if (!(bool)m_settings.OnLoadBackupEnabled)
+            {
+                cancel_toolStripButton.ForeColor = Color.Gray;
+                cancel_toolStripButton.Text = "Recent changes backup disabled";
+                cancel_toolStripButton.Enabled = false;
+            }
+            // proceed
             bool connectionSuccess = DBHelper.CheckDatabase();
-            if (connectionSuccess) databaseLoaded = true;
+            if (connectionSuccess)
+            {
+                backup_panel.Enabled = true;
+                databaseLoaded = true;
+                database_label.Text = @"Please use the setup dialog to change database path.
+Current database path: " + DBHelper.connection.FileName;
+            }
             else
             {
                 databaseLoaded = false;
                 advancedSettings_tabPage.Text = "PROBLEMS WITH DATABASE";
+                backup_panel.Enabled = false;
                 tabControl.SelectTab(advancedSettings_tabPage);
             }
             ShowDialog();
@@ -51,12 +68,9 @@ Current database path: ";
             else
                 switchUserInfoInterface(false);
         }
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
         private void runSetup_button_Click(object sender, EventArgs e)
         {
+            Visible = false;
             FirstRun fr = new FirstRun();
             Close();
         }
@@ -273,6 +287,7 @@ Current database path: ";
             else { key4Button.Text = ""; }
             if (am.K5 != null) { key5Button.Tag = am.K5; key5Button.Text = am.K5.Description; }
             else { key5Button.Text = ""; }
+            if ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod && am.Number_of_keys == 0) am.Number_of_keys = 1;
             keysRequired_NumUpDown.Value = (decimal)am.Number_of_keys;
             description_textBox.Text = am.Description;
         }
@@ -462,17 +477,23 @@ Current database path: ";
         private void keyDescription_textBox_TextChanged(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
-            Key key = (Key)keysListBox.SelectedItem;
-            key.Description = keyDescription_textBox.Text;
-            key.Save();
+            try
+            {
+                Key key = (Key)keysListBox.SelectedItem;
+                key.Description = keyDescription_textBox.Text;
+                key.Save();
+            }
+            catch { }
         }
         private void keyInverted_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
 			Key key = null;
-			try { key = (Key)keysListBox.SelectedItem; } catch { };
+			try { key = (Key)keysListBox.SelectedItem; 
             key.Inverted = keyInverted_checkBox.Checked;
             key.Save();
+            }
+            catch { keyInverted_checkBox.Checked = !keyInverted_checkBox.Checked; };
         }
         private void keyConfigure_button_Click(object sender, EventArgs e)
         {
@@ -603,7 +624,11 @@ Current database path: ";
         {
             try
             {
-                if (databaseLoaded) UpdateUserList();
+                keysRequired_NumUpDown.Minimum = ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod)?1:0;
+                if (databaseLoaded)
+                {
+                    UpdateUserList();
+                }
             }
             catch { MessageBox.Show("Database is corrupted"); tabControl.SelectTab(advancedSettings_tabPage); }
         }
@@ -619,6 +644,14 @@ Current database path: ";
             {
                 advancedSettings_tabPage.Text = "Advanced settings";
                 DBOpened_checkBox.Checked = true;
+                discardChanges_linkLabel.LinkVisited = false;
+                if ((bool)m_settings.OnLoadBackupEnabled)
+                {
+                    onLoadBackupEnabled_checkBox.Checked = true;
+                    discardChanges_linkLabel.Enabled = true;
+                }
+                advancedSettings_alwaysCheckSelectedKey_checkBox.Checked = ((bool)m_settings.AlwaysCheckSelectedKey);
+                requireAtLeastOneKeyInAuthMethod_checkBox.Checked = ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod);
             }
         }
         // defaults for logging
@@ -751,15 +784,122 @@ Current database path: ";
 
         private void openingPictureBox_Click(object sender, MouseEventArgs e)
         {
+            Thread.Sleep(5);
             CheckAuthMethod();
-            Thread.Sleep(15);
-            Refresh();
             // make sure database isn't locked and give plugin some time to do its job
+            Refresh();
         }
 
         private void openingPictureBox_MouseClick(object sender, MouseEventArgs e)
         {
             
+        }
+
+        private void requireAtLeastOneKeyInAuthMethod_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.RequireAtLeastOneKeyInAuthMethod = (requireAtLeastOneKeyInAuthMethod_checkBox.Checked);
+        }
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DBHelper.Disconnect();
+                Close();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private bool DiscardChanges(bool closeConfig = false)
+        {
+            try
+            {
+                DBHelper.Disconnect();
+                DialogResult result = MessageBox.Show("Discard changes?", "Cancel", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                // Check backup copy
+                string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
+                DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath + ".old", DBPassword);
+                if (!DBHelper.CheckDatabase()) throw new Exception("Something is not right with backup database");
+                // Discard changes
+                if (result == DialogResult.Yes && File.Exists((string)m_settings.LocalDatabasePath + ".old") && (new FileInfo((string)m_settings.LocalDatabasePath + ".old").Length > 0))
+                    File.Copy((string)m_settings.LocalDatabasePath + ".old",
+                        (string)m_settings.LocalDatabasePath, true);
+                DBHelper.Disconnect();
+                // synchronize system users with the "unchanged" database
+                DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
+                DBHelper.RestoreSystemUsersFromMFLoginDB();
+                if (closeConfig && result!=DialogResult.No) Close();
+                return true;
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); return false; }
+        }
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DiscardChanges(true);
+        }
+
+        private void discardChanges_linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            bool success=DiscardChanges();
+            string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
+            DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
+            discardChanges_linkLabel.LinkVisited = success;
+        }
+
+        private void onLoadBackupEnabled_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.OnLoadBackupEnabled = onLoadBackupEnabled_checkBox.Checked;
+        }
+
+        private void advancedSettings_tabPage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void backupPath_button_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Title = "Choose new database file location";
+            fileDialog.DefaultExt = ".db"; // windows password file
+            fileDialog.FileName = Shared.GetUniqueKey(16);
+            fileDialog.OverwritePrompt = false;
+            fileDialog.ShowDialog();
+            backupPath_textBox.Text = fileDialog.FileName;
+        }
+
+        private void backupBackup_button_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(backupPath_textBox.Text))
+            {
+                DialogResult dr = MessageBox.Show("Overwrite?", "Destination file exists", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (dr != DialogResult.Yes) return;
+            }
+            bool success = DBHelper.BackupDatabase(backupPath_textBox.Text, Shared.Hashed(backupPassword_textBox.Text));
+            if (success) backup_panel.BackColor = Color.SpringGreen; else backup_panel.BackColor = Color.OrangeRed;
+        }
+
+        private void otherAdvancedSettings_groupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void database_groupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RestoreWindowsUsers_button_Click(object sender, EventArgs e)
+        {
+            DBHelper.RestoreSystemUsersFromMFLoginDB();
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 	}
 }

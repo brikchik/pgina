@@ -52,6 +52,7 @@ namespace pGina.Plugin.MFLoginPlugin
                         m_settings.LocalDatabasePath = path;
                         m_settings.Local = true;
                         m_settings.FirstRun = false;
+                        Visible = false;
                         Close();
                     }
 				}

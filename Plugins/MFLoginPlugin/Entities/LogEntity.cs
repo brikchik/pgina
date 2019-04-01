@@ -17,6 +17,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                 LEID = ulong.Parse(r["MAX_LEID"].ToString()) + 1;
             }
             catch { LEID = 1; }
+            r.Close();
             UID = user.UID;
             Name = user.Name;
             AMID = authmethod.AMID;
@@ -39,6 +40,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                 LEID = ulong.Parse(r["MAX_LEID"].ToString()) + 1;
             }
             catch { LEID = 1; }
+            r.Close();
             UID = user.UID;
             Name = user.Name;
             AMID = 0;
@@ -94,10 +96,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                 Time = (DateTime)r["Time"];
                 Hash = (string)r["Hash"];
                 if (!IsValid()) return false;
+                r.Close();
                 return true;
             }
             else
+            {
+                r.Close();
                 return false;
+            }
         }
         public bool Save()
         {

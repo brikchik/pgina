@@ -37,12 +37,12 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         {
             try
             {
-                // check basic structure
+                // check structure
                 SQLiteCommand sqlc = new SQLiteCommand("SELECT COUNT(name) FROM sqlite_master WHERE type='table';", connection);
                 ulong a = ulong.Parse(sqlc.ExecuteScalar().ToString());
                 if (a != 4) throw new Exception();
 				/*
-				 * Those checks spam with excessive log entities
+				 * Those checks are reliable but they spam with excessive log entities
 				 * However, this may be useful to monitor configuration menu use:
 				 * each database connect has "testName user added" and "testName user removed" messages
 				*/
@@ -120,17 +120,13 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
         {
 			try
 			{
-				connection.Shutdown();
 				connection.Close();
-				connection = null;
 			}
 			catch (Exception ex) { return new BooleanResult() { Success = false, Message = ex.Message }; }
 			return new BooleanResult() { Success = true };
         }
 		public static User[] ReadUsers()
 		{
-        
-            
                 try
                 {
                     List<User> Users = new List<User>();
@@ -142,6 +138,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
                         newUser.Fill();
                         Users.Add(newUser);
                     }
+                    r.Close();
                     return Users.ToArray();
                 }
                 catch (Exception ex)
@@ -177,6 +174,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 				newKey.Fill();
 				Keys.Add(newKey);
 			}
+            r.Close();
 			return Keys.ToArray();
             }
             catch (Exception ex)
@@ -202,6 +200,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 				newAM.Fill();
 				AMs.Add(newAM);
 			}
+            r.Close();
 			return AMs.ToArray();
             }
             catch (Exception ex)
@@ -225,6 +224,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
 				am.Fill();
 				authMethods.Add(am);
 			}
+            r.Close();
 			return authMethods.ToArray();
             }
             catch (Exception ex)
@@ -246,6 +246,13 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
             }
             SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM AUTH_METHOD WHERE UID NOT IN (SELECT UID FROM USERS);", DBHelper.connection);
             sqlc.ExecuteScalar();
+        }
+        public static void RestoreSystemUsersFromMFLoginDB()
+        {
+            foreach (User user in ReadUsers())
+            {
+                if (!user.ExistsInSystem()) user.AddToSystem();
+            }
         }
         public static List<LogEntity> ReadLogs(string mode="", int count=20) //mode="F100", "L100","All", etc.
         {
@@ -270,6 +277,7 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
                 le.Fill();
                 logs.Add(le);
             }
+            r.Close();
             return logs;
             }
             catch (Exception ex)
@@ -278,10 +286,24 @@ CREATE TABLE USERS (UID NUMERIC (16) PRIMARY KEY NOT NULL UNIQUE, Name STRING (1
                 return null;
             }
         }
-        public bool ClearLogs(DateTime border)
+        public static bool BackupDatabase(string destPath, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (File.Exists(destPath)) File.Delete(destPath);
+                SQLiteConnection.CreateFile(destPath);
+                if (!File.Exists(destPath)) throw new Exception("Unable to create backup db file");
+                SQLiteConnectionStringBuilder sQLiteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
+                sQLiteConnectionStringBuilder.Add("Data Source", destPath);
+                sQLiteConnectionStringBuilder.Add("Version", 3);
+                sQLiteConnectionStringBuilder.Add("Password", password);
+                SQLiteConnection destination = new SQLiteConnection(sQLiteConnectionStringBuilder.ConnectionString);
+                destination.Open();
+                connection.BackupDatabase(destination, "main", "main", -1, null, 0);
+                destination.Close();
+            }
+            catch (Exception ex) { m_logger.Error("Unable to create backup. "+ex.Message); return false; }
+            return true;
         }
-        
     }
 }

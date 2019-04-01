@@ -19,6 +19,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			{
 				type = (string)r["Type"];
 			}
+            r.Close();
 			Key key = null;
 			switch (type)
 			{
@@ -70,6 +71,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			KID = ulong.Parse(r["MAX_KID"].ToString()) + 1;
 			}
 			catch { KID = 1; }
+            r.Close();
 		}
 		public Key(ulong kid) { KID = kid; }
 		// management form
@@ -80,20 +82,27 @@ namespace pGina.Plugin.MFLoginPlugin
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM KEYS WHERE KID=$KID", DBHelper.connection);
 			sqlc.Parameters.AddWithValue("$KID", KID);
 			SQLiteDataReader r = sqlc.ExecuteReader();
-			if (r.Read())
-			{
-				Description = (string)r["Description"];
-				Inverted = (bool)r["Inverted"];
-				Type = (string)r["Type"];
-				try { Serial = (string)r["Serial"]; } catch { }; // may be null
-				try { Password = (string)r["Password"]; } catch { };// may be null
-				try { Data = (string)r["Data"];} catch { };// may be null
-				Hash = (string)r["Hash"];
+            if (r.Read())
+            {
+                Description = (string)r["Description"];
+                Inverted = (bool)r["Inverted"];
+                Type = (string)r["Type"];
+                try { Serial = (string)r["Serial"]; }
+                catch { }; // may be null
+                try { Password = (string)r["Password"]; }
+                catch { };// may be null
+                try { Data = (string)r["Data"]; }
+                catch { };// may be null
+                Hash = (string)r["Hash"];
+                r.Close();
                 if (!IsValid()) return false;
-				return true;
-			}
-			else
-				return false;
+                return true;
+            }
+            else
+            {
+                r.Close();
+                return false;
+            }
 		}
 		public bool Save()
 		{

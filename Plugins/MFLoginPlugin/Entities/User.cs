@@ -33,6 +33,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                     UID = ulong.Parse(r["MAX_UID"].ToString()) + 1;
                 }
                 catch { UID = 1; }
+                r.Close();
 		}
 
 		public override string ToString() { return Name; }
@@ -48,12 +49,16 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                     Role = (string)r["Role"];
                     if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
                     Hash = (string)r["Hash"];
+                    r.Close();
                     if (!IsValid()) return false;
                     return true;
                 }
                 else
+                {
+                    r.Close();
                     return false;
-		}
+                }
+        }
 		public bool Fill()
 		{
                 SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM USERS WHERE UID=$UID", DBHelper.connection);
@@ -65,11 +70,15 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                     Role = (string)r["Role"];
                     if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
                     Hash = (string)r["Hash"];
+                    r.Close();
                     if (!IsValid()) return false;
                     return true;
                 }
                 else
+                {
+                    r.Close();
                     return false;
+                }
 		}
 		public bool Save()
 		{
@@ -99,16 +108,18 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 		}
 		public bool Remove()
 		{
-			SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM USERS WHERE UID=$UID", DBHelper.connection);
-			sqlc.Parameters.AddWithValue("$UID", UID);
-			bool success = (sqlc.ExecuteNonQuery()==1);
-			sqlc = new SQLiteCommand("DELETE FROM AUTH_METHODS WHERE UID=$UID", DBHelper.connection);
-			sqlc.Parameters.AddWithValue("$UID", UID);
-
+            try
+            {
                 LogEntity le = new LogEntity(this, "Removed from MFLogin", true);
                 le.Save();
-            
-			return success;
+                SQLiteCommand sqlc = new SQLiteCommand("DELETE FROM USERS WHERE UID=$UID", DBHelper.connection);
+                sqlc.Parameters.AddWithValue("$UID", UID);
+                bool success = (sqlc.ExecuteNonQuery() == 1);
+                sqlc = new SQLiteCommand("DELETE FROM AUTH_METHODS WHERE UID=$UID", DBHelper.connection);
+                sqlc.Parameters.AddWithValue("$UID", UID);
+                return success;
+            }
+            catch (Exception ex) { m_logger.Error(ex.Message); return false; }
 		}
 
 		public bool ExistsInSystem()
@@ -127,7 +138,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 			{
 				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
 				DirectoryEntry newUser = directoryEntry.Children.Add(Name, "user");
-				newUser.Invoke("SetPassword", new Object[] { WindowsPassword });
+				if (WindowsPassword!=null)
+                    newUser.Invoke("SetPassword", new Object[] { WindowsPassword });
 				newUser.Invoke("Put", new object[] { "Description", "pGina created" });
 				newUser.CommitChanges();
 				DirectoryEntry grp = null; ;
@@ -194,9 +206,19 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 		}
 		public bool MakeAdmin(bool admin)
 		{
-			String action = admin?"Add":"Remove";
-			DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-			DirectoryEntry currentUser = directoryEntry.Children.Find(Name, "user");
+            DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+            DirectoryEntry currentUser = null;
+            String action = admin ? "Add" : "Remove";
+            try
+            {
+                currentUser = directoryEntry.Children.Find(Name, "user");
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                // user not found
+                AddToSystem();
+                currentUser = directoryEntry.Children.Find(Name, "user");
+            }
 			try
 			{
 				DirectoryEntry grp = directoryEntry.Children.Find("Administrators", "group");

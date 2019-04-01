@@ -12,6 +12,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			SQLiteDataReader r = sqlc.ExecuteReader();
 			r.Read();
 			try	{AMID = ulong.Parse(r["MAX_AMID"].ToString()) + 1;} catch { AMID = 1; m_logger.Debug("Unable to create new Auth_method"); }
+            r.Close();
 		}
 		public AuthMethod(ulong amid)
 		{
@@ -41,23 +42,32 @@ namespace pGina.Plugin.MFLoginPlugin
 			SQLiteCommand sqlc = new SQLiteCommand("SELECT * FROM AUTH_METHOD WHERE AMID=$AMID", DBHelper.connection);
 			sqlc.Parameters.AddWithValue("$AMID", AMID);
 			SQLiteDataReader r = sqlc.ExecuteReader();
-			if (r.Read())
-			{
-				UID = ulong.Parse(r["UID"].ToString());
-				try { K1 = Key.DefineKey(ulong.Parse(r["K1"].ToString())); } catch { m_logger.Debug("K1 not loaded"); }
-				try { K2 = Key.DefineKey(ulong.Parse(r["K2"].ToString())); } catch { m_logger.Debug("K2 not loaded"); }
-				try { K3 = Key.DefineKey(ulong.Parse(r["K3"].ToString())); } catch { m_logger.Debug("K3 not loaded"); }
-				try { K4 = Key.DefineKey(ulong.Parse(r["K4"].ToString())); } catch { m_logger.Debug("K4 not loaded"); }
-				try { K5 = Key.DefineKey(ulong.Parse(r["K5"].ToString())); } catch { m_logger.Debug("K5 not loaded"); }
-				//we don't care if some keys are null
-				Description = (string)r["Description"];
-				Number_of_keys = int.Parse(r["Number_of_keys"].ToString());
-				Hash = (string)r["Hash"];
+            if (r.Read())
+            {
+                UID = ulong.Parse(r["UID"].ToString());
+                try { K1 = Key.DefineKey(ulong.Parse(r["K1"].ToString())); }
+                catch { m_logger.Debug("K1 not loaded"); }
+                try { K2 = Key.DefineKey(ulong.Parse(r["K2"].ToString())); }
+                catch { m_logger.Debug("K2 not loaded"); }
+                try { K3 = Key.DefineKey(ulong.Parse(r["K3"].ToString())); }
+                catch { m_logger.Debug("K3 not loaded"); }
+                try { K4 = Key.DefineKey(ulong.Parse(r["K4"].ToString())); }
+                catch { m_logger.Debug("K4 not loaded"); }
+                try { K5 = Key.DefineKey(ulong.Parse(r["K5"].ToString())); }
+                catch { m_logger.Debug("K5 not loaded"); }
+                //we don't care if some keys are null
+                Description = (string)r["Description"];
+                Number_of_keys = int.Parse(r["Number_of_keys"].ToString());
+                Hash = (string)r["Hash"];
+                r.Close();
                 if (!IsValid()) return false;
-				return true;
-			}
-			else
-				return false;
+                return true;
+            }
+            else
+            {
+                r.Close();
+                return false;
+            }
 		}
 		public bool Save()
 		{

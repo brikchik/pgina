@@ -37,7 +37,10 @@ namespace pGina.Plugin.MFLoginPlugin
                 m_settings.SetDefault("DBPassword", new byte[] { });
 				m_settings.SetDefault("DBPasswordSalt", new byte[] { });
 				// advanced setings:
+
+                m_settings.SetDefault("OnLoadBackupEnabled", true);
                 m_settings.SetDefault("AlwaysCheckSelectedKey", false);
+                m_settings.SetDefault("RequireAtLeastOneKeyInAuthMethod", false);
 
 				m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
