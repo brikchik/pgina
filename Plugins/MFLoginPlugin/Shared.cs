@@ -11,6 +11,8 @@ namespace pGina.Plugin.MFLoginPlugin
 	class Shared
 	{
         public const int INTERNAL_USER_PASSWORD_LENGTH = 64;
+		public const string PGINA_CONFIG_LOG_PATH= "C:/Program Files/pGina.fork/log/pGina.Configuration_log.txt";
+		public const string PGINA_SERVICE_LOG_PATH = "C:/Program Files/pGina.fork/log/pGina.Service.ServiceHost_log.txt";
 		public static void RunConsoleCommand(string command) //just in case you need it
 		{
 			Process process = new Process();

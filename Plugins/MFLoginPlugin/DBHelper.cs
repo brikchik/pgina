@@ -12,7 +12,7 @@ using pGina.Shared.Types;
 using log4net;
 namespace pGina.Plugin.MFLoginPlugin
 {
-    class DBHelper 
+    public class DBHelper 
     {
 		public static SQLiteConnection connection;
         private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");

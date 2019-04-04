@@ -67,7 +67,6 @@ Source: "..\Plugins\bin\*.exe"; DestDir: "{app}\Plugins"; Flags: ignoreversion r
 Source: "..\Plugins\bin\*.dll"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Plugins\bin\x64\*.dll"; DestDir: "{app}\Plugins\x64"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Plugins\bin\x86\*.dll"; DestDir: "{app}\Plugins\x86"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\Plugins\bin\*.sql"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 ;Source: "..\Plugins\bin\*.xml"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 ;Source: "..\Plugins\bin\*.config"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -75,6 +74,7 @@ Source: "..\Plugins\bin\*.sql"; DestDir: "{app}\Plugins"; Flags: ignoreversion r
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commondesktop}\MFLogin configuration"; Filename: "{app}\Plugins\MFLoginConfig.exe"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\pGina.InstallUtil.exe"; Parameters: "post-install"; StatusMsg: "Installing service, CP/GINA, and setting permissions..."; WorkingDir: "{app}"; Flags: runhidden

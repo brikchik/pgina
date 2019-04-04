@@ -3,7 +3,7 @@ using log4net;
 using pGina.Plugin.MFLoginPlugin.Entities;
 namespace pGina.Plugin.MFLoginPlugin
 {
-    class AuthMethod
+    public class AuthMethod
     {
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
 		public AuthMethod(User user=null) {

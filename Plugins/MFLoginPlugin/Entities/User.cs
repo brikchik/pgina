@@ -4,7 +4,7 @@ using System.DirectoryServices;
 using log4net;
 namespace pGina.Plugin.MFLoginPlugin.Entities
 {
-    class User
+	public class User
     {
         public ulong UID;
         public string Name;

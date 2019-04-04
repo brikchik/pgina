@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "BluetoothDevice (any device, 5 - 15 seconds to check)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
             "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
             "Encrypted Password File (with Windows password)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
-            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "Website http request"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             this.changeRole_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.user_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,18 +47,33 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cancel_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.advancedSettings_tabPage = new System.Windows.Forms.TabPage();
-            this.requireAtLeastOneKeyInAuthMethod_checkBox = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.RestoreWindowsUsers_button = new System.Windows.Forms.Button();
+            this.cleanDB_button = new System.Windows.Forms.Button();
+            this.cleanDBKeys_button = new System.Windows.Forms.Button();
+            this.otherAdvancedSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.showpGinaLogs_checkBox = new System.Windows.Forms.CheckBox();
+            this.openSummaryCollapsed_checkBox = new System.Windows.Forms.CheckBox();
             this.advancedSettings_alwaysCheckSelectedKey_checkBox = new System.Windows.Forms.CheckBox();
-            this.backup_groupBox = new System.Windows.Forms.GroupBox();
+            this.requireAtLeastOneKeyInAuthMethod_checkBox = new System.Windows.Forms.CheckBox();
             this.database_groupBox = new System.Windows.Forms.GroupBox();
             this.DBOpened_checkBox = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.dbErase_checkBox = new System.Windows.Forms.CheckBox();
             this.dbErase_button = new System.Windows.Forms.Button();
-            this.cleanDBKeys_button = new System.Windows.Forms.Button();
-            this.cleanDB_button = new System.Windows.Forms.Button();
             this.database_label = new System.Windows.Forms.Label();
             this.runSetup_button = new System.Windows.Forms.Button();
+            this.backup_groupBox = new System.Windows.Forms.GroupBox();
+            this.backup_panel = new System.Windows.Forms.Panel();
+            this.backupPassword_label = new System.Windows.Forms.Label();
+            this.backupPath_button = new System.Windows.Forms.Button();
+            this.backupPassword_textBox = new System.Windows.Forms.TextBox();
+            this.backupPath_textBox = new System.Windows.Forms.TextBox();
+            this.backupBackup_button = new System.Windows.Forms.Button();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.dbBackupWarning_label = new System.Windows.Forms.Label();
+            this.onLoadBackupEnabled_checkBox = new System.Windows.Forms.CheckBox();
+            this.discardChanges_linkLabel = new System.Windows.Forms.LinkLabel();
             this.keys_tabPage = new System.Windows.Forms.TabPage();
             this.checkKey_groupBox = new System.Windows.Forms.GroupBox();
             this.checkKeyResult_button = new System.Windows.Forms.Button();
@@ -140,25 +155,22 @@
             this.leid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.uid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.discardChanges_linkLabel = new System.Windows.Forms.LinkLabel();
-            this.onLoadBackupEnabled_checkBox = new System.Windows.Forms.CheckBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.dbBackupWarning_label = new System.Windows.Forms.Label();
-            this.backup_panel = new System.Windows.Forms.Panel();
-            this.backupBackup_button = new System.Windows.Forms.Button();
-            this.backupPath_textBox = new System.Windows.Forms.TextBox();
-            this.backupPassword_textBox = new System.Windows.Forms.TextBox();
-            this.backupPath_button = new System.Windows.Forms.Button();
-            this.backupPassword_label = new System.Windows.Forms.Label();
-            this.otherAdvancedSettings_groupBox = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.RestoreWindowsUsers_button = new System.Windows.Forms.Button();
+            this.pGinaLogs_tabPage = new System.Windows.Forms.TabPage();
+            this.pGinaLogs_tabControl = new System.Windows.Forms.TabControl();
+            this.pGinaLogsConfig_tabPage = new System.Windows.Forms.TabPage();
+            this.pGinaConfigLog_listBox = new System.Windows.Forms.ListBox();
+            this.pGinaLogsService_tabPage = new System.Windows.Forms.TabPage();
+            this.pGinaServiceLog_listBox = new System.Windows.Forms.ListBox();
             this.changeRole_contextMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
             this.advancedSettings_tabPage.SuspendLayout();
-            this.backup_groupBox.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.otherAdvancedSettings_groupBox.SuspendLayout();
             this.database_groupBox.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.backup_groupBox.SuspendLayout();
+            this.backup_panel.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.keys_tabPage.SuspendLayout();
             this.checkKey_groupBox.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -181,10 +193,10 @@
             this.logControl_groupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.countLogs_numericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logs_dataView)).BeginInit();
-            this.panel4.SuspendLayout();
-            this.backup_panel.SuspendLayout();
-            this.otherAdvancedSettings_groupBox.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.pGinaLogs_tabPage.SuspendLayout();
+            this.pGinaLogs_tabControl.SuspendLayout();
+            this.pGinaLogsConfig_tabPage.SuspendLayout();
+            this.pGinaLogsService_tabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // changeRole_contextMenuStrip
@@ -291,16 +303,85 @@
             this.advancedSettings_tabPage.Click += new System.EventHandler(this.advancedSettings_tabPage_Click);
             this.advancedSettings_tabPage.Enter += new System.EventHandler(this.advancedSettings_tabPage_Enter);
             // 
-            // requireAtLeastOneKeyInAuthMethod_checkBox
+            // groupBox1
             // 
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.AutoSize = true;
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.Location = new System.Drawing.Point(9, 53);
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.Name = "requireAtLeastOneKeyInAuthMethod_checkBox";
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.Size = new System.Drawing.Size(302, 20);
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.TabIndex = 15;
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.Text = "Require at least 1 key In authentication method";
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.UseVisualStyleBackColor = true;
-            this.requireAtLeastOneKeyInAuthMethod_checkBox.CheckedChanged += new System.EventHandler(this.requireAtLeastOneKeyInAuthMethod_checkBox_CheckedChanged);
+            this.groupBox1.Controls.Add(this.RestoreWindowsUsers_button);
+            this.groupBox1.Controls.Add(this.cleanDB_button);
+            this.groupBox1.Controls.Add(this.cleanDBKeys_button);
+            this.groupBox1.Location = new System.Drawing.Point(296, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(338, 222);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Service features";
+            // 
+            // RestoreWindowsUsers_button
+            // 
+            this.RestoreWindowsUsers_button.Location = new System.Drawing.Point(8, 130);
+            this.RestoreWindowsUsers_button.Name = "RestoreWindowsUsers_button";
+            this.RestoreWindowsUsers_button.Size = new System.Drawing.Size(324, 29);
+            this.RestoreWindowsUsers_button.TabIndex = 4;
+            this.RestoreWindowsUsers_button.Text = "Add all database users to Windows";
+            this.RestoreWindowsUsers_button.UseVisualStyleBackColor = true;
+            this.RestoreWindowsUsers_button.Click += new System.EventHandler(this.RestoreWindowsUsers_button_Click);
+            // 
+            // cleanDB_button
+            // 
+            this.cleanDB_button.Location = new System.Drawing.Point(7, 21);
+            this.cleanDB_button.Margin = new System.Windows.Forms.Padding(4);
+            this.cleanDB_button.Name = "cleanDB_button";
+            this.cleanDB_button.Size = new System.Drawing.Size(324, 64);
+            this.cleanDB_button.TabIndex = 2;
+            this.cleanDB_button.Text = "Clean database\r\n(Removes all users that don\'t exist in the OS and all unused auth" +
+                "entication methods)";
+            this.cleanDB_button.UseVisualStyleBackColor = true;
+            this.cleanDB_button.Click += new System.EventHandler(this.cleanDB_button_Click);
+            // 
+            // cleanDBKeys_button
+            // 
+            this.cleanDBKeys_button.Location = new System.Drawing.Point(7, 92);
+            this.cleanDBKeys_button.Name = "cleanDBKeys_button";
+            this.cleanDBKeys_button.Size = new System.Drawing.Size(324, 29);
+            this.cleanDBKeys_button.TabIndex = 3;
+            this.cleanDBKeys_button.Text = "Remove all unused keys";
+            this.cleanDBKeys_button.UseVisualStyleBackColor = true;
+            this.cleanDBKeys_button.Click += new System.EventHandler(this.removeUnusedKeys_button_Click);
+            // 
+            // otherAdvancedSettings_groupBox
+            // 
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.showpGinaLogs_checkBox);
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.openSummaryCollapsed_checkBox);
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.advancedSettings_alwaysCheckSelectedKey_checkBox);
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.requireAtLeastOneKeyInAuthMethod_checkBox);
+            this.otherAdvancedSettings_groupBox.Location = new System.Drawing.Point(9, 260);
+            this.otherAdvancedSettings_groupBox.Name = "otherAdvancedSettings_groupBox";
+            this.otherAdvancedSettings_groupBox.Size = new System.Drawing.Size(959, 115);
+            this.otherAdvancedSettings_groupBox.TabIndex = 16;
+            this.otherAdvancedSettings_groupBox.TabStop = false;
+            this.otherAdvancedSettings_groupBox.Text = "Other settings";
+            this.otherAdvancedSettings_groupBox.Enter += new System.EventHandler(this.otherAdvancedSettings_groupBox_Enter);
+            // 
+            // showpGinaLogs_checkBox
+            // 
+            this.showpGinaLogs_checkBox.AutoSize = true;
+            this.showpGinaLogs_checkBox.Location = new System.Drawing.Point(359, 26);
+            this.showpGinaLogs_checkBox.Name = "showpGinaLogs_checkBox";
+            this.showpGinaLogs_checkBox.Size = new System.Drawing.Size(128, 20);
+            this.showpGinaLogs_checkBox.TabIndex = 19;
+            this.showpGinaLogs_checkBox.Text = "Show pGina logs";
+            this.showpGinaLogs_checkBox.UseVisualStyleBackColor = true;
+            this.showpGinaLogs_checkBox.CheckedChanged += new System.EventHandler(this.showpGinaLogs_checkBox_CheckedChanged);
+            // 
+            // openSummaryCollapsed_checkBox
+            // 
+            this.openSummaryCollapsed_checkBox.AutoSize = true;
+            this.openSummaryCollapsed_checkBox.Location = new System.Drawing.Point(9, 79);
+            this.openSummaryCollapsed_checkBox.Name = "openSummaryCollapsed_checkBox";
+            this.openSummaryCollapsed_checkBox.Size = new System.Drawing.Size(247, 20);
+            this.openSummaryCollapsed_checkBox.TabIndex = 18;
+            this.openSummaryCollapsed_checkBox.Text = "Always open summary tab collapsed";
+            this.openSummaryCollapsed_checkBox.UseVisualStyleBackColor = true;
+            this.openSummaryCollapsed_checkBox.CheckedChanged += new System.EventHandler(this.openSummaryCollapsed_checkBox_CheckedChanged);
             // 
             // advancedSettings_alwaysCheckSelectedKey_checkBox
             // 
@@ -313,17 +394,16 @@
             this.advancedSettings_alwaysCheckSelectedKey_checkBox.UseVisualStyleBackColor = true;
             this.advancedSettings_alwaysCheckSelectedKey_checkBox.CheckedChanged += new System.EventHandler(this.advancedSettings_alwaysCheckSelectedKey_checkBox_CheckedChanged);
             // 
-            // backup_groupBox
+            // requireAtLeastOneKeyInAuthMethod_checkBox
             // 
-            this.backup_groupBox.Controls.Add(this.backup_panel);
-            this.backup_groupBox.Controls.Add(this.panel4);
-            this.backup_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.backup_groupBox.Location = new System.Drawing.Point(640, 7);
-            this.backup_groupBox.Name = "backup_groupBox";
-            this.backup_groupBox.Size = new System.Drawing.Size(328, 222);
-            this.backup_groupBox.TabIndex = 13;
-            this.backup_groupBox.TabStop = false;
-            this.backup_groupBox.Text = "Database backup";
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.AutoSize = true;
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Location = new System.Drawing.Point(9, 53);
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Name = "requireAtLeastOneKeyInAuthMethod_checkBox";
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Size = new System.Drawing.Size(302, 20);
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.TabIndex = 15;
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.Text = "Require at least 1 key In authentication method";
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.UseVisualStyleBackColor = true;
+            this.requireAtLeastOneKeyInAuthMethod_checkBox.CheckedChanged += new System.EventHandler(this.requireAtLeastOneKeyInAuthMethod_checkBox_CheckedChanged);
             // 
             // database_groupBox
             // 
@@ -387,28 +467,6 @@
             this.dbErase_button.UseVisualStyleBackColor = false;
             this.dbErase_button.Click += new System.EventHandler(this.dbErase_button_Click);
             // 
-            // cleanDBKeys_button
-            // 
-            this.cleanDBKeys_button.Location = new System.Drawing.Point(7, 92);
-            this.cleanDBKeys_button.Name = "cleanDBKeys_button";
-            this.cleanDBKeys_button.Size = new System.Drawing.Size(324, 29);
-            this.cleanDBKeys_button.TabIndex = 3;
-            this.cleanDBKeys_button.Text = "Remove all unused keys";
-            this.cleanDBKeys_button.UseVisualStyleBackColor = true;
-            this.cleanDBKeys_button.Click += new System.EventHandler(this.removeUnusedKeys_button_Click);
-            // 
-            // cleanDB_button
-            // 
-            this.cleanDB_button.Location = new System.Drawing.Point(7, 21);
-            this.cleanDB_button.Margin = new System.Windows.Forms.Padding(4);
-            this.cleanDB_button.Name = "cleanDB_button";
-            this.cleanDB_button.Size = new System.Drawing.Size(324, 64);
-            this.cleanDB_button.TabIndex = 2;
-            this.cleanDB_button.Text = "Clean database\r\n(Removes all users that don\'t exist in the OS and all unused auth" +
-                "entication methods)";
-            this.cleanDB_button.UseVisualStyleBackColor = true;
-            this.cleanDB_button.Click += new System.EventHandler(this.cleanDB_button_Click);
-            // 
             // database_label
             // 
             this.database_label.AutoEllipsis = true;
@@ -430,6 +488,123 @@
             this.runSetup_button.Text = "Run setup dialog again";
             this.runSetup_button.UseVisualStyleBackColor = true;
             this.runSetup_button.Click += new System.EventHandler(this.runSetup_button_Click);
+            // 
+            // backup_groupBox
+            // 
+            this.backup_groupBox.Controls.Add(this.backup_panel);
+            this.backup_groupBox.Controls.Add(this.panel4);
+            this.backup_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.backup_groupBox.Location = new System.Drawing.Point(640, 7);
+            this.backup_groupBox.Name = "backup_groupBox";
+            this.backup_groupBox.Size = new System.Drawing.Size(328, 222);
+            this.backup_groupBox.TabIndex = 13;
+            this.backup_groupBox.TabStop = false;
+            this.backup_groupBox.Text = "Database backup";
+            // 
+            // backup_panel
+            // 
+            this.backup_panel.BackColor = System.Drawing.Color.Cornsilk;
+            this.backup_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.backup_panel.Controls.Add(this.backupPassword_label);
+            this.backup_panel.Controls.Add(this.backupPath_button);
+            this.backup_panel.Controls.Add(this.backupPassword_textBox);
+            this.backup_panel.Controls.Add(this.backupPath_textBox);
+            this.backup_panel.Controls.Add(this.backupBackup_button);
+            this.backup_panel.Location = new System.Drawing.Point(7, 130);
+            this.backup_panel.Name = "backup_panel";
+            this.backup_panel.Size = new System.Drawing.Size(315, 85);
+            this.backup_panel.TabIndex = 3;
+            // 
+            // backupPassword_label
+            // 
+            this.backupPassword_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.backupPassword_label.Location = new System.Drawing.Point(149, 4);
+            this.backupPassword_label.Name = "backupPassword_label";
+            this.backupPassword_label.Size = new System.Drawing.Size(92, 50);
+            this.backupPassword_label.TabIndex = 4;
+            this.backupPassword_label.Text = "Password for backup database";
+            this.backupPassword_label.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // backupPath_button
+            // 
+            this.backupPath_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.backupPath_button.Location = new System.Drawing.Point(4, 4);
+            this.backupPath_button.Name = "backupPath_button";
+            this.backupPath_button.Size = new System.Drawing.Size(134, 50);
+            this.backupPath_button.TabIndex = 3;
+            this.backupPath_button.Text = "Choose path to backup location";
+            this.backupPath_button.UseVisualStyleBackColor = true;
+            this.backupPath_button.Click += new System.EventHandler(this.backupPath_button_Click);
+            // 
+            // backupPassword_textBox
+            // 
+            this.backupPassword_textBox.Location = new System.Drawing.Point(152, 60);
+            this.backupPassword_textBox.Name = "backupPassword_textBox";
+            this.backupPassword_textBox.Size = new System.Drawing.Size(89, 20);
+            this.backupPassword_textBox.TabIndex = 2;
+            this.backupPassword_textBox.UseSystemPasswordChar = true;
+            // 
+            // backupPath_textBox
+            // 
+            this.backupPath_textBox.Location = new System.Drawing.Point(4, 60);
+            this.backupPath_textBox.Name = "backupPath_textBox";
+            this.backupPath_textBox.Size = new System.Drawing.Size(134, 20);
+            this.backupPath_textBox.TabIndex = 1;
+            // 
+            // backupBackup_button
+            // 
+            this.backupBackup_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.backupBackup_button.Location = new System.Drawing.Point(247, 1);
+            this.backupBackup_button.Name = "backupBackup_button";
+            this.backupBackup_button.Size = new System.Drawing.Size(63, 80);
+            this.backupBackup_button.TabIndex = 0;
+            this.backupBackup_button.Text = "Back up now";
+            this.backupBackup_button.UseVisualStyleBackColor = true;
+            this.backupBackup_button.Click += new System.EventHandler(this.backupBackup_button_Click);
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel4.Controls.Add(this.dbBackupWarning_label);
+            this.panel4.Controls.Add(this.onLoadBackupEnabled_checkBox);
+            this.panel4.Controls.Add(this.discardChanges_linkLabel);
+            this.panel4.Location = new System.Drawing.Point(7, 19);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(315, 104);
+            this.panel4.TabIndex = 2;
+            // 
+            // dbBackupWarning_label
+            // 
+            this.dbBackupWarning_label.Location = new System.Drawing.Point(8, 71);
+            this.dbBackupWarning_label.Name = "dbBackupWarning_label";
+            this.dbBackupWarning_label.Size = new System.Drawing.Size(304, 27);
+            this.dbBackupWarning_label.TabIndex = 2;
+            this.dbBackupWarning_label.Text = "Does NOT remove Windows users. Use the \"Clean database\" button in the \"Database\" " +
+                "section to remove obsolete data";
+            // 
+            // onLoadBackupEnabled_checkBox
+            // 
+            this.onLoadBackupEnabled_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.onLoadBackupEnabled_checkBox.Location = new System.Drawing.Point(11, 10);
+            this.onLoadBackupEnabled_checkBox.Name = "onLoadBackupEnabled_checkBox";
+            this.onLoadBackupEnabled_checkBox.Size = new System.Drawing.Size(268, 36);
+            this.onLoadBackupEnabled_checkBox.TabIndex = 1;
+            this.onLoadBackupEnabled_checkBox.Text = "Backup current state on load (may be slow if the database is huge)";
+            this.onLoadBackupEnabled_checkBox.UseVisualStyleBackColor = true;
+            this.onLoadBackupEnabled_checkBox.CheckedChanged += new System.EventHandler(this.onLoadBackupEnabled_checkBox_CheckedChanged);
+            // 
+            // discardChanges_linkLabel
+            // 
+            this.discardChanges_linkLabel.AutoSize = true;
+            this.discardChanges_linkLabel.Enabled = false;
+            this.discardChanges_linkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.discardChanges_linkLabel.Location = new System.Drawing.Point(8, 49);
+            this.discardChanges_linkLabel.Name = "discardChanges_linkLabel";
+            this.discardChanges_linkLabel.Size = new System.Drawing.Size(280, 17);
+            this.discardChanges_linkLabel.TabIndex = 0;
+            this.discardChanges_linkLabel.TabStop = true;
+            this.discardChanges_linkLabel.Text = "Discard recent changes (this configuration)";
+            this.discardChanges_linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.discardChanges_linkLabel_LinkClicked);
             // 
             // keys_tabPage
             // 
@@ -711,17 +886,17 @@
             this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.fastChoiceTypes_listView.AutoArrange = false;
             this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem21.Tag = "BluetoothDevice";
-            listViewItem22.Tag = "ConnectedDevice";
-            listViewItem23.Tag = "EncryptedPasswordFileKey";
-            listViewItem24.Tag = "Password";
-            listViewItem25.Tag = "HttpRequest";
+            listViewItem6.Tag = "BluetoothDevice";
+            listViewItem7.Tag = "ConnectedDevice";
+            listViewItem8.Tag = "EncryptedPasswordFileKey";
+            listViewItem9.Tag = "Password";
+            listViewItem10.Tag = "HttpRequest";
             this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem21,
-            listViewItem22,
-            listViewItem23,
-            listViewItem24,
-            listViewItem25});
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10});
             this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
             this.fastChoiceTypes_listView.MultiSelect = false;
             this.fastChoiceTypes_listView.Name = "fastChoiceTypes_listView";
@@ -1147,6 +1322,7 @@
             this.tabControl.Controls.Add(this.summary_tabPage);
             this.tabControl.Controls.Add(this.logs_tabPage);
             this.tabControl.Controls.Add(this.advancedSettings_tabPage);
+            this.tabControl.Controls.Add(this.pGinaLogs_tabPage);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.tabControl.HotTrack = true;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
@@ -1412,144 +1588,73 @@
             this.amid.ReadOnly = true;
             this.amid.Visible = false;
             // 
-            // discardChanges_linkLabel
+            // pGinaLogs_tabPage
             // 
-            this.discardChanges_linkLabel.AutoSize = true;
-            this.discardChanges_linkLabel.Enabled = false;
-            this.discardChanges_linkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.discardChanges_linkLabel.Location = new System.Drawing.Point(8, 49);
-            this.discardChanges_linkLabel.Name = "discardChanges_linkLabel";
-            this.discardChanges_linkLabel.Size = new System.Drawing.Size(280, 17);
-            this.discardChanges_linkLabel.TabIndex = 0;
-            this.discardChanges_linkLabel.TabStop = true;
-            this.discardChanges_linkLabel.Text = "Discard recent changes (this configuration)";
-            this.discardChanges_linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.discardChanges_linkLabel_LinkClicked);
+            this.pGinaLogs_tabPage.Controls.Add(this.pGinaLogs_tabControl);
+            this.pGinaLogs_tabPage.Location = new System.Drawing.Point(4, 24);
+            this.pGinaLogs_tabPage.Name = "pGinaLogs_tabPage";
+            this.pGinaLogs_tabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.pGinaLogs_tabPage.Size = new System.Drawing.Size(976, 382);
+            this.pGinaLogs_tabPage.TabIndex = 6;
+            this.pGinaLogs_tabPage.Text = "pGina logs";
+            this.pGinaLogs_tabPage.UseVisualStyleBackColor = true;
+            this.pGinaLogs_tabPage.Enter += new System.EventHandler(this.pGinaLogs_tabPage_Enter);
             // 
-            // onLoadBackupEnabled_checkBox
+            // pGinaLogs_tabControl
             // 
-            this.onLoadBackupEnabled_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.onLoadBackupEnabled_checkBox.Location = new System.Drawing.Point(11, 10);
-            this.onLoadBackupEnabled_checkBox.Name = "onLoadBackupEnabled_checkBox";
-            this.onLoadBackupEnabled_checkBox.Size = new System.Drawing.Size(268, 36);
-            this.onLoadBackupEnabled_checkBox.TabIndex = 1;
-            this.onLoadBackupEnabled_checkBox.Text = "Backup current state on load (may be slow if the database is huge)";
-            this.onLoadBackupEnabled_checkBox.UseVisualStyleBackColor = true;
-            this.onLoadBackupEnabled_checkBox.CheckedChanged += new System.EventHandler(this.onLoadBackupEnabled_checkBox_CheckedChanged);
+            this.pGinaLogs_tabControl.Controls.Add(this.pGinaLogsConfig_tabPage);
+            this.pGinaLogs_tabControl.Controls.Add(this.pGinaLogsService_tabPage);
+            this.pGinaLogs_tabControl.Location = new System.Drawing.Point(3, 3);
+            this.pGinaLogs_tabControl.Name = "pGinaLogs_tabControl";
+            this.pGinaLogs_tabControl.SelectedIndex = 0;
+            this.pGinaLogs_tabControl.Size = new System.Drawing.Size(970, 376);
+            this.pGinaLogs_tabControl.TabIndex = 1;
             // 
-            // panel4
+            // pGinaLogsConfig_tabPage
             // 
-            this.panel4.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel4.Controls.Add(this.dbBackupWarning_label);
-            this.panel4.Controls.Add(this.onLoadBackupEnabled_checkBox);
-            this.panel4.Controls.Add(this.discardChanges_linkLabel);
-            this.panel4.Location = new System.Drawing.Point(7, 19);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(315, 104);
-            this.panel4.TabIndex = 2;
+            this.pGinaLogsConfig_tabPage.Controls.Add(this.pGinaConfigLog_listBox);
+            this.pGinaLogsConfig_tabPage.Location = new System.Drawing.Point(4, 24);
+            this.pGinaLogsConfig_tabPage.Name = "pGinaLogsConfig_tabPage";
+            this.pGinaLogsConfig_tabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.pGinaLogsConfig_tabPage.Size = new System.Drawing.Size(962, 348);
+            this.pGinaLogsConfig_tabPage.TabIndex = 0;
+            this.pGinaLogsConfig_tabPage.Text = "Configuration";
+            this.pGinaLogsConfig_tabPage.UseVisualStyleBackColor = true;
+            this.pGinaLogsConfig_tabPage.Enter += new System.EventHandler(this.pGinaLogsConfig_tabPage_Enter);
+            this.pGinaLogsConfig_tabPage.Validated += new System.EventHandler(this.pGinaLogsConfig_tabPage_Validated);
             // 
-            // dbBackupWarning_label
+            // pGinaConfigLog_listBox
             // 
-            this.dbBackupWarning_label.Location = new System.Drawing.Point(8, 71);
-            this.dbBackupWarning_label.Name = "dbBackupWarning_label";
-            this.dbBackupWarning_label.Size = new System.Drawing.Size(304, 27);
-            this.dbBackupWarning_label.TabIndex = 2;
-            this.dbBackupWarning_label.Text = "Does NOT remove Windows users. Use the \"Clean database\" button in the \"Database\" " +
-                "section to remove obsolete data";
+            this.pGinaConfigLog_listBox.FormattingEnabled = true;
+            this.pGinaConfigLog_listBox.HorizontalScrollbar = true;
+            this.pGinaConfigLog_listBox.ItemHeight = 15;
+            this.pGinaConfigLog_listBox.Location = new System.Drawing.Point(0, 0);
+            this.pGinaConfigLog_listBox.Name = "pGinaConfigLog_listBox";
+            this.pGinaConfigLog_listBox.Size = new System.Drawing.Size(962, 349);
+            this.pGinaConfigLog_listBox.TabIndex = 0;
+            this.pGinaConfigLog_listBox.SelectedIndexChanged += new System.EventHandler(this.pGinaConfigLog_listBox_SelectedIndexChanged);
             // 
-            // backup_panel
+            // pGinaLogsService_tabPage
             // 
-            this.backup_panel.BackColor = System.Drawing.Color.Cornsilk;
-            this.backup_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.backup_panel.Controls.Add(this.backupPassword_label);
-            this.backup_panel.Controls.Add(this.backupPath_button);
-            this.backup_panel.Controls.Add(this.backupPassword_textBox);
-            this.backup_panel.Controls.Add(this.backupPath_textBox);
-            this.backup_panel.Controls.Add(this.backupBackup_button);
-            this.backup_panel.Location = new System.Drawing.Point(7, 130);
-            this.backup_panel.Name = "backup_panel";
-            this.backup_panel.Size = new System.Drawing.Size(315, 85);
-            this.backup_panel.TabIndex = 3;
+            this.pGinaLogsService_tabPage.Controls.Add(this.pGinaServiceLog_listBox);
+            this.pGinaLogsService_tabPage.Location = new System.Drawing.Point(4, 24);
+            this.pGinaLogsService_tabPage.Name = "pGinaLogsService_tabPage";
+            this.pGinaLogsService_tabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.pGinaLogsService_tabPage.Size = new System.Drawing.Size(962, 348);
+            this.pGinaLogsService_tabPage.TabIndex = 1;
+            this.pGinaLogsService_tabPage.Text = "Service";
+            this.pGinaLogsService_tabPage.UseVisualStyleBackColor = true;
+            this.pGinaLogsService_tabPage.Enter += new System.EventHandler(this.pGinaLogsService_tabPage_Enter);
             // 
-            // backupBackup_button
+            // pGinaServiceLog_listBox
             // 
-            this.backupBackup_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.backupBackup_button.Location = new System.Drawing.Point(247, 1);
-            this.backupBackup_button.Name = "backupBackup_button";
-            this.backupBackup_button.Size = new System.Drawing.Size(63, 80);
-            this.backupBackup_button.TabIndex = 0;
-            this.backupBackup_button.Text = "Back up now";
-            this.backupBackup_button.UseVisualStyleBackColor = true;
-            this.backupBackup_button.Click += new System.EventHandler(this.backupBackup_button_Click);
-            // 
-            // backupPath_textBox
-            // 
-            this.backupPath_textBox.Location = new System.Drawing.Point(4, 60);
-            this.backupPath_textBox.Name = "backupPath_textBox";
-            this.backupPath_textBox.Size = new System.Drawing.Size(134, 20);
-            this.backupPath_textBox.TabIndex = 1;
-            // 
-            // backupPassword_textBox
-            // 
-            this.backupPassword_textBox.Location = new System.Drawing.Point(152, 60);
-            this.backupPassword_textBox.Name = "backupPassword_textBox";
-            this.backupPassword_textBox.Size = new System.Drawing.Size(89, 20);
-            this.backupPassword_textBox.TabIndex = 2;
-            this.backupPassword_textBox.UseSystemPasswordChar = true;
-            // 
-            // backupPath_button
-            // 
-            this.backupPath_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.backupPath_button.Location = new System.Drawing.Point(4, 4);
-            this.backupPath_button.Name = "backupPath_button";
-            this.backupPath_button.Size = new System.Drawing.Size(134, 50);
-            this.backupPath_button.TabIndex = 3;
-            this.backupPath_button.Text = "Choose path to backup location";
-            this.backupPath_button.UseVisualStyleBackColor = true;
-            this.backupPath_button.Click += new System.EventHandler(this.backupPath_button_Click);
-            // 
-            // backupPassword_label
-            // 
-            this.backupPassword_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.backupPassword_label.Location = new System.Drawing.Point(149, 4);
-            this.backupPassword_label.Name = "backupPassword_label";
-            this.backupPassword_label.Size = new System.Drawing.Size(92, 50);
-            this.backupPassword_label.TabIndex = 4;
-            this.backupPassword_label.Text = "Password for backup database";
-            this.backupPassword_label.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // otherAdvancedSettings_groupBox
-            // 
-            this.otherAdvancedSettings_groupBox.Controls.Add(this.advancedSettings_alwaysCheckSelectedKey_checkBox);
-            this.otherAdvancedSettings_groupBox.Controls.Add(this.requireAtLeastOneKeyInAuthMethod_checkBox);
-            this.otherAdvancedSettings_groupBox.Location = new System.Drawing.Point(9, 275);
-            this.otherAdvancedSettings_groupBox.Name = "otherAdvancedSettings_groupBox";
-            this.otherAdvancedSettings_groupBox.Size = new System.Drawing.Size(350, 100);
-            this.otherAdvancedSettings_groupBox.TabIndex = 16;
-            this.otherAdvancedSettings_groupBox.TabStop = false;
-            this.otherAdvancedSettings_groupBox.Text = "Other settings";
-            this.otherAdvancedSettings_groupBox.Enter += new System.EventHandler(this.otherAdvancedSettings_groupBox_Enter);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.RestoreWindowsUsers_button);
-            this.groupBox1.Controls.Add(this.cleanDB_button);
-            this.groupBox1.Controls.Add(this.cleanDBKeys_button);
-            this.groupBox1.Location = new System.Drawing.Point(296, 7);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(338, 222);
-            this.groupBox1.TabIndex = 17;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Service features";
-            // 
-            // RestoreWindowsUsers_button
-            // 
-            this.RestoreWindowsUsers_button.Location = new System.Drawing.Point(8, 130);
-            this.RestoreWindowsUsers_button.Name = "RestoreWindowsUsers_button";
-            this.RestoreWindowsUsers_button.Size = new System.Drawing.Size(324, 29);
-            this.RestoreWindowsUsers_button.TabIndex = 4;
-            this.RestoreWindowsUsers_button.Text = "Add all database users to Windows";
-            this.RestoreWindowsUsers_button.UseVisualStyleBackColor = true;
-            this.RestoreWindowsUsers_button.Click += new System.EventHandler(this.RestoreWindowsUsers_button_Click);
+            this.pGinaServiceLog_listBox.FormattingEnabled = true;
+            this.pGinaServiceLog_listBox.HorizontalScrollbar = true;
+            this.pGinaServiceLog_listBox.ItemHeight = 15;
+            this.pGinaServiceLog_listBox.Location = new System.Drawing.Point(0, 0);
+            this.pGinaServiceLog_listBox.Name = "pGinaServiceLog_listBox";
+            this.pGinaServiceLog_listBox.Size = new System.Drawing.Size(962, 349);
+            this.pGinaServiceLog_listBox.TabIndex = 1;
             // 
             // LocalConfiguration
             // 
@@ -1565,14 +1670,22 @@
             this.Name = "LocalConfiguration";
             this.ShowIcon = false;
             this.Text = "Plugin Configuration";
+            this.Load += new System.EventHandler(this.LocalConfiguration_Load);
             this.changeRole_contextMenuStrip.ResumeLayout(false);
             this.controlPanel.ResumeLayout(false);
             this.controlPanel.PerformLayout();
             this.advancedSettings_tabPage.ResumeLayout(false);
-            this.backup_groupBox.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.otherAdvancedSettings_groupBox.ResumeLayout(false);
+            this.otherAdvancedSettings_groupBox.PerformLayout();
             this.database_groupBox.ResumeLayout(false);
             this.database_groupBox.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.backup_groupBox.ResumeLayout(false);
+            this.backup_panel.ResumeLayout(false);
+            this.backup_panel.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.keys_tabPage.ResumeLayout(false);
             this.checkKey_groupBox.ResumeLayout(false);
             this.checkKey_groupBox.PerformLayout();
@@ -1602,13 +1715,10 @@
             this.logControl_groupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.countLogs_numericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logs_dataView)).EndInit();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.backup_panel.ResumeLayout(false);
-            this.backup_panel.PerformLayout();
-            this.otherAdvancedSettings_groupBox.ResumeLayout(false);
-            this.otherAdvancedSettings_groupBox.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.pGinaLogs_tabPage.ResumeLayout(false);
+            this.pGinaLogs_tabControl.ResumeLayout(false);
+            this.pGinaLogsConfig_tabPage.ResumeLayout(false);
+            this.pGinaLogsService_tabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1728,5 +1838,13 @@
         private System.Windows.Forms.GroupBox otherAdvancedSettings_groupBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button RestoreWindowsUsers_button;
+		private System.Windows.Forms.CheckBox openSummaryCollapsed_checkBox;
+		private System.Windows.Forms.TabPage pGinaLogs_tabPage;
+		private System.Windows.Forms.ListBox pGinaConfigLog_listBox;
+		private System.Windows.Forms.TabControl pGinaLogs_tabControl;
+		private System.Windows.Forms.TabPage pGinaLogsConfig_tabPage;
+		private System.Windows.Forms.TabPage pGinaLogsService_tabPage;
+		private System.Windows.Forms.CheckBox showpGinaLogs_checkBox;
+		private System.Windows.Forms.ListBox pGinaServiceLog_listBox;
 	}
 }

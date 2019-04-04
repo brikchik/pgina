@@ -11,6 +11,7 @@ using pGina.Shared.Settings;
 using pGina.Shared.Types;
 using System.Threading;
 using System.IO;
+using System.Diagnostics;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -51,9 +52,10 @@ Current database path: " + DBHelper.connection.FileName;
                 backup_panel.Enabled = false;
                 tabControl.SelectTab(advancedSettings_tabPage);
             }
-            ShowDialog();
-        }
-        private void UpdateUserList()
+
+			if (!(bool)m_settings.ShowPGinaLogs) tabControl.TabPages.Remove(pGinaLogs_tabPage);
+		}
+		private void UpdateUserList()
         {
             successPictureBox.Visible = false;
             if (!databaseLoaded) return;
@@ -571,7 +573,7 @@ Current database path: " + DBHelper.connection.FileName;
                 }
                 summary_treeView.Nodes.Add(userNode);
             }
-            summary_treeView.ExpandAll();
+			if (!(bool)m_settings.AlwaysOpenSummaryTabCollapsed) summary_treeView.ExpandAll();
         }
         private void summary_tabPage_Enter(object sender, EventArgs e)
         {
@@ -652,7 +654,10 @@ Current database path: " + DBHelper.connection.FileName;
                 }
                 advancedSettings_alwaysCheckSelectedKey_checkBox.Checked = ((bool)m_settings.AlwaysCheckSelectedKey);
                 requireAtLeastOneKeyInAuthMethod_checkBox.Checked = ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod);
-            }
+				openSummaryCollapsed_checkBox.Checked = ((bool)m_settings.AlwaysOpenSummaryTabCollapsed);
+				showpGinaLogs_checkBox.Checked = ((bool)m_settings.ShowPGinaLogs);
+
+			}
         }
         // defaults for logging
         private bool extraLogs = false;
@@ -898,6 +903,60 @@ Current database path: " + DBHelper.connection.FileName;
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+		private void LocalConfiguration_Load(object sender, EventArgs e)
+		{
+
+		}
+
+		private void pGinaLogs_tabPage_Enter(object sender, EventArgs e)
+		{
+			pGinaLogsConfig_tabPage.Select();
+		}
+
+		private void openSummaryCollapsed_checkBox_CheckedChanged(object sender, EventArgs e)
+		{
+			m_settings.AlwaysOpenSummaryTabCollapsed = openSummaryCollapsed_checkBox.Checked;
+		}
+
+		private void pGinaLogsConfig_tabPage_Enter(object sender, EventArgs e)
+		{
+			if (File.Exists(Shared.PGINA_CONFIG_LOG_PATH))
+			{
+				string[] logs = File.ReadAllLines(Shared.PGINA_CONFIG_LOG_PATH);
+				logs = logs.Reverse().ToArray();
+				pGinaConfigLog_listBox.Items.Clear();
+				pGinaConfigLog_listBox.Items.AddRange(logs);
+			}
+		}
+
+		private void pGinaLogsService_tabPage_Enter(object sender, EventArgs e)
+		{
+			if (File.Exists(Shared.PGINA_SERVICE_LOG_PATH))
+			{
+				string[] logs = File.ReadAllLines(Shared.PGINA_SERVICE_LOG_PATH);
+				logs = logs.Reverse().ToArray();
+				pGinaServiceLog_listBox.Items.Clear();
+				pGinaServiceLog_listBox.Items.AddRange(logs);
+			}
+		}
+
+		private void pGinaLogsConfig_tabPage_Validated(object sender, EventArgs e)
+		{
+
+		}
+
+		private void showpGinaLogs_checkBox_CheckedChanged(object sender, EventArgs e)
+		{
+			m_settings.ShowPGinaLogs = showpGinaLogs_checkBox.Checked;
+			if (showpGinaLogs_checkBox.Checked && !tabControl.TabPages.Contains(pGinaLogs_tabPage)) tabControl.TabPages.Add(pGinaLogs_tabPage);
+			if (!showpGinaLogs_checkBox.Checked && tabControl.TabPages.Contains(pGinaLogs_tabPage)) tabControl.TabPages.Remove(pGinaLogs_tabPage);
+		}
+
+        private void pGinaConfigLog_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

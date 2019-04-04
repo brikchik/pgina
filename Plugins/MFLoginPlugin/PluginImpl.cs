@@ -41,6 +41,8 @@ namespace pGina.Plugin.MFLoginPlugin
                 m_settings.SetDefault("OnLoadBackupEnabled", true);
                 m_settings.SetDefault("AlwaysCheckSelectedKey", false);
                 m_settings.SetDefault("RequireAtLeastOneKeyInAuthMethod", false);
+				m_settings.SetDefault("AlwaysOpenSummaryTabCollapsed", false);
+				m_settings.SetDefault("ShowPGinaLogs", false);
 
 				m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
@@ -116,6 +118,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				if (local)
 				{
 					LocalConfiguration conf = new LocalConfiguration();
+					conf.ShowDialog();
 				}
 				else
 				{

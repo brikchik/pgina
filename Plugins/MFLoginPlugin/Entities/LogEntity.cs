@@ -5,7 +5,7 @@ using System.Data.SQLite;
 
 namespace pGina.Plugin.MFLoginPlugin.Entities
 {
-    class LogEntity
+	public class LogEntity
     {
         public LogEntity(User user, AuthMethod authmethod, bool success) 
         {
