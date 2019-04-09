@@ -37,6 +37,9 @@
             this.ok_button = new System.Windows.Forms.Button();
             this.path_textBox = new System.Windows.Forms.TextBox();
             this.savePassword_checkBox = new System.Windows.Forms.CheckBox();
+            this.createdKeys_listBox = new System.Windows.Forms.ListBox();
+            this.existingKeys_groupBox = new System.Windows.Forms.GroupBox();
+            this.existingKeys_groupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // chooseFile_button
@@ -127,11 +130,31 @@
                 "storage)";
             this.savePassword_checkBox.UseVisualStyleBackColor = false;
             // 
+            // createdKeys_listBox
+            // 
+            this.createdKeys_listBox.FormattingEnabled = true;
+            this.createdKeys_listBox.Location = new System.Drawing.Point(6, 19);
+            this.createdKeys_listBox.Name = "createdKeys_listBox";
+            this.createdKeys_listBox.Size = new System.Drawing.Size(522, 290);
+            this.createdKeys_listBox.TabIndex = 3;
+            this.createdKeys_listBox.SelectedIndexChanged += new System.EventHandler(this.createdKeys_listBox_SelectedIndexChanged);
+            // 
+            // existingKeys_groupBox
+            // 
+            this.existingKeys_groupBox.Controls.Add(this.createdKeys_listBox);
+            this.existingKeys_groupBox.Location = new System.Drawing.Point(285, 9);
+            this.existingKeys_groupBox.Name = "existingKeys_groupBox";
+            this.existingKeys_groupBox.Size = new System.Drawing.Size(534, 317);
+            this.existingKeys_groupBox.TabIndex = 23;
+            this.existingKeys_groupBox.TabStop = false;
+            this.existingKeys_groupBox.Text = "Created Keys";
+            // 
             // EncryptedPasswordFileKeyManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 332);
+            this.ClientSize = new System.Drawing.Size(831, 332);
+            this.Controls.Add(this.existingKeys_groupBox);
             this.Controls.Add(this.savePassword_checkBox);
             this.Controls.Add(this.path_textBox);
             this.Controls.Add(this.chooseFile_button);
@@ -144,6 +167,7 @@
             this.Name = "EncryptedPasswordFileKeyManagementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Password file key";
+            this.existingKeys_groupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,5 +184,7 @@
         private System.Windows.Forms.Button ok_button;
         private System.Windows.Forms.TextBox path_textBox;
         private System.Windows.Forms.CheckBox savePassword_checkBox;
+        private System.Windows.Forms.ListBox createdKeys_listBox;
+        private System.Windows.Forms.GroupBox existingKeys_groupBox;
     }
 }

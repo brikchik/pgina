@@ -114,7 +114,7 @@
             this.newKey_groupBox.Controls.Add(this.serials_listBox);
             this.newKey_groupBox.Location = new System.Drawing.Point(13, 13);
             this.newKey_groupBox.Name = "newKey_groupBox";
-            this.newKey_groupBox.Size = new System.Drawing.Size(547, 192);
+            this.newKey_groupBox.Size = new System.Drawing.Size(615, 192);
             this.newKey_groupBox.TabIndex = 9;
             this.newKey_groupBox.TabStop = false;
             this.newKey_groupBox.Text = "New key";
@@ -156,7 +156,7 @@
             this.serials_listBox.FormattingEnabled = true;
             this.serials_listBox.Location = new System.Drawing.Point(321, 33);
             this.serials_listBox.Name = "serials_listBox";
-            this.serials_listBox.Size = new System.Drawing.Size(220, 147);
+            this.serials_listBox.Size = new System.Drawing.Size(288, 147);
             this.serials_listBox.TabIndex = 2;
             this.serials_listBox.SelectedIndexChanged += new System.EventHandler(this.serials_listBox_SelectedIndexChanged);
             // 
@@ -165,7 +165,7 @@
             this.existingKeys_groupBox.Controls.Add(this.createdKeys_listBox);
             this.existingKeys_groupBox.Location = new System.Drawing.Point(285, 208);
             this.existingKeys_groupBox.Name = "existingKeys_groupBox";
-            this.existingKeys_groupBox.Size = new System.Drawing.Size(275, 187);
+            this.existingKeys_groupBox.Size = new System.Drawing.Size(343, 187);
             this.existingKeys_groupBox.TabIndex = 10;
             this.existingKeys_groupBox.TabStop = false;
             this.existingKeys_groupBox.Text = "Created Keys";
@@ -175,7 +175,7 @@
             this.createdKeys_listBox.FormattingEnabled = true;
             this.createdKeys_listBox.Location = new System.Drawing.Point(6, 19);
             this.createdKeys_listBox.Name = "createdKeys_listBox";
-            this.createdKeys_listBox.Size = new System.Drawing.Size(263, 160);
+            this.createdKeys_listBox.Size = new System.Drawing.Size(331, 160);
             this.createdKeys_listBox.TabIndex = 3;
             this.createdKeys_listBox.SelectedIndexChanged += new System.EventHandler(this.createdKeys_listBox_SelectedIndexChanged);
             // 
@@ -183,7 +183,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(572, 406);
+            this.ClientSize = new System.Drawing.Size(640, 406);
             this.Controls.Add(this.existingKeys_groupBox);
             this.Controls.Add(this.newKey_groupBox);
             this.Controls.Add(this.inverted_checkBox);

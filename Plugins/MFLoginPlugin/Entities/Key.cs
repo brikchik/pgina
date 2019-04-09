@@ -28,6 +28,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "BluetoothDevice": key = new BluetoothDevice(kid); break;
 				case "HttpRequest": key = new HttpRequestKey(kid); break;
                 case "EncryptedPasswordFileKey": key = new EncryptedPasswordFileKey(kid); break;
+				case "ETokenKey": key = new ETokenKey(kid); break;
 				default:break;
 			}
 			if(key!=null)key.Fill();
@@ -43,6 +44,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "BluetoothDevice": key = new BluetoothDevice(key.KID); break;
 				case "HttpRequest": key = new HttpRequestKey(key.KID); break;
                 case "EncryptedPasswordFileKey": key = new EncryptedPasswordFileKey(key.KID); break;
+				case "ETokenKey": key = new ETokenKey(key.KID); break;
 				default: key = null; m_logger.Error("Unable to recognize key type: "+type); break;
 			}
 			return key; // get appropriate key class
@@ -148,5 +150,6 @@ namespace pGina.Plugin.MFLoginPlugin
 
 		//key MAY contain windows password
 		public virtual string ReturnWindowsPassword() { return null; }
+        // it is used only if the plugin database has no password
 	}
 }

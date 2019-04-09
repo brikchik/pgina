@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.DirectoryServices;
+using System.IO;
 using log4net;
+using pGina.Shared.Settings;
+using pGina.Shared.Types;
+
 namespace pGina.Plugin.MFLoginPlugin.Entities
 {
 	public class User
@@ -35,7 +39,6 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                 catch { UID = 1; }
                 r.Close();
 		}
-
 		public override string ToString() { return Name; }
 		public bool FillByName(string name)
 		{
@@ -49,9 +52,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                     Role = (string)r["Role"];
                     if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
                     Hash = (string)r["Hash"];
-                    r.Close();
+					r.Close();
+                    if (WindowsPassword == "") WindowsPassword = null;
                     if (!IsValid()) return false;
-                    return true;
+					return true;
                 }
                 else
                 {
@@ -70,9 +74,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                     Role = (string)r["Role"];
                     if (r["WindowsPassword"] != System.DBNull.Value) WindowsPassword = (string)r["WindowsPassword"];
                     Hash = (string)r["Hash"];
-                    r.Close();
+					r.Close();
+                    if (WindowsPassword == "") WindowsPassword = null;
                     if (!IsValid()) return false;
-                    return true;
+					return true;
                 }
                 else
                 {
@@ -94,10 +99,10 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
                     sqlc.Parameters.AddWithValue("$UID", UID);
                     sqlc.Parameters.AddWithValue("$Name", Name);
                     sqlc.Parameters.AddWithValue("$Role", Role);
-                    sqlc.Parameters.AddWithValue("$WindowsPassword", WindowsPassword);
+                    sqlc.Parameters.AddWithValue("$WindowsPassword", (WindowsPassword==null)?"":WindowsPassword);
                     ComputeHash();
                     sqlc.Parameters.AddWithValue("$Hash", Hash);
-                    return (sqlc.ExecuteNonQuery() == 1);
+				return (sqlc.ExecuteNonQuery() == 1);
                 }
                 catch (Exception ex)
                 {
@@ -124,33 +129,17 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
 
 		public bool ExistsInSystem()
 		{
-			try
-			{
-				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-				DirectoryEntry currentUser = directoryEntry.Children.Find(Name, "user");
-			}
-			catch (Exception) { return false; }
-			return true;
+            return Abstractions.WindowsApi.pInvokes.UserExists(Name);
 		}
 		public bool AddToSystem()
 		{
-			try
-			{
-				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-				DirectoryEntry newUser = directoryEntry.Children.Add(Name, "user");
-				if (WindowsPassword!=null)
-                    newUser.Invoke("SetPassword", new Object[] { WindowsPassword });
-				newUser.Invoke("Put", new object[] { "Description", "pGina created" });
-				newUser.CommitChanges();
-				DirectoryEntry grp = null; ;
-				try { grp = directoryEntry.Children.Find("Users", "group"); } catch { }
-				if (grp != null) grp.Invoke("Add", new object[] { newUser.Path.ToString() });
-				try { grp = directoryEntry.Children.Find("Пользователи", "group"); } catch { }
-				if (grp != null) grp.Invoke("Add", new object[] { newUser.Path.ToString() });
-                    LogEntity le = new LogEntity(this, "Created", true);
-                    le.Save();
+            if (Abstractions.WindowsApi.pInvokes.UserADD(Name, WindowsPassword, "pGina created"))
+            {
+            LogEntity le = new LogEntity(this, "Created", true);
+            le.Save();
 			}
-			catch (Exception e) { m_logger.Error(e.Message); return false; }
+            else
+            { m_logger.Error("Unable to create user "+Name); return false; }
 			return true;
 		}
         public bool AddToPGina()
@@ -165,47 +154,56 @@ namespace pGina.Plugin.MFLoginPlugin.Entities
             catch (Exception e) { m_logger.Error(e.Message); return false; }
                 LogEntity le = new LogEntity(this, "Added to MFLogin", true);
                 le.Save();
-            
             return true;
         }
 		public bool NewPassword()
 		{
-			try
-			{
-				WindowsPassword = Shared.GetUniqueKey(Shared.INTERNAL_USER_PASSWORD_LENGTH);
-				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-				DirectoryEntry user = directoryEntry.Children.Find(Name, "user");
-				user.Invoke("SetPassword", new Object[] { WindowsPassword });
-				user.CommitChanges();
-				Save();
-			}
-			catch (Exception e) { m_logger.Error(e.Message); return false; }
-                LogEntity le = new LogEntity(this, "Got a new internal password", true);
-                le.Save();
+            if (Abstractions.WindowsApi.pInvokes.ValidateUser(Name, "", WindowsPassword))
+            {
+                string newWindowsPassword = Shared.GetUniqueKey(Shared.INTERNAL_USER_PASSWORD_LENGTH);
+                Abstractions.WindowsApi.pInvokes.UserChangePassword("", Name, WindowsPassword, newWindowsPassword);
+                WindowsPassword = newWindowsPassword;
+            }
+            else
+            {
+                try
+                {
+                    WindowsPassword = Shared.GetUniqueKey(Shared.INTERNAL_USER_PASSWORD_LENGTH);
+                    DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+                    DirectoryEntry user = directoryEntry.Children.Find(Name, "user");
+                    user.Invoke("SetPassword", new Object[] { WindowsPassword });
+                    user.CommitChanges();
+                    Save();
+                }
+                catch (Exception e) { m_logger.Error(e.Message); return false; }
+            }
+            LogEntity le = new LogEntity(this, "Got a new internal password", true);
+            le.Save();
 			return true;
 		}
-		public bool RemoveFromSystem()
+		public BooleanResult RemoveFromSystem()
 		{
-			try
-			{
-				DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-				DirectoryEntry currentUser = directoryEntry.Children.Find(Name, "user");
-				currentUser.InvokeGet("Description");
-				if (currentUser.InvokeGet("Description").ToString() == "pGina created")
-				{
-					directoryEntry.Children.Remove(currentUser);
-
-                        LogEntity le = new LogEntity(this, "Removed from Windows", true);
-                        le.Save();
-                    
-				}
-				else throw new Exception(message: "User is not created by pGina: "+Name);
-			}
-			catch (Exception e) { m_logger.Error(e.Message); return false; }
-			return true;
+            if (Abstractions.WindowsApi.pInvokes.UserDel(Name))
+            {
+                LogEntity le = new LogEntity(this, "Removed from Windows", true);
+                le.Save();
+                return new BooleanResult() { Success = true };
+            }
+            else
+                return new BooleanResult { Success = false };
+		}
+		public BooleanResult RemoveProfile()
+		{
+            try
+            {
+                Abstractions.WindowsApi.pInvokes.DeleteProfile(Abstractions.Windows.Security.GetSIDFromName(Name));
+            }
+            catch (Exception ex) { return new BooleanResult() { Success = false, Message = ex.Message }; }
+            return new BooleanResult() { Success = true };
 		}
 		public bool MakeAdmin(bool admin)
 		{
+            
             DirectoryEntry directoryEntry = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
             DirectoryEntry currentUser = null;
             String action = admin ? "Add" : "Remove";

@@ -35,6 +35,9 @@
             this.description_label = new System.Windows.Forms.Label();
             this.ok_button = new System.Windows.Forms.Button();
             this.searchBTDevices_button = new System.Windows.Forms.Button();
+            this.createdKeys_listBox = new System.Windows.Forms.ListBox();
+            this.existingKeys_groupBox = new System.Windows.Forms.GroupBox();
+            this.existingKeys_groupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // inverted_checkBox
@@ -46,7 +49,6 @@
             this.inverted_checkBox.TabIndex = 7;
             this.inverted_checkBox.Text = "Invert (Device has to be MISSING)";
             this.inverted_checkBox.UseVisualStyleBackColor = true;
-            this.inverted_checkBox.CheckedChanged += new System.EventHandler(this.inverted_checkBox_CheckedChanged);
             // 
             // serial_label
             // 
@@ -57,7 +59,6 @@
             this.serial_label.Size = new System.Drawing.Size(110, 17);
             this.serial_label.TabIndex = 13;
             this.serial_label.Text = "Device address:";
-            this.serial_label.Click += new System.EventHandler(this.serial_label_Click);
             // 
             // serial_textBox
             // 
@@ -77,7 +78,6 @@
             this.description_textBox.Size = new System.Drawing.Size(256, 53);
             this.description_textBox.TabIndex = 8;
             this.description_textBox.Text = "BluetoothDevice N";
-            this.description_textBox.TextChanged += new System.EventHandler(this.description_textBox_TextChanged_1);
             // 
             // description_label
             // 
@@ -88,7 +88,6 @@
             this.description_label.Size = new System.Drawing.Size(83, 17);
             this.description_label.TabIndex = 10;
             this.description_label.Text = "Description:";
-            this.description_label.Click += new System.EventHandler(this.description_label_Click_1);
             // 
             // ok_button
             // 
@@ -110,11 +109,31 @@
             this.searchBTDevices_button.UseVisualStyleBackColor = true;
             this.searchBTDevices_button.Click += new System.EventHandler(this.searchBTDevices_button_Click);
             // 
+            // createdKeys_listBox
+            // 
+            this.createdKeys_listBox.FormattingEnabled = true;
+            this.createdKeys_listBox.Location = new System.Drawing.Point(6, 19);
+            this.createdKeys_listBox.Name = "createdKeys_listBox";
+            this.createdKeys_listBox.Size = new System.Drawing.Size(506, 199);
+            this.createdKeys_listBox.TabIndex = 3;
+            this.createdKeys_listBox.SelectedIndexChanged += new System.EventHandler(this.createdKeys_listBox_SelectedIndexChanged);
+            // 
+            // existingKeys_groupBox
+            // 
+            this.existingKeys_groupBox.Controls.Add(this.createdKeys_listBox);
+            this.existingKeys_groupBox.Location = new System.Drawing.Point(287, 12);
+            this.existingKeys_groupBox.Name = "existingKeys_groupBox";
+            this.existingKeys_groupBox.Size = new System.Drawing.Size(518, 228);
+            this.existingKeys_groupBox.TabIndex = 14;
+            this.existingKeys_groupBox.TabStop = false;
+            this.existingKeys_groupBox.Text = "Created Keys";
+            // 
             // BluetoothManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(280, 246);
+            this.ClientSize = new System.Drawing.Size(817, 246);
+            this.Controls.Add(this.existingKeys_groupBox);
             this.Controls.Add(this.searchBTDevices_button);
             this.Controls.Add(this.inverted_checkBox);
             this.Controls.Add(this.serial_label);
@@ -125,6 +144,7 @@
             this.Name = "BluetoothManagementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bluetooth key management";
+            this.existingKeys_groupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -139,5 +159,7 @@
 		private System.Windows.Forms.Label description_label;
         private System.Windows.Forms.Button ok_button;
         private System.Windows.Forms.Button searchBTDevices_button;
+        private System.Windows.Forms.ListBox createdKeys_listBox;
+        private System.Windows.Forms.GroupBox existingKeys_groupBox;
 	}
 }

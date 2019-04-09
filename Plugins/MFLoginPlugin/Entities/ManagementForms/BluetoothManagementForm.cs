@@ -12,13 +12,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
     public partial class BluetoothManagementForm : Form
     {
 		public string Description = "BluetoothDevice";
-		public string Serial = "";
+		public string Serial = null;
 		public bool Inverted = false;
 		public bool IsValid = false;
         public BluetoothManagementForm(string userName)
         {
             InitializeComponent();
 			description_textBox.Text += " for "+userName;
+            createdKeys_listBox.Items.AddRange(DBHelper.ReadKeys("BluetoothDevice"));
         }
 
 		private void description_textBox_TextChanged(object sender, EventArgs e)
@@ -26,16 +27,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 			Description = description_textBox.Text;
 		}
 
-		private void description_label_Click(object sender, EventArgs e)
-		{
-
-		}
-
 		private void ok_button_Click(object sender, EventArgs e)
 		{
 			Inverted = inverted_checkBox.Checked;
-			IsValid = true;
-			Close();
+			if (Serial != null)
+			{
+				IsValid = true;
+				Close();
+			}
 		}
 
 		private void serial_textBox_TextChanged(object sender, EventArgs e)
@@ -45,33 +44,21 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 
         private void searchBTDevices_button_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SelectBluetoothDeviceDialog sbtd = new SelectBluetoothDeviceDialog();
-                sbtd.ShowDialog();
-                serial_textBox.Text = sbtd.SelectedDevice.DeviceAddress.ToString();
-            }
-            catch (Exception ex) { MessageBox.Show("Unable to use bluetooth. "+ex.Message); }
-        }
+			try
+			{
+				SelectBluetoothDeviceDialog sbtd = new SelectBluetoothDeviceDialog();
+				sbtd.ShowDialog();
+				serial_textBox.Text = sbtd.SelectedDevice.DeviceAddress.ToString();
+			}
+			catch (Exception ex) { MessageBox.Show("Unable to use bluetooth. " + ex.Message); }
+		}
 
-        private void inverted_checkBox_CheckedChanged(object sender, EventArgs e)
+        private void createdKeys_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void serial_label_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void description_label_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void description_textBox_TextChanged_1(object sender, EventArgs e)
-        {
-
+            Key key = ((Key)createdKeys_listBox.SelectedItem);
+            serial_textBox.Text = key.Serial;
+            inverted_checkBox.Checked = key.Inverted;
+            description_textBox.Text = key.Description;
         }
 	}
 }

@@ -12,6 +12,7 @@ using pGina.Shared.Types;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
+using System.Security.Principal;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -53,9 +54,9 @@ Current database path: " + DBHelper.connection.FileName;
                 tabControl.SelectTab(advancedSettings_tabPage);
             }
 
-			if (!(bool)m_settings.ShowPGinaLogs) tabControl.TabPages.Remove(pGinaLogs_tabPage);
-		}
-		private void UpdateUserList()
+            if (!(bool)m_settings.ShowPGinaLogs) tabControl.TabPages.Remove(pGinaLogs_tabPage);
+        }
+        private void UpdateUserList()
         {
             successPictureBox.Visible = false;
             if (!databaseLoaded) return;
@@ -130,7 +131,7 @@ Current database path: " + DBHelper.connection.FileName;
                 {
                     if (!key.AddKey(userName_textBox.Text)) return;
                 }
-                catch (Exception ex){ m_logger.Error("unable to create key: "+ex.Message); return; }
+                catch (Exception ex) { m_logger.Error("unable to create key: " + ex.Message); return; }
                 key.Save();
                 string label = key.ToString();
                 AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
@@ -246,9 +247,9 @@ Current database path: " + DBHelper.connection.FileName;
                 {
                     ((CheckBox)sender).CheckState = CheckState.Unchecked;
                     ((User)user_ListBox.SelectedItem).WindowsPassword = null;
-					((User)user_ListBox.SelectedItem).Save();
+                    ((User)user_ListBox.SelectedItem).Save();
 
-				}
+                }
                 else
                     ((CheckBox)sender).CheckState = CheckState.Checked;
             }
@@ -276,19 +277,19 @@ Current database path: " + DBHelper.connection.FileName;
             try
             {
                 am = (AuthMethod)authMethods_listBox.SelectedItem;
-				if (am == null) throw new Exception("Empty auth method chosen");
+                if (am == null) throw new Exception("Empty auth method chosen");
             }
             catch (Exception ex) { m_logger.Debug(ex.Message); return; }
             if (am.K1 != null) { key1Button.Tag = am.K1; key1Button.Text = am.K1.Description; }
-            else { key1Button.Text = ""; }
+            else { key1Button.Text = ""; key1Button.Tag = null; }
             if (am.K2 != null) { key2Button.Tag = am.K2; key2Button.Text = am.K2.Description; }
-            else { key2Button.Text = ""; }
+            else { key2Button.Text = ""; key2Button.Tag = null; }
             if (am.K3 != null) { key3Button.Tag = am.K3; key3Button.Text = am.K3.Description; }
-            else { key3Button.Text = ""; }
+            else { key3Button.Text = ""; key3Button.Tag = null; }
             if (am.K4 != null) { key4Button.Tag = am.K4; key4Button.Text = am.K4.Description; }
-            else { key4Button.Text = ""; }
+            else { key4Button.Text = ""; key4Button.Tag = null; }
             if (am.K5 != null) { key5Button.Tag = am.K5; key5Button.Text = am.K5.Description; }
-            else { key5Button.Text = ""; }
+            else { key5Button.Text = ""; key5Button.Tag = null; }
             if ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod && am.Number_of_keys == 0) am.Number_of_keys = 1;
             keysRequired_NumUpDown.Value = (decimal)am.Number_of_keys;
             description_textBox.Text = am.Description;
@@ -306,9 +307,15 @@ Current database path: " + DBHelper.connection.FileName;
             {
                 try
                 {
+                    if (removeWithProfile_checkBox.Checked)
+                    {
+                        BooleanResult result = user.RemoveProfile();
+                        if (!result.Success) MessageBox.Show("Unable to remove user profile. " + result.Message);
+                    }
                     if (removeWindowsUser_checkBox.Checked)
                     {
-                        if (!user.RemoveFromSystem()) MessageBox.Show("Unable to remove user from system");
+                        BooleanResult result = user.RemoveFromSystem();
+                        if (!result.Success) MessageBox.Show("Unable to completely remove user from system. " + result.Message);
                     }
                     user.Remove();
                 }
@@ -442,6 +449,9 @@ Current database path: " + DBHelper.connection.FileName;
         {
             keyInfo_groupBox.Enabled = value;
             checkKey_groupBox.Enabled = value;
+            keySerial_textBox.Enabled = value;
+            keyDescription_textBox.Enabled = value;
+            keySerial_textBox.Text = null;
         }
         private void keysListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -449,7 +459,6 @@ Current database path: " + DBHelper.connection.FileName;
             if (keysListBox.SelectedItems.Count != 1)
             {
                 switchKeyInfoInterface(false);
-                keySerial_textBox.Enabled = false;
             }
             else
                 try
@@ -490,23 +499,27 @@ Current database path: " + DBHelper.connection.FileName;
         private void keyInverted_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
-			Key key = null;
-			try { key = (Key)keysListBox.SelectedItem; 
-            key.Inverted = keyInverted_checkBox.Checked;
-            key.Save();
+            Key key = null;
+            try
+            {
+                key = (Key)keysListBox.SelectedItem;
+                key.Inverted = keyInverted_checkBox.Checked;
+                key.Save();
             }
-            catch { keyInverted_checkBox.Checked = !keyInverted_checkBox.Checked; };
+            catch { }
         }
         private void keyConfigure_button_Click(object sender, EventArgs e)
         {
-			try { ((Key)keysListBox.SelectedItem).Configure(); } catch { } 
-			// catch a strange bug of "nothing" being the selected item in listBox
+            try { ((Key)keysListBox.SelectedItem).Configure(); }
+            catch { }
+            // catch a strange bug of "nothing" being the selected item in listBox
         }
         private void removeAuthMethod_button_Click(object sender, EventArgs e)
         {
             if (!databaseLoaded) return;
-			AuthMethod am = null;
-			try { am = ((AuthMethod)authMethods_listBox.SelectedItem); } catch { }
+            AuthMethod am = null;
+            try { am = ((AuthMethod)authMethods_listBox.SelectedItem); }
+            catch { }
             if (am == null) return;
             am.Delete();
             if (authMethods_listBox.Items.Count <= 1)
@@ -554,26 +567,30 @@ Current database path: " + DBHelper.connection.FileName;
         }
         private void refreshSummary()
         {
-            if (!databaseLoaded) return;
-            summary_treeView.Nodes.Clear();
-            foreach (User user in DBHelper.ReadUsers())
+            try
             {
-                TreeNode userNode = new TreeNode((user.Role == "Administrator" ? "[A] " : "") + user.Name);
-                foreach (AuthMethod authMethod in DBHelper.GetAuthMethods(user))
+                if (!databaseLoaded) return;
+                summary_treeView.Nodes.Clear();
+                foreach (User user in DBHelper.ReadUsers())
                 {
-                    TreeNode amNode = new TreeNode(authMethod.ToString());
-                    Key[] keys = DBHelper.ReadKeys("", authMethod);
-                    foreach (Key key in keys)
+                    TreeNode userNode = new TreeNode((user.Role == "Administrator" ? "[A] " : "") + user.Name);
+                    foreach (AuthMethod authMethod in DBHelper.GetAuthMethods(user))
                     {
-                        amNode.Nodes.Add(key.ToString());
+                        TreeNode amNode = new TreeNode(authMethod.ToString());
+                        Key[] keys = DBHelper.ReadKeys("", authMethod);
+                        foreach (Key key in keys)
+                        {
+                            amNode.Nodes.Add(key.ToString());
+                        }
+                        amNode.Nodes.Add("Keys required: " + authMethod.Number_of_keys);
+                        if (authMethod.Number_of_keys > keys.Count()) amNode.Text += "  #### Login impossible ####";
+                        userNode.Nodes.Add(amNode);
                     }
-                    amNode.Nodes.Add("Keys required: " + authMethod.Number_of_keys);
-                    if (authMethod.Number_of_keys > keys.Count()) amNode.Text += "  #### Login impossible ####";
-                    userNode.Nodes.Add(amNode);
+                    summary_treeView.Nodes.Add(userNode);
                 }
-                summary_treeView.Nodes.Add(userNode);
+                if (!(bool)m_settings.AlwaysOpenSummaryTabCollapsed) summary_treeView.ExpandAll();
             }
-			if (!(bool)m_settings.AlwaysOpenSummaryTabCollapsed) summary_treeView.ExpandAll();
+            catch { } // just in case
         }
         private void summary_tabPage_Enter(object sender, EventArgs e)
         {
@@ -626,7 +643,7 @@ Current database path: " + DBHelper.connection.FileName;
         {
             try
             {
-                keysRequired_NumUpDown.Minimum = ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod)?1:0;
+                keysRequired_NumUpDown.Minimum = ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod) ? 1 : 0;
                 if (databaseLoaded)
                 {
                     UpdateUserList();
@@ -654,10 +671,12 @@ Current database path: " + DBHelper.connection.FileName;
                 }
                 advancedSettings_alwaysCheckSelectedKey_checkBox.Checked = ((bool)m_settings.AlwaysCheckSelectedKey);
                 requireAtLeastOneKeyInAuthMethod_checkBox.Checked = ((bool)m_settings.RequireAtLeastOneKeyInAuthMethod);
-				openSummaryCollapsed_checkBox.Checked = ((bool)m_settings.AlwaysOpenSummaryTabCollapsed);
-				showpGinaLogs_checkBox.Checked = ((bool)m_settings.ShowPGinaLogs);
+                openSummaryCollapsed_checkBox.Checked = ((bool)m_settings.AlwaysOpenSummaryTabCollapsed);
+                showpGinaLogs_checkBox.Checked = ((bool)m_settings.ShowPGinaLogs);
+                maxAuthTime_numericUpDown.Value = (decimal)(int)m_settings.MaxAuthTimeSeconds;
 
-			}
+                onlyPairedBluetoothDevices_checkBox.Checked = (bool)m_settings.AllowOnlyPairedBluetoothDevices;
+            }
         }
         // defaults for logging
         private bool extraLogs = false;
@@ -707,7 +726,7 @@ Current database path: " + DBHelper.connection.FileName;
 
         private void last100logs_radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            modeLogs="L";
+            modeLogs = "L";
             FillLogs();
         }
 
@@ -766,7 +785,20 @@ Current database path: " + DBHelper.connection.FileName;
             m_settings.AlwaysCheckSelectedKey = (advancedSettings_alwaysCheckSelectedKey_checkBox.Checked);
         }
 
-        private void CheckAuthMethod()
+        public delegate void WorkCompletedCallBack(bool success, string message);
+        private bool CheckAuthMethodAsyncRunning = false;
+        public void CheckAuthMethodAsync() // background task
+        {
+            WorkCompletedCallBack callback = AMCheckCallBack;
+            CheckAuthMethod(callback);
+        }
+        public void AMCheckCallBack(bool success, string result) // show auth method check result
+        {
+            CheckAuthMethodAsyncRunning = false;
+            successPictureBox.Visible = success;
+            if (!success) MessageBox.Show(result);
+        }
+        private void CheckAuthMethod(WorkCompletedCallBack callback) // may be really slow
         {
             AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
             UserInformation ui = new UserInformation()
@@ -775,29 +807,23 @@ Current database path: " + DBHelper.connection.FileName;
                 Password = testAMpassword_textBox.Text,
                 OriginalPassword = testAMpassword_textBox.Text
             };
-            BooleanResult authMethodCheck = AuthenticationManager.TryAuthMethod(am, ui, false);
-            successPictureBox.Visible = authMethodCheck.Success;
             User user = new User();
             user.FillByName(ui.Username);
-            if (user.WindowsPassword != null && ui.Password != user.WindowsPassword && ui.Password != ui.OriginalPassword)
-                MessageBox.Show("You certainly can't log in with this authentication method - some keys contain incorrect Windows password.",
-                    "Bad keys", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            if (user.WindowsPassword == null && ui.Password == ui.OriginalPassword)
-                MessageBox.Show("You can't log in this way as database has no Windows password and keys do not provide it either.",
-                    "Login impossible", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            BooleanResult authMethodCheck = AuthenticationManager.TryAuthMethod(am, ui, false);
+            if (authMethodCheck.Success) callback(true, null); //success
+            if (user.WindowsPassword != null && user.WindowsPassword != "" &&
+                ui.Password != user.WindowsPassword && ui.Password != testAMpassword_textBox.Text)
+                callback(false, "Keys provide incorrect Windows Password"); //error message to show
         }
-
         private void openingPictureBox_Click(object sender, MouseEventArgs e)
         {
-            Thread.Sleep(5);
-            CheckAuthMethod();
-            // make sure database isn't locked and give plugin some time to do its job
-            Refresh();
+            if (!CheckAuthMethodAsyncRunning) { CheckAuthMethodAsyncRunning = true; CheckAuthMethodAsync(); }
+            // check in background so that bluetooth scan doesn't block the UI thread
         }
 
         private void openingPictureBox_MouseClick(object sender, MouseEventArgs e)
         {
-            
+
         }
 
         private void requireAtLeastOneKeyInAuthMethod_checkBox_CheckedChanged(object sender, EventArgs e)
@@ -832,7 +858,7 @@ Current database path: " + DBHelper.connection.FileName;
                 // synchronize system users with the "unchanged" database
                 DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
                 DBHelper.RestoreSystemUsersFromMFLoginDB();
-                if (closeConfig && result!=DialogResult.No) Close();
+                if (closeConfig && result != DialogResult.No) Close();
                 return true;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); return false; }
@@ -844,7 +870,7 @@ Current database path: " + DBHelper.connection.FileName;
 
         private void discardChanges_linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            bool success=DiscardChanges();
+            bool success = DiscardChanges();
             string DBPassword = Encoding.ASCII.GetString(ProtectedData.Unprotect((byte[])m_settings.DBPassword, (byte[])m_settings.DBPasswordSalt, DataProtectionScope.LocalMachine));
             DBHelper.ConnectOrCreateLocalDB((string)m_settings.LocalDatabasePath, DBPassword);
             discardChanges_linkLabel.LinkVisited = success;
@@ -907,58 +933,88 @@ Current database path: " + DBHelper.connection.FileName;
 
         }
 
-		private void LocalConfiguration_Load(object sender, EventArgs e)
-		{
+        private void LocalConfiguration_Load(object sender, EventArgs e)
+        {
 
-		}
+        }
 
-		private void pGinaLogs_tabPage_Enter(object sender, EventArgs e)
-		{
-			pGinaLogsConfig_tabPage.Select();
-		}
+        private void pGinaLogs_tabPage_Enter(object sender, EventArgs e)
+        {
+            pGinaLogsConfig_tabPage.Select();
+        }
 
-		private void openSummaryCollapsed_checkBox_CheckedChanged(object sender, EventArgs e)
-		{
-			m_settings.AlwaysOpenSummaryTabCollapsed = openSummaryCollapsed_checkBox.Checked;
-		}
+        private void openSummaryCollapsed_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.AlwaysOpenSummaryTabCollapsed = openSummaryCollapsed_checkBox.Checked;
+        }
 
-		private void pGinaLogsConfig_tabPage_Enter(object sender, EventArgs e)
-		{
-			if (File.Exists(Shared.PGINA_CONFIG_LOG_PATH))
-			{
-				string[] logs = File.ReadAllLines(Shared.PGINA_CONFIG_LOG_PATH);
-				logs = logs.Reverse().ToArray();
-				pGinaConfigLog_listBox.Items.Clear();
-				pGinaConfigLog_listBox.Items.AddRange(logs);
-			}
-		}
+        private void pGinaLogsConfig_tabPage_Enter(object sender, EventArgs e)
+        {
+            if (File.Exists(Shared.PGINA_CONFIG_LOG_PATH))
+            {
+                string[] logs = File.ReadAllLines(Shared.PGINA_CONFIG_LOG_PATH);
+                logs = logs.Reverse().ToArray();
+                pGinaConfigLog_listBox.Items.Clear();
+                pGinaConfigLog_listBox.Items.AddRange(logs);
+            }
+        }
 
-		private void pGinaLogsService_tabPage_Enter(object sender, EventArgs e)
-		{
-			if (File.Exists(Shared.PGINA_SERVICE_LOG_PATH))
-			{
-				string[] logs = File.ReadAllLines(Shared.PGINA_SERVICE_LOG_PATH);
-				logs = logs.Reverse().ToArray();
-				pGinaServiceLog_listBox.Items.Clear();
-				pGinaServiceLog_listBox.Items.AddRange(logs);
-			}
-		}
+        private void pGinaLogsService_tabPage_Enter(object sender, EventArgs e)
+        {
+            if (File.Exists(Shared.PGINA_SERVICE_LOG_PATH))
+            {
+                string[] logs = File.ReadAllLines(Shared.PGINA_SERVICE_LOG_PATH);
+                logs = logs.Reverse().ToArray();
+                pGinaServiceLog_listBox.Items.Clear();
+                pGinaServiceLog_listBox.Items.AddRange(logs);
+            }
+        }
 
-		private void pGinaLogsConfig_tabPage_Validated(object sender, EventArgs e)
-		{
+        private void pGinaLogsConfig_tabPage_Validated(object sender, EventArgs e)
+        {
 
-		}
+        }
 
-		private void showpGinaLogs_checkBox_CheckedChanged(object sender, EventArgs e)
-		{
-			m_settings.ShowPGinaLogs = showpGinaLogs_checkBox.Checked;
-			if (showpGinaLogs_checkBox.Checked && !tabControl.TabPages.Contains(pGinaLogs_tabPage)) tabControl.TabPages.Add(pGinaLogs_tabPage);
-			if (!showpGinaLogs_checkBox.Checked && tabControl.TabPages.Contains(pGinaLogs_tabPage)) tabControl.TabPages.Remove(pGinaLogs_tabPage);
-		}
+        private void showpGinaLogs_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.ShowPGinaLogs = showpGinaLogs_checkBox.Checked;
+            if (showpGinaLogs_checkBox.Checked && !tabControl.TabPages.Contains(pGinaLogs_tabPage)) tabControl.TabPages.Add(pGinaLogs_tabPage);
+            if (!showpGinaLogs_checkBox.Checked && tabControl.TabPages.Contains(pGinaLogs_tabPage)) tabControl.TabPages.Remove(pGinaLogs_tabPage);
+        }
 
         private void pGinaConfigLog_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
-	}
+
+        private void removeWithProfile_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openingPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void maxAuthTime_groupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void maxAuthTime_numericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            m_settings.MaxAuthTimeSeconds = (int)maxAuthTime_numericUpDown.Value;
+        }
+
+        private void onlyPairedBluetoothDevices_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.AllowOnlyPairedBluetoothDevices = onlyPairedBluetoothDevices_checkBox.Checked;
+        }
+    }
 }

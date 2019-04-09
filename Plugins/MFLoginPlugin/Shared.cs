@@ -13,6 +13,7 @@ namespace pGina.Plugin.MFLoginPlugin
         public const int INTERNAL_USER_PASSWORD_LENGTH = 64;
 		public const string PGINA_CONFIG_LOG_PATH= "C:/Program Files/pGina.fork/log/pGina.Configuration_log.txt";
 		public const string PGINA_SERVICE_LOG_PATH = "C:/Program Files/pGina.fork/log/pGina.Service.ServiceHost_log.txt";
+
 		public static void RunConsoleCommand(string command) //just in case you need it
 		{
 			Process process = new Process();
@@ -68,10 +69,8 @@ namespace pGina.Plugin.MFLoginPlugin
         // This constant is used to determine the keysize of the encryption algorithm in bits.
         // We divide this by 8 within the code below to get the equivalent number of bytes.
         private const int Keysize = 256;
-
         // This constant determines the number of iterations for the password bytes generation function.
         private const int DerivationIterations = 1000;
-
         public static string Encrypt(string plainText, string passPhrase)
         {
             // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
@@ -108,7 +107,6 @@ namespace pGina.Plugin.MFLoginPlugin
                 }
             }
         }
-
         public static string Decrypt(string cipherText, string passPhrase)
         {
             // Get the complete stream of bytes that represent:
@@ -146,7 +144,6 @@ namespace pGina.Plugin.MFLoginPlugin
                 }
             }
         }
-
         private static byte[] Generate256BitsOfRandomEntropy()
         {
             var randomBytes = new byte[32]; // 32 Bytes will give us 256 bits.

@@ -9,6 +9,7 @@ using log4net;
 using pGina.Shared.Interfaces;
 using pGina.Shared.Types;
 using pGina.Shared.Settings;
+using pGina.Plugin.MFLoginPlugin.Entities;
 //
 // NOTE: pGina.fork plugins work with "pGina created" non-admin accounts by default!!!
 // net user LOGIN PASSWORD /ADD /COMMENT:"pGina created"
@@ -16,7 +17,7 @@ using pGina.Shared.Settings;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
-    public class MFLoginPlugin : IPluginConfiguration, IPluginAuthentication, IPluginAuthorization
+    public class MFLoginPlugin : IPluginConfiguration, IPluginAuthentication
     {
         private ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
         public static Guid SimpleUuid = new Guid("{98EF7D32-20B2-421F-A68D-5BFA8E3BAFA6}");
@@ -36,13 +37,17 @@ namespace pGina.Plugin.MFLoginPlugin
 				m_settings.SetDefault("Description", m_defaultDescription);
                 m_settings.SetDefault("DBPassword", new byte[] { });
 				m_settings.SetDefault("DBPasswordSalt", new byte[] { });
-				// advanced setings:
-
+				
+                // advanced setings:
                 m_settings.SetDefault("OnLoadBackupEnabled", true);
                 m_settings.SetDefault("AlwaysCheckSelectedKey", false);
                 m_settings.SetDefault("RequireAtLeastOneKeyInAuthMethod", false);
 				m_settings.SetDefault("AlwaysOpenSummaryTabCollapsed", false);
 				m_settings.SetDefault("ShowPGinaLogs", false);
+                m_settings.SetDefault("MaxAuthTimeSeconds", 10);
+
+                // key settings
+                m_settings.SetDefault("AllowOnlyPairedBluetoothDevices", false);
 
 				m_logger.DebugFormat("Plugin initialized on {0} in PID: {1} Session: {2}", Environment.MachineName, me.Id, me.SessionId);
             }
@@ -94,17 +99,6 @@ namespace pGina.Plugin.MFLoginPlugin
 				// Allow pGina service to show the exception
             }
         }
-
-		public BooleanResult AuthorizeUser(SessionProperties properties)
-		{
-            // we save user profile path here every time
-
-
-
-            // ####
-			// We elect to not do any authorization, let the user pass for us
-			return new BooleanResult() { Success = true };
-		}
 
 		public void Configure()
         {

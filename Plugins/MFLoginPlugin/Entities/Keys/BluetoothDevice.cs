@@ -8,12 +8,14 @@ using log4net;
 using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
+using pGina.Shared.Settings;
 
 namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 {
 	class BluetoothDevice : Key
 	{
 		private static ILog m_logger = LogManager.GetLogger("MFLoginPlugin");
+        dynamic m_settings = new pGinaDynamicSettings(MFLoginPlugin.SimpleUuid);
 		public BluetoothDevice(ulong kid) : base(kid) { Type = "BluetoothDevice"; }
         public override bool AddKey(string userName = "")
 		{
@@ -30,10 +32,13 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 			bool success = false;
 			try
 			{
-				m_logger.Debug("Searching for bluetooth device " + Serial);
+				m_logger.Info("Searching for bluetooth device " + Serial);
 				BluetoothClient bluetoothClient = new BluetoothClient();
-				BluetoothDeviceInfo[] info = bluetoothClient.DiscoverDevices();
-				//BluetoothDeviceInfo[] paired = bluetoothClient.DiscoverDevices(255, true, false, false);
+				BluetoothDeviceInfo[] info;
+                if ((bool)m_settings.AllowOnlyPairedBluetoothDevices) 
+                    info = bluetoothClient.DiscoverDevices(255, true, false, false);
+                else
+                    info = bluetoothClient.DiscoverDevices();
 				foreach (BluetoothDeviceInfo device in info)
 				{
 					if (device.DeviceAddress.ToString() == Serial && device.LastSeen>DateTime.Now.Subtract(TimeSpan.FromSeconds(30)))
@@ -43,15 +48,15 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 					}
 					//
 					// This method is unreliable as bluetooth address can be copied.
-					// It also has glitches sometimes (with false positives & false negatives)
+					// It also takes pretty long to perform scan
 					// Device should be paired for the key to be secure
 					//
 				}
 			}
-			catch { m_logger.Debug("Bluetooth key problem. "+Description); }
+			catch { m_logger.Error("Bluetooth key problem. "+Description); }
 			if (Inverted) success = !success;
-			m_logger.Debug("BluetoothDevice " + Description + "; Inverted: " + Inverted + "; Success: " + success);
-			return success; // !!!!
+			m_logger.Info("BluetoothDevice " + Description + "; Inverted: " + Inverted + "; Success: " + success);
+			return success;
 		}
 	}
 }

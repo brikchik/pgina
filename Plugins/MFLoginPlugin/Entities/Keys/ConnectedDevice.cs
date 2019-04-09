@@ -29,12 +29,11 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 			{
 				if (msObject["DeviceID"].ToString().Contains(Serial))
 				{
-					m_logger.Debug("Device with serial number "+msObject["DeviceID"].ToString() + " is connected");
 					success = true;
 				}
 			}
 			if (Inverted) success = !success;
-			log4net.LogManager.GetLogger("MFLoginPlugin").Debug("ConnectedDevice " + Description + "; Inverted: " + Inverted + "; Success: " + success);
+			m_logger.Info("ConnectedDevice " + Description + "; Inverted: " + Inverted + "; Success: " + success);
 			return success;
 		}
 	}

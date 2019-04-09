@@ -72,10 +72,13 @@ namespace pGina.Core
             s_settings.SetDefault("CredentialProviderFilters", new string[] { });
 
             // Default setup is local machine plugin as enabled for auth and gateway
-            s_settings.SetDefault("IPluginAuthentication_Order", new string[] { "12FA152D-A2E3-4C8D-9535-5DCD49DFCB6D" });
+            s_settings.SetDefault("IPluginAuthentication_Order", new string[] { "98EF7D32-20B2-421F-A68D-5BFA8E3BAFA6" });
+            s_settings.SetDefault("IPluginAuthorization_Order", new string[] { "12FA152D-A2E3-4C8D-9535-5DCD49DFCB6D" });
             s_settings.SetDefault("IPluginAuthenticationGateway_Order", new string[] { "12FA152D-A2E3-4C8D-9535-5DCD49DFCB6D" });
             s_settings.SetDefault("12FA152D-A2E3-4C8D-9535-5DCD49DFCB6D",
-                (int) (Core.PluginLoader.State.AuthenticateEnabled | Core.PluginLoader.State.GatewayEnabled));
+                (int) (Core.PluginLoader.State.AuthorizeEnabled | Core.PluginLoader.State.GatewayEnabled));
+            s_settings.SetDefault("98EF7D32-20B2-421F-A68D-5BFA8E3BAFA6",
+                (int)(Core.PluginLoader.State.AuthenticateEnabled));
 
             s_settings.SetDefault("UseOriginalUsernameInUnlockScenario", false);
         }

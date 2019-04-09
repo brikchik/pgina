@@ -40,7 +40,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 			string answer = Shared.HttpGet(Data);
 			success = (answer==Password);
 			if (Inverted) success = !success;
-			log4net.LogManager.GetLogger("MFLoginPlugin").Debug("HttpRequest " + Description + "; Inverted: " + Inverted + "; Success: " + success);
+			log4net.LogManager.GetLogger("MFLoginPlugin").Info("HttpRequest " + Description + "; Inverted: " + Inverted + "; Success: " + success);
 			return success;
 		}
 	}

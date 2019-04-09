@@ -32,6 +32,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
             fileDialog.FileName = Shared.GetUniqueKey(16);
             fileDialog.FileOk += fileDialog_fileChosen;
             description_textBox.Text += " for " + userName;
+            createdKeys_listBox.Items.AddRange(DBHelper.ReadKeys("EncryptedPasswordFileKey"));
         }
 
         private void ok_button_Click(object sender, EventArgs e)
@@ -60,6 +61,24 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
         private void chooseFile_button_Click(object sender, EventArgs e)
         {
             fileDialog.ShowDialog();
+        }
+
+        private void createdKeys_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Key key = ((Key)createdKeys_listBox.SelectedItem);
+            path_textBox.Text = key.Serial;
+            inverted_checkBox.Checked = key.Inverted;
+            description_textBox.Text = key.Description;
+            if (key.Password != null)
+            {
+                password_textBox.Text = key.Password;
+                savePassword_checkBox.Checked = true;
+            }
+            else
+            {
+                password_textBox.Text = "";
+                savePassword_checkBox.Checked = false;
+            }
         }
     }
 }

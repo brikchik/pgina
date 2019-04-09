@@ -39,6 +39,9 @@
             this.setAnyway_button = new System.Windows.Forms.Button();
             this.receivedResponse_textBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.createdKeys_listBox = new System.Windows.Forms.ListBox();
+            this.existingKeys_groupBox = new System.Windows.Forms.GroupBox();
+            this.existingKeys_groupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // inverted_checkBox
@@ -153,11 +156,31 @@
             this.label1.TabIndex = 19;
             this.label1.Text = "RECEIVED RESPONSE:";
             // 
+            // createdKeys_listBox
+            // 
+            this.createdKeys_listBox.FormattingEnabled = true;
+            this.createdKeys_listBox.Location = new System.Drawing.Point(6, 19);
+            this.createdKeys_listBox.Name = "createdKeys_listBox";
+            this.createdKeys_listBox.Size = new System.Drawing.Size(343, 381);
+            this.createdKeys_listBox.TabIndex = 3;
+            this.createdKeys_listBox.SelectedIndexChanged += new System.EventHandler(this.createdKeys_listBox_SelectedIndexChanged);
+            // 
+            // existingKeys_groupBox
+            // 
+            this.existingKeys_groupBox.Controls.Add(this.createdKeys_listBox);
+            this.existingKeys_groupBox.Location = new System.Drawing.Point(550, 12);
+            this.existingKeys_groupBox.Name = "existingKeys_groupBox";
+            this.existingKeys_groupBox.Size = new System.Drawing.Size(355, 412);
+            this.existingKeys_groupBox.TabIndex = 23;
+            this.existingKeys_groupBox.TabStop = false;
+            this.existingKeys_groupBox.Text = "Created Keys";
+            // 
             // HttpRequestManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 436);
+            this.ClientSize = new System.Drawing.Size(917, 436);
+            this.Controls.Add(this.existingKeys_groupBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.receivedResponse_textBox);
             this.Controls.Add(this.setAnyway_button);
@@ -172,6 +195,7 @@
             this.Name = "HttpRequestManagementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Http request";
+            this.existingKeys_groupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -190,5 +214,7 @@
 		private System.Windows.Forms.Button setAnyway_button;
 		private System.Windows.Forms.TextBox receivedResponse_textBox;
 		private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox createdKeys_listBox;
+        private System.Windows.Forms.GroupBox existingKeys_groupBox;
 	}
 }

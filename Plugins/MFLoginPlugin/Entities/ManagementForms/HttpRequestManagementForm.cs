@@ -15,6 +15,7 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		{
 			InitializeComponent();
 			description_textBox.Text = "HttpRequest"+ " for " + userName;
+            createdKeys_listBox.Items.AddRange(DBHelper.ReadKeys("HttpRequest"));
 		}
 		public HttpRequestManagementForm(string address, string response, bool inverted, string description)
 		{
@@ -78,5 +79,14 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.ManagementForms
 		{
 			ok_button.Text = "Check and set";
 		}
+
+        private void createdKeys_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Key key = ((Key)createdKeys_listBox.SelectedItem);
+            address_textBox.Text = key.Data;
+            response_textBox.Text = key.Password;
+            inverted_checkBox.Checked = key.Inverted;
+            description_textBox.Text = key.Description;
+        }
 	}
 }

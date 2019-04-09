@@ -59,9 +59,8 @@ namespace pGina.Plugin.MFLoginPlugin.Entities.Keys
 				if (Serial.EndsWith(name)) success = true;
 			}
 			catch (Exception ex) { m_logger.Error(ex.Message); success = false; }
-
 			if (Inverted) success = !success;
-			m_logger.Debug("EncryptedPasswordFileKey "+Description+"; Inverted: "+Inverted+"; Success: "+success);
+			m_logger.Info("EncryptedPasswordFileKey "+Description+"; Inverted: "+Inverted+"; Success: "+success);
 			return success;
 		}
         public override string ReturnWindowsPassword()

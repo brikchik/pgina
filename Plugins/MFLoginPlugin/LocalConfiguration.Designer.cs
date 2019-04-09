@@ -29,15 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
-            "BluetoothDevice (any device, 5 - 15 seconds to check)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
-            "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            "BluetoothDevice (any device, 5 - 15 seconds to check)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Encrypted Password File (with Windows password)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            "ConnectedDevice"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            "Encrypted Password File (with Windows password)"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+            "eToken USB"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+            "Password"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "Website http request"}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.MenuBar, null);
             this.changeRole_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.user_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,11 +49,15 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cancel_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.advancedSettings_tabPage = new System.Windows.Forms.TabPage();
+            this.keysAdvancedSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.onlyPairedBluetoothDevices_checkBox = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RestoreWindowsUsers_button = new System.Windows.Forms.Button();
             this.cleanDB_button = new System.Windows.Forms.Button();
             this.cleanDBKeys_button = new System.Windows.Forms.Button();
             this.otherAdvancedSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.maxAuthTime_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.maxAuthTime_label = new System.Windows.Forms.Label();
             this.showpGinaLogs_checkBox = new System.Windows.Forms.CheckBox();
             this.openSummaryCollapsed_checkBox = new System.Windows.Forms.CheckBox();
             this.advancedSettings_alwaysCheckSelectedKey_checkBox = new System.Windows.Forms.CheckBox();
@@ -123,8 +129,9 @@
             this.key1Button = new System.Windows.Forms.Button();
             this.key2Button = new System.Windows.Forms.Button();
             this.UsersGroupBox = new System.Windows.Forms.GroupBox();
-            this.removeWindowsUser_checkBox = new System.Windows.Forms.CheckBox();
             this.removeUser_button = new System.Windows.Forms.Button();
+            this.removeWithProfile_checkBox = new System.Windows.Forms.CheckBox();
+            this.removeWindowsUser_checkBox = new System.Windows.Forms.CheckBox();
             this.addUser_button = new System.Windows.Forms.Button();
             this.user_ListBox = new System.Windows.Forms.ListBox();
             this.user_groupBox = new System.Windows.Forms.GroupBox();
@@ -164,8 +171,10 @@
             this.changeRole_contextMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
             this.advancedSettings_tabPage.SuspendLayout();
+            this.keysAdvancedSettings_groupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.otherAdvancedSettings_groupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAuthTime_numericUpDown)).BeginInit();
             this.database_groupBox.SuspendLayout();
             this.panel3.SuspendLayout();
             this.backup_groupBox.SuspendLayout();
@@ -288,6 +297,7 @@
             // 
             // advancedSettings_tabPage
             // 
+            this.advancedSettings_tabPage.Controls.Add(this.keysAdvancedSettings_groupBox);
             this.advancedSettings_tabPage.Controls.Add(this.groupBox1);
             this.advancedSettings_tabPage.Controls.Add(this.otherAdvancedSettings_groupBox);
             this.advancedSettings_tabPage.Controls.Add(this.database_groupBox);
@@ -303,6 +313,27 @@
             this.advancedSettings_tabPage.Click += new System.EventHandler(this.advancedSettings_tabPage_Click);
             this.advancedSettings_tabPage.Enter += new System.EventHandler(this.advancedSettings_tabPage_Enter);
             // 
+            // keysAdvancedSettings_groupBox
+            // 
+            this.keysAdvancedSettings_groupBox.Controls.Add(this.onlyPairedBluetoothDevices_checkBox);
+            this.keysAdvancedSettings_groupBox.Location = new System.Drawing.Point(296, 182);
+            this.keysAdvancedSettings_groupBox.Name = "keysAdvancedSettings_groupBox";
+            this.keysAdvancedSettings_groupBox.Size = new System.Drawing.Size(338, 72);
+            this.keysAdvancedSettings_groupBox.TabIndex = 18;
+            this.keysAdvancedSettings_groupBox.TabStop = false;
+            this.keysAdvancedSettings_groupBox.Text = "Key settings";
+            // 
+            // onlyPairedBluetoothDevices_checkBox
+            // 
+            this.onlyPairedBluetoothDevices_checkBox.AutoSize = true;
+            this.onlyPairedBluetoothDevices_checkBox.Location = new System.Drawing.Point(8, 19);
+            this.onlyPairedBluetoothDevices_checkBox.Name = "onlyPairedBluetoothDevices_checkBox";
+            this.onlyPairedBluetoothDevices_checkBox.Size = new System.Drawing.Size(330, 20);
+            this.onlyPairedBluetoothDevices_checkBox.TabIndex = 0;
+            this.onlyPairedBluetoothDevices_checkBox.Text = "Allow to use only paired Bluetooth devices (secure)";
+            this.onlyPairedBluetoothDevices_checkBox.UseVisualStyleBackColor = true;
+            this.onlyPairedBluetoothDevices_checkBox.CheckedChanged += new System.EventHandler(this.onlyPairedBluetoothDevices_checkBox_CheckedChanged);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.RestoreWindowsUsers_button);
@@ -310,10 +341,11 @@
             this.groupBox1.Controls.Add(this.cleanDBKeys_button);
             this.groupBox1.Location = new System.Drawing.Point(296, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(338, 222);
+            this.groupBox1.Size = new System.Drawing.Size(338, 168);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Service features";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // RestoreWindowsUsers_button
             // 
@@ -349,6 +381,8 @@
             // 
             // otherAdvancedSettings_groupBox
             // 
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.maxAuthTime_numericUpDown);
+            this.otherAdvancedSettings_groupBox.Controls.Add(this.maxAuthTime_label);
             this.otherAdvancedSettings_groupBox.Controls.Add(this.showpGinaLogs_checkBox);
             this.otherAdvancedSettings_groupBox.Controls.Add(this.openSummaryCollapsed_checkBox);
             this.otherAdvancedSettings_groupBox.Controls.Add(this.advancedSettings_alwaysCheckSelectedKey_checkBox);
@@ -360,6 +394,38 @@
             this.otherAdvancedSettings_groupBox.TabStop = false;
             this.otherAdvancedSettings_groupBox.Text = "Other settings";
             this.otherAdvancedSettings_groupBox.Enter += new System.EventHandler(this.otherAdvancedSettings_groupBox_Enter);
+            // 
+            // maxAuthTime_numericUpDown
+            // 
+            this.maxAuthTime_numericUpDown.Location = new System.Drawing.Point(764, 26);
+            this.maxAuthTime_numericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.maxAuthTime_numericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.maxAuthTime_numericUpDown.Name = "maxAuthTime_numericUpDown";
+            this.maxAuthTime_numericUpDown.Size = new System.Drawing.Size(66, 21);
+            this.maxAuthTime_numericUpDown.TabIndex = 0;
+            this.maxAuthTime_numericUpDown.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.maxAuthTime_numericUpDown.ValueChanged += new System.EventHandler(this.maxAuthTime_numericUpDown_ValueChanged);
+            // 
+            // maxAuthTime_label
+            // 
+            this.maxAuthTime_label.AutoSize = true;
+            this.maxAuthTime_label.Location = new System.Drawing.Point(536, 28);
+            this.maxAuthTime_label.Name = "maxAuthTime_label";
+            this.maxAuthTime_label.Size = new System.Drawing.Size(222, 16);
+            this.maxAuthTime_label.TabIndex = 20;
+            this.maxAuthTime_label.Text = "Max authentication time (in seconds)";
             // 
             // showpGinaLogs_checkBox
             // 
@@ -825,6 +891,7 @@
             // 
             // keyDescription_textBox
             // 
+            this.keyDescription_textBox.Enabled = false;
             this.keyDescription_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.keyDescription_textBox.Location = new System.Drawing.Point(10, 73);
             this.keyDescription_textBox.Multiline = true;
@@ -886,17 +953,19 @@
             this.fastChoiceTypes_listView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.fastChoiceTypes_listView.AutoArrange = false;
             this.fastChoiceTypes_listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem6.Tag = "BluetoothDevice";
-            listViewItem7.Tag = "ConnectedDevice";
-            listViewItem8.Tag = "EncryptedPasswordFileKey";
-            listViewItem9.Tag = "Password";
-            listViewItem10.Tag = "HttpRequest";
+            listViewItem7.Tag = "BluetoothDevice";
+            listViewItem8.Tag = "ConnectedDevice";
+            listViewItem9.Tag = "EncryptedPasswordFileKey";
+            listViewItem10.Tag = "ETokenKey";
+            listViewItem11.Tag = "Password";
+            listViewItem12.Tag = "HttpRequest";
             this.fastChoiceTypes_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem6,
             listViewItem7,
             listViewItem8,
             listViewItem9,
-            listViewItem10});
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.fastChoiceTypes_listView.Location = new System.Drawing.Point(6, 20);
             this.fastChoiceTypes_listView.MultiSelect = false;
             this.fastChoiceTypes_listView.Name = "fastChoiceTypes_listView";
@@ -1010,6 +1079,7 @@
             this.openingPictureBox.Size = new System.Drawing.Size(70, 88);
             this.openingPictureBox.TabIndex = 19;
             this.openingPictureBox.TabStop = false;
+            this.openingPictureBox.Click += new System.EventHandler(this.openingPictureBox_Click);
             this.openingPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.openingPictureBox_MouseClick);
             this.openingPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.openingPictureBox_Click);
             // 
@@ -1193,8 +1263,9 @@
             // UsersGroupBox
             // 
             this.UsersGroupBox.BackColor = System.Drawing.Color.Gainsboro;
-            this.UsersGroupBox.Controls.Add(this.removeWindowsUser_checkBox);
             this.UsersGroupBox.Controls.Add(this.removeUser_button);
+            this.UsersGroupBox.Controls.Add(this.removeWithProfile_checkBox);
+            this.UsersGroupBox.Controls.Add(this.removeWindowsUser_checkBox);
             this.UsersGroupBox.Controls.Add(this.addUser_button);
             this.UsersGroupBox.Controls.Add(this.user_ListBox);
             this.UsersGroupBox.Location = new System.Drawing.Point(9, 8);
@@ -1203,18 +1274,6 @@
             this.UsersGroupBox.TabIndex = 6;
             this.UsersGroupBox.TabStop = false;
             this.UsersGroupBox.Text = "Users";
-            // 
-            // removeWindowsUser_checkBox
-            // 
-            this.removeWindowsUser_checkBox.AutoSize = true;
-            this.removeWindowsUser_checkBox.Checked = true;
-            this.removeWindowsUser_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.removeWindowsUser_checkBox.Location = new System.Drawing.Point(126, 309);
-            this.removeWindowsUser_checkBox.Name = "removeWindowsUser_checkBox";
-            this.removeWindowsUser_checkBox.Size = new System.Drawing.Size(75, 20);
-            this.removeWindowsUser_checkBox.TabIndex = 3;
-            this.removeWindowsUser_checkBox.Text = "from OS";
-            this.removeWindowsUser_checkBox.UseVisualStyleBackColor = true;
             // 
             // removeUser_button
             // 
@@ -1226,6 +1285,35 @@
             this.removeUser_button.Text = "Remove";
             this.removeUser_button.UseVisualStyleBackColor = false;
             this.removeUser_button.Click += new System.EventHandler(this.removeUser_button_Click);
+            // 
+            // removeWithProfile_checkBox
+            // 
+            this.removeWithProfile_checkBox.AutoSize = true;
+            this.removeWithProfile_checkBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.removeWithProfile_checkBox.Checked = true;
+            this.removeWithProfile_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.removeWithProfile_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.removeWithProfile_checkBox.Location = new System.Drawing.Point(115, 321);
+            this.removeWithProfile_checkBox.Name = "removeWithProfile_checkBox";
+            this.removeWithProfile_checkBox.Size = new System.Drawing.Size(120, 17);
+            this.removeWithProfile_checkBox.TabIndex = 5;
+            this.removeWithProfile_checkBox.Text = "Remove user profile";
+            this.removeWithProfile_checkBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.removeWithProfile_checkBox.UseVisualStyleBackColor = true;
+            this.removeWithProfile_checkBox.CheckedChanged += new System.EventHandler(this.removeWithProfile_checkBox_CheckedChanged);
+            // 
+            // removeWindowsUser_checkBox
+            // 
+            this.removeWindowsUser_checkBox.AutoSize = true;
+            this.removeWindowsUser_checkBox.Checked = true;
+            this.removeWindowsUser_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.removeWindowsUser_checkBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.removeWindowsUser_checkBox.Location = new System.Drawing.Point(122, 307);
+            this.removeWindowsUser_checkBox.Name = "removeWindowsUser_checkBox";
+            this.removeWindowsUser_checkBox.Size = new System.Drawing.Size(107, 17);
+            this.removeWindowsUser_checkBox.TabIndex = 3;
+            this.removeWindowsUser_checkBox.Text = "Remove from OS";
+            this.removeWindowsUser_checkBox.UseVisualStyleBackColor = true;
             // 
             // addUser_button
             // 
@@ -1675,9 +1763,12 @@
             this.controlPanel.ResumeLayout(false);
             this.controlPanel.PerformLayout();
             this.advancedSettings_tabPage.ResumeLayout(false);
+            this.keysAdvancedSettings_groupBox.ResumeLayout(false);
+            this.keysAdvancedSettings_groupBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.otherAdvancedSettings_groupBox.ResumeLayout(false);
             this.otherAdvancedSettings_groupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAuthTime_numericUpDown)).EndInit();
             this.database_groupBox.ResumeLayout(false);
             this.database_groupBox.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -1846,5 +1937,10 @@
 		private System.Windows.Forms.TabPage pGinaLogsService_tabPage;
 		private System.Windows.Forms.CheckBox showpGinaLogs_checkBox;
 		private System.Windows.Forms.ListBox pGinaServiceLog_listBox;
+        private System.Windows.Forms.CheckBox removeWithProfile_checkBox;
+        private System.Windows.Forms.NumericUpDown maxAuthTime_numericUpDown;
+        private System.Windows.Forms.Label maxAuthTime_label;
+        private System.Windows.Forms.GroupBox keysAdvancedSettings_groupBox;
+        private System.Windows.Forms.CheckBox onlyPairedBluetoothDevices_checkBox;
 	}
 }
