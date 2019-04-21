@@ -1,4 +1,11 @@
-﻿using System;
+﻿// 
+// Written by Gleb Rudometov
+// github.com/brikchik
+// under BSD 3-Clause License
+// 2019
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +17,6 @@ using pGina.Shared.Interfaces;
 using pGina.Shared.Types;
 using pGina.Shared.Settings;
 using pGina.Plugin.MFLoginPlugin.Entities;
-//
-// NOTE: pGina.fork plugins work with "pGina created" non-admin accounts by default!!!
-// net user LOGIN PASSWORD /ADD /COMMENT:"pGina created"
-//
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -44,7 +47,7 @@ namespace pGina.Plugin.MFLoginPlugin
                 m_settings.SetDefault("RequireAtLeastOneKeyInAuthMethod", false);
 				m_settings.SetDefault("AlwaysOpenSummaryTabCollapsed", false);
 				m_settings.SetDefault("ShowPGinaLogs", false);
-                m_settings.SetDefault("MaxAuthTimeSeconds", 10);
+                m_settings.SetDefault("MaxAuthTimeSeconds", 20); // for every auth method
 
                 // key settings
                 m_settings.SetDefault("AllowOnlyPairedBluetoothDevices", false);

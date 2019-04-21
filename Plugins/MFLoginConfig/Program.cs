@@ -13,6 +13,7 @@ namespace pGina.Plugin.MFLoginPlugin
 			Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 			//Application.Run();
+            // some functions may not work as those are initialized by pGina
 			new MFLoginPlugin().Configure();
 		}
     }

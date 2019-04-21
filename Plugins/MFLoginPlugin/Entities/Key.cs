@@ -29,6 +29,7 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "HttpRequest": key = new HttpRequestKey(kid); break;
                 case "EncryptedPasswordFileKey": key = new EncryptedPasswordFileKey(kid); break;
 				case "ETokenKey": key = new ETokenKey(kid); break;
+				case "FaceRecognitionKey": key = new FaceRecognitionKey(kid); break;
 				default:break;
 			}
 			if(key!=null)key.Fill();
@@ -45,11 +46,12 @@ namespace pGina.Plugin.MFLoginPlugin
 				case "HttpRequest": key = new HttpRequestKey(key.KID); break;
                 case "EncryptedPasswordFileKey": key = new EncryptedPasswordFileKey(key.KID); break;
 				case "ETokenKey": key = new ETokenKey(key.KID); break;
+				case "FaceRecognitionKey": key = new FaceRecognitionKey(key.KID); break;
 				default: key = null; m_logger.Error("Unable to recognize key type: "+type); break;
 			}
 			return key; // get appropriate key class
 		}
-		public static String[] KeyTypes= { "Password", "ConnectedDevice", "BluetoothDevice"};
+		public static String[] KeyTypes= { "Password", "ConnectedDevice", "BluetoothDevice", "HttpRequest", "EncryptedPasswordFileKey", "ETokenKey", "FaceRecognitionKey"};
 
         public ulong KID;
 		public string Description="";

@@ -10,9 +10,11 @@ using pGina.Plugin.MFLoginPlugin.Entities.ManagementForms;
 using pGina.Shared.Settings;
 using pGina.Shared.Types;
 using System.Threading;
+using System.Runtime;
 using System.IO;
 using System.Diagnostics;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace pGina.Plugin.MFLoginPlugin
 {
@@ -451,7 +453,6 @@ Current database path: " + DBHelper.connection.FileName;
             checkKey_groupBox.Enabled = value;
             keySerial_textBox.Enabled = value;
             keyDescription_textBox.Enabled = value;
-            keySerial_textBox.Text = null;
         }
         private void keysListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -481,7 +482,8 @@ Current database path: " + DBHelper.connection.FileName;
                     keyConfigure_button.Enabled = key.IsConfigurable;
 
                     // auto check if enabled in settings
-                    if ((bool)m_settings.AlwaysCheckSelectedKey) checkKey();
+                    if ((bool)m_settings.AlwaysCheckSelectedKey) 
+                        checkKeyAsync((result) => { if (result!=null) MessageBox.Show(result); });
                 }
                 catch (Exception ex) { m_logger.Debug(ex.Message); }
         }
@@ -765,7 +767,7 @@ Current database path: " + DBHelper.connection.FileName;
             DBHelper.RemoveUnusedKeys();
             UpdateKeyList();
         }
-        private void checkKey()
+        private void checkKeyAsync(Action<string> callback)
         {
             try
             {
@@ -773,52 +775,57 @@ Current database path: " + DBHelper.connection.FileName;
                 bool success = ((Key)keysListBox.SelectedItem).CheckKey(password);
                 checkKeyResult_button.BackColor = (success) ? Color.Green : Color.Red;
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); checkKeyResult_button.BackColor = Color.White; }
+            catch (Exception ex) {  
+                checkKeyResult_button.BackColor = Color.White;
+                callback(ex.Message);
+            }
+            callback(null);
         }
         private void checkKey_button_Click(object sender, EventArgs e)
         {
-            checkKey();
+            checkKeyAsync((message) => { if(message!=null) MessageBox.Show(message); });
         }
-
         private void advancedSettings_alwaysCheckSelectedKey_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             m_settings.AlwaysCheckSelectedKey = (advancedSettings_alwaysCheckSelectedKey_checkBox.Checked);
         }
 
-        public delegate void WorkCompletedCallBack(bool success, string message);
-        private bool CheckAuthMethodAsyncRunning = false;
-        public void CheckAuthMethodAsync() // background task
+        private BooleanResult CheckAuthMethod(AuthMethod am, UserInformation ui) // may be really slow
         {
-            WorkCompletedCallBack callback = AMCheckCallBack;
-            CheckAuthMethod(callback);
-        }
-        public void AMCheckCallBack(bool success, string result) // show auth method check result
-        {
-            CheckAuthMethodAsyncRunning = false;
-            successPictureBox.Visible = success;
-            if (!success) MessageBox.Show(result);
-        }
-        private void CheckAuthMethod(WorkCompletedCallBack callback) // may be really slow
-        {
-            AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
-            UserInformation ui = new UserInformation()
-            {
-                Username = userName_textBox.Text,
-                Password = testAMpassword_textBox.Text,
-                OriginalPassword = testAMpassword_textBox.Text
-            };
             User user = new User();
             user.FillByName(ui.Username);
             BooleanResult authMethodCheck = AuthenticationManager.TryAuthMethod(am, ui, false);
-            if (authMethodCheck.Success) callback(true, null); //success
             if (user.WindowsPassword != null && user.WindowsPassword != "" &&
-                ui.Password != user.WindowsPassword && ui.Password != testAMpassword_textBox.Text)
-                callback(false, "Keys provide incorrect Windows Password"); //error message to show
+                    ui.Password != user.WindowsPassword && ui.Password != testAMpassword_textBox.Text)
+            {
+                authMethodCheck.Message="Keys provide incorrect Windows Password";
+                //error message to show
+            }
+            return authMethodCheck;
         }
+        private bool CheckAuthMethodAsyncRunning = false;
         private void openingPictureBox_Click(object sender, MouseEventArgs e)
         {
-            if (!CheckAuthMethodAsyncRunning) { CheckAuthMethodAsyncRunning = true; CheckAuthMethodAsync(); }
-            // check in background so that bluetooth scan doesn't block the UI thread
+            try
+            {
+                AuthMethod am = (AuthMethod)authMethods_listBox.SelectedItem;
+                UserInformation ui = new UserInformation()
+                {
+                    Username = userName_textBox.Text,
+                    Password = testAMpassword_textBox.Text,
+                    OriginalPassword = testAMpassword_textBox.Text
+                };
+                if (CheckAuthMethodAsyncRunning) return;
+                CheckAuthMethodAsyncRunning = true;
+                Task<BooleanResult> task = Task.Factory.StartNew(() => CheckAuthMethod(am, ui));
+                CheckAuthMethodAsyncRunning = false;
+                BooleanResult result = task.Result;
+                successPictureBox.Visible = result.Success;
+                if (!result.Success && result.Message!="This authentication method has failed") MessageBox.Show(result.Message);
+                // check in background so that bluetooth scan doesn't block the UI thread
+                // ignore obvious message not to bother users
+            }
+            catch (Exception ex) { MessageBox.Show("Error in key. "+ex.Message); }
         }
 
         private void openingPictureBox_MouseClick(object sender, MouseEventArgs e)
@@ -1015,6 +1022,11 @@ Current database path: " + DBHelper.connection.FileName;
         private void onlyPairedBluetoothDevices_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             m_settings.AllowOnlyPairedBluetoothDevices = onlyPairedBluetoothDevices_checkBox.Checked;
+        }
+
+        private void maxAuthTime_label_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
